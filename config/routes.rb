@@ -1,3 +1,3 @@
 Riiif::Engine.routes.draw do
-  get "/:id/:region/:size/:aspect/native(.:format)" => "images#show"
+  get "/:id/:region/:size/:rotation/:quality(.:format)" => "images#show"
 end
