@@ -31,3 +31,7 @@ Then you can make requests like this:
 * http://www.example.org/image-service/abcd1234/full/pct:50/0/native.jpg
 * http://www.example.org/image-service/abcd1234/full/150,75/0/native.jpg
 * http://www.example.org/image-service/abcd1234/full/!150,75/0/native.jpg
+
+For more information see the IIIF spec:
+
+http://www-sul.stanford.edu/iiif/image-api/1.1/
