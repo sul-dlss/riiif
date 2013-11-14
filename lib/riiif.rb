@@ -7,4 +7,5 @@ module Riiif
   autoload :FileSystemFileResolver
 
   class Error < RuntimeError; end
+  class InvalidAttributeError < Error; end
 end

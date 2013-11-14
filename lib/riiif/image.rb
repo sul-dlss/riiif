@@ -14,9 +14,7 @@ module Riiif
     def render(args)
       options = validate_options!(args)
       image = load_image
-      unless options[:size] == 'full'
-        image.resize "100x100"
-      end
+      image.resize options[:size] unless options[:size] == 'full'
       image.format(options[:format])
       image.to_blob
     end
@@ -26,7 +24,27 @@ module Riiif
       def validate_options!(args)
         options = args.with_indifferent_access
         raise ArgumentError, 'You must provide a format' unless options[:format]
+        options[:size] = validate_size(options.delete(:size))
         options
+      end
+
+      def validate_size(size)
+        if size == 'full'
+          size
+        elsif md = /^,(\d+)$/.match(size)
+          "x#{md[1]}"
+        elsif md = /^(\d+),$/.match(size)
+          "#{md[1]}"
+        elsif md = /^pct:(\d+)$/.match(size)
+          "#{md[1]}%"
+        elsif md = /^(\d+),(\d+)$/.match(size)
+          "#{md[1]}x#{md[2]}!"
+        elsif md = /^!(\d+),(\d+)$/.match(size)
+          "#{md[1]}x#{md[2]}"
+        else
+          raise InvalidAttributeError, "Invalid size: #{size}"
+        end
+
       end
 
       def load_image
