@@ -23,11 +23,11 @@ Mount the gem as an engine:
 mount Riiif::Engine => '/image-service'
 ```
 
-Then you can make requests like:
+Then you can make requests like this:
 
-http://www.example.org/image-service/abcd1234/full/full/0/native.jpg
-http://www.example.org/image-service/abcd1234/full/100,/0/native.jpg
-http://www.example.org/image-service/abcd1234/full/,100/0/native.jpg
-http://www.example.org/image-service/abcd1234/full/pct:50/0/native.jpg
-http://www.example.org/image-service/abcd1234/full/150,75/0/native.jpg
-http://www.example.org/image-service/abcd1234/full/!150,75/0/native.jpg
+* http://www.example.org/image-service/abcd1234/full/full/0/native.jpg
+* http://www.example.org/image-service/abcd1234/full/100,/0/native.jpg
+* http://www.example.org/image-service/abcd1234/full/,100/0/native.jpg
+* http://www.example.org/image-service/abcd1234/full/pct:50/0/native.jpg
+* http://www.example.org/image-service/abcd1234/full/150,75/0/native.jpg
+* http://www.example.org/image-service/abcd1234/full/!150,75/0/native.jpg
