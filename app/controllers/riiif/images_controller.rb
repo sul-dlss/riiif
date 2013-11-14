@@ -3,8 +3,7 @@ module Riiif
     def show
       image = Image.new(params[:id])
       data = image.render(params.permit(:region, :size, :rotation, :quality, :format))
-      # TODO need to send the type parameter?
-      send_data data, type: "image/#{params[:format]}", :disposition => 'inline'
+      send_data data, type: Mime::Type.lookup_by_extension(params[:format]), :disposition => 'inline'
     end
   end
 end

@@ -13,8 +13,15 @@ module Riiif
 
     def render(args)
       options = decode_options!(args)
-      image.crop options[:crop] if options[:crop]
-      image.resize options[:size] if options[:size]
+
+      image.combine_options do |c|
+        c.crop options[:crop] if options[:crop]
+        c.resize options[:size] if options[:size]
+        if options[:rotation]
+          c.virtual_pixel 'white'
+          c.distort.+ 'srt', options[:rotation]
+        end
+      end
       image.format(options[:format])
       image.to_blob
     end
@@ -27,7 +34,7 @@ module Riiif
         options[:crop] = decode_region(options.delete(:region))
         options[:size] = decode_size(options.delete(:size))
         validate_quality!(options[:quality])
-        validate_rotation!(options[:rotation])
+        options[:rotation] = decode_rotation(options[:rotation])
         validate_format!(options[:format])
         options
       end
@@ -37,9 +44,13 @@ module Riiif
         raise InvalidAttributeError, "Unsupported quality: #{quality}" 
       end
 
-      def validate_rotation!(rotation)
+      def decode_rotation(rotation)
         return if rotation.nil? || rotation == '0'
-        raise InvalidAttributeError, "Unsupported rotation: #{rotation}"
+        begin
+          Float(rotation)
+        rescue ArgumentError
+          raise InvalidAttributeError, "Unsupported rotation: #{rotation}"
+        end
       end
 
       def validate_format!(format)
