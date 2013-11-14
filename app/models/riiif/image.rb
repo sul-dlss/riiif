@@ -21,6 +21,14 @@ module Riiif
           c.virtual_pixel 'white'
           c.distort.+ 'srt', options[:rotation]
         end
+
+        case options[:quality]
+        when 'grey'
+          c.colorspace "Gray"
+        when 'bitonal'
+          c.colorspace "Gray"
+          c.type 'Bilevel'
+        end
       end
       image.format(options[:format])
       image.to_blob
@@ -33,14 +41,15 @@ module Riiif
         raise ArgumentError, 'You must provide a format' unless options[:format]
         options[:crop] = decode_region(options.delete(:region))
         options[:size] = decode_size(options.delete(:size))
-        validate_quality!(options[:quality])
+        options[:quality] = decode_quality(options[:quality])
         options[:rotation] = decode_rotation(options[:rotation])
         validate_format!(options[:format])
         options
       end
 
-      def validate_quality!(quality)
-        return if quality.nil? || quality == 'native'
+      def decode_quality(quality)
+        return if quality.nil? || ['native', 'color'].include?(quality)
+        return quality if ['bitonal', 'grey'].include?(quality)
         raise InvalidAttributeError, "Unsupported quality: #{quality}" 
       end
 

@@ -96,5 +96,28 @@ describe Riiif::Image do
         expect { subject.render(rotation: '150x', format: 'png') }.to raise_error Riiif::InvalidAttributeError
       end
     end
+
+    describe "quality" do
+      it "should return the original when specifing native" do
+        expect(combinator).to_not receive(:colorspace)
+        subject.render(quality: 'native', format: 'png')
+      end
+      it "should return the original when specifing color" do
+        expect(combinator).to_not receive(:colorspace)
+        subject.render(quality: 'color', format: 'png')
+      end
+      it "should convert to grayscale" do
+        expect(combinator).to receive(:colorspace).with('Gray')
+        subject.render(quality: 'grey', format: 'png')
+      end
+      it "should convert to bitonal" do
+        expect(combinator).to receive(:colorspace).with('Gray')
+        expect(combinator).to receive(:type).with('Bilevel')
+        subject.render(quality: 'bitonal', format: 'png')
+      end
+      it "should raise an error for invalid angle" do
+        expect { subject.render(rotation: '150x', format: 'png') }.to raise_error Riiif::InvalidAttributeError
+      end
+    end
   end
 end
