@@ -2,11 +2,24 @@ require 'spec_helper'
 
 describe Riiif::Image do
   subject { Riiif::Image.new('world') }
+  describe "happy path" do
+    let(:inner) { double }
+    before do
+      expect(inner).to receive(:format).with('jpg')
+      expect(inner).to receive(:to_blob).and_return('imagedata')
+      subject.stub(:load_image).and_return(inner)
+    end
+    it "should render" do
+      expect(subject.render('size' => 'full', format: 'jpg')).to eq 'imagedata'
+    end
+  end
+
   describe "without a format" do
     it "should raise an error" do
       expect { subject.render('size' => 'full') }.to raise_error ArgumentError
     end
   end
+
   describe "resize" do
     let(:inner) { double(format: true, to_blob: 'imagedata') }
     before do
