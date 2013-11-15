@@ -4,4 +4,5 @@ Riiif::Engine.routes.draw do
   get "/:id/:region/:size/:rotation/:quality(.:format)" => "images#show", 
     constraints: { rotation: ALLOW_DOTS, size: PERCENTAGE}
   get "/:id/info(.:format)" => "images#info", :constraints => { :format => /json/}
+  get "/:id/view(.:format)" => "images#view"
 end

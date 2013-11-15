@@ -11,6 +11,10 @@ module Riiif
       render json: image.info.merge(server_info)
     end
 
+    def view
+      @image = Image.new(params[:id])
+    end
+
     protected
 
     def server_info
