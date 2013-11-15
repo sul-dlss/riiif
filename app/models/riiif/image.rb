@@ -95,7 +95,7 @@ module Riiif
           "x#{md[1]}"
         elsif md = /^(\d+),$/.match(size)
           "#{md[1]}"
-        elsif md = /^pct:(\d+)$/.match(size)
+        elsif md = /^pct:(\d+(.\d+)?)$/.match(size)
           "#{md[1]}%"
         elsif md = /^(\d+),(\d+)$/.match(size)
           "#{md[1]}x#{md[2]}!"

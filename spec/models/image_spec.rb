@@ -77,9 +77,13 @@ describe Riiif::Image do
         expect(combinator).to_not receive(:resize)
         subject.render(size: 'full', format: 'png')
       end
-      it "should handle percent sizes" do
+      it "should handle integer percent sizes" do
         expect(combinator).to receive(:resize).with('50%')
         subject.render(size: 'pct:50', format: 'png')
+      end
+      it "should handle float percent sizes" do
+        expect(combinator).to receive(:resize).with('12.5%')
+        subject.render(size: 'pct:12.5', format: 'png')
       end
       it "should handle w," do
         expect(combinator).to receive(:resize).with('50')
