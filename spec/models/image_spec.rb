@@ -28,6 +28,22 @@ describe Riiif::Image do
     end
   end
 
+  describe "get images from web" do
+    before do
+      Riiif::Image.file_resolver = Riiif::HTTPFileResolver
+      Riiif::HTTPFileResolver.id_to_path = lambda do |id| 
+        "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/#{id}.jpg/600px-#{id}.jpg"
+      end
+    end
+    after do
+      Riiif::Image.file_resolver = Riiif::FileSystemFileResolver
+    end
+    subject { Riiif::Image.new('Cave_26,_Ajanta') }
+    it "should be easy" do
+      expect(subject.info).to eq height: 390, width:600
+    end
+  end
+
 
   describe "mogrify" do
     let(:combinator) { double }
