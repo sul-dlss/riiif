@@ -4,6 +4,8 @@ module Riiif
     class_attribute :file_resolver
     self.file_resolver = FileSystemFileResolver
 
+    OUTPUT_FORMATS = %W{jpg png}
+
     attr_reader :path_name
 
     # @param [String] id The identifier of the file
@@ -32,6 +34,10 @@ module Riiif
       end
       image.format(options[:format])
       image.to_blob
+    end
+
+    def info
+      {height: image[:height], width: image[:width]}
     end
 
     private
@@ -63,7 +69,7 @@ module Riiif
       end
 
       def validate_format!(format)
-        raise InvalidAttributeError, "Unsupported format: #{format}" unless ['jpg', 'png'].include?(format)
+        raise InvalidAttributeError, "Unsupported format: #{format}" unless OUTPUT_FORMATS.include?(format)
 
       end
 

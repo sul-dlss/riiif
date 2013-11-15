@@ -22,6 +22,12 @@ describe Riiif::Image do
     end
   end
 
+  describe "info" do
+    it "should return the data" do
+      expect(subject.info).to eq height: 400, width:800
+    end
+  end
+
 
   describe "mogrify" do
     let(:combinator) { double }

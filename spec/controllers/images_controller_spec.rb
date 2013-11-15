@@ -13,4 +13,19 @@ describe Riiif::ImagesController do
     expect(response).to be_successful
     expect(response.body).to eq 'IMAGEDATA'
   end
+
+  it "should return info" do
+    image = double
+    expect(Riiif::Image).to receive(:new).with('abcd1234').and_return(image)
+    expect(image).to receive(:info).and_return({width: 6000, height: 4000 })
+    get :info, id: 'abcd1234', format: 'json'
+    expect(response).to be_successful
+    json = JSON.parse(response.body)
+    expect(json).to eq "@context"=>"http://library.stanford.edu/iiif/image-api/1.1/context.json",
+      "@id" =>"http://test.host/image-service/abcd1234",
+      "width" =>6000,
+      "height" =>4000,
+      "formats" =>  [ "jpg", "png" ],
+      "profile" =>  "http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level0" 
+  end
 end

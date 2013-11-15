@@ -9,4 +9,10 @@ describe 'routes for resizing' do
                   region: 'full', size: 'full', rotation: '0', quality: 'native', format: 'jpg')
   end
 
+  it "routes GET /abcd1234/info.json" do
+    expect(
+      get: "/abcd1234/info.json"
+    ).to route_to(controller: "riiif/images", id: 'abcd1234', action: "info", format: 'json')
+  end
+
 end
