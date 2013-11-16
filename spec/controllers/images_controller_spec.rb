@@ -12,6 +12,7 @@ describe Riiif::ImagesController do
                rotation: '0', quality: 'native', format: 'jpg'
     expect(response).to be_successful
     expect(response.body).to eq 'IMAGEDATA'
+    expect(response.headers['Link']).to eq '<http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2>;rel="profile"'
   end
 
   it "should return info" do
@@ -27,5 +28,6 @@ describe Riiif::ImagesController do
       "height" =>4000,
       "formats" =>  [ "jpg", "png" ],
       "profile" =>  "http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level0" 
+    expect(response.headers['Link']).to eq '<http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2>;rel="profile"'
   end
 end
