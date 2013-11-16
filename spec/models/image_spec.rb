@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Riiif::Image do
+  before { Rails.cache.clear }
   let(:filename) { File.expand_path('spec/samples/world.jp2') }
   subject { Riiif::Image.new('world') }
   describe "happy path" do

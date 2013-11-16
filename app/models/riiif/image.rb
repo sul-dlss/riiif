@@ -6,15 +6,19 @@ module Riiif
 
     OUTPUT_FORMATS = %W{jpg png}
 
-    attr_reader :path_name
+    attr_reader :path_name, :id
 
     # @param [String] id The identifier of the file
     def initialize(id)
+      @id = id
       @path_name = file_resolver.find(id)
     end
 
     def render(args)
-      image.extract(decode_options!(args))
+      options = decode_options!(args)
+      Rails.cache.fetch(options.merge(id: id), compress: true, expires_in: 3.days) do
+        image.extract(options)
+      end
     end
 
     delegate :info, to: :image
