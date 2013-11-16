@@ -60,7 +60,7 @@ module Riiif
         command << ' -type Bilevel'
       end
       command << " #{path} #{options[:format]}:-"
-      puts "COMMAND: #{command}"
+      Rails.logger.debug "RIIIF executed: #{command}"
       execute(command)
     end
 
