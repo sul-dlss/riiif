@@ -37,7 +37,7 @@ To source the images from the network instead of the file system, we first confi
 ```
 Then we configure the resolver with a mechanism for mapping the provided id to a url:
 ```
-      Riiif::HTTPFileResolver.id_to_path = lambda do |id| 
+      Riiif::HTTPFileResolver.id_to_uri = lambda do |id| 
         "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/#{id}.jpg/600px-#{id}.jpg"
       end
 ```

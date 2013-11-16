@@ -1,15 +1,11 @@
 require 'spec_helper'
 
 describe Riiif::Image do
+  let(:filename) { File.expand_path('spec/samples/world.jp2') }
   subject { Riiif::Image.new('world') }
   describe "happy path" do
-    let(:combinator) { double }
-    let(:inner) { double }
     before do
-      expect(inner).to receive(:format).with('jpg')
-      expect(inner).to receive(:to_blob).and_return('imagedata')
-      inner.stub(:combine_options).and_yield(combinator)
-      subject.stub(:image).and_return(inner)
+      expect(subject.image).to receive(:execute).with("convert #{filename} jpg:-").and_return('imagedata')
     end
     it "should render" do
       expect(subject.render('size' => 'full', format: 'jpg')).to eq 'imagedata'
@@ -31,7 +27,7 @@ describe Riiif::Image do
   describe "get images from web" do
     before do
       Riiif::Image.file_resolver = Riiif::HTTPFileResolver
-      Riiif::HTTPFileResolver.id_to_path = lambda do |id| 
+      Riiif::HTTPFileResolver.id_to_uri = lambda do |id| 
         "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/#{id}.jpg/600px-#{id}.jpg"
       end
     end
@@ -46,25 +42,18 @@ describe Riiif::Image do
 
 
   describe "mogrify" do
-    let(:combinator) { double }
-    let(:inner) { double(format: true, to_blob: 'imagedata') }
-    before do
-      inner.stub(:combine_options).and_yield(combinator)
-      subject.stub(:image).and_return(inner)
-    end
     describe "region" do
       it "should return the original when specifing full size" do
-        expect(combinator).to_not receive(:crop)
+        expect(subject.image).to receive(:execute).with("convert #{filename} png:-")
         subject.render(region: 'full', format: 'png')
       end
       it "should handle absolute geometry" do
-        expect(combinator).to receive(:crop).with('60x75+80+15')
+        expect(subject.image).to receive(:execute).with("convert -crop 60x75+80+15 #{filename} png:-")
         subject.render(region: '80,15,60,75', format: 'png')
       end
       it "should handle percent geometry" do
-        expect(inner).to receive(:[]).with(:height).and_return(131)
-        expect(inner).to receive(:[]).with(:width).and_return(175)
-        expect(combinator).to receive(:crop).with('80%x70+18+13')
+        expect(subject.image).to receive(:execute).with("identify -format %hx%w #{filename}").and_return('131x175')
+        expect(subject.image).to receive(:execute).with("convert -crop 80%x70+18+13 #{filename} png:-")
         subject.render(region: 'pct:10,10,80,70', format: 'png')
       end
       it "should raise an error for invalid geometry" do
@@ -74,31 +63,31 @@ describe Riiif::Image do
 
     describe "resize" do
       it "should return the original when specifing full size" do
-        expect(combinator).to_not receive(:resize)
+        expect(subject.image).to receive(:execute).with("convert #{filename} png:-")
         subject.render(size: 'full', format: 'png')
       end
       it "should handle integer percent sizes" do
-        expect(combinator).to receive(:resize).with('50%')
+        expect(subject.image).to receive(:execute).with("convert -resize 50% #{filename} png:-")
         subject.render(size: 'pct:50', format: 'png')
       end
       it "should handle float percent sizes" do
-        expect(combinator).to receive(:resize).with('12.5%')
+        expect(subject.image).to receive(:execute).with("convert -resize 12.5% #{filename} png:-")
         subject.render(size: 'pct:12.5', format: 'png')
       end
       it "should handle w," do
-        expect(combinator).to receive(:resize).with('50')
+        expect(subject.image).to receive(:execute).with("convert -resize 50 #{filename} png:-")
         subject.render(size: '50,', format: 'png')
       end
       it "should handle ,h" do
-        expect(combinator).to receive(:resize).with('x50')
+        expect(subject.image).to receive(:execute).with("convert -resize x50 #{filename} png:-")
         subject.render(size: ',50', format: 'png')
       end
       it "should handle w,h" do
-        expect(combinator).to receive(:resize).with('150x75!')
+        expect(subject.image).to receive(:execute).with("convert -resize 150x75! #{filename} png:-")
         subject.render(size: '150,75', format: 'png')
       end
       it "should handle bestfit (!w,h)" do
-        expect(combinator).to receive(:resize).with('150x75')
+        expect(subject.image).to receive(:execute).with("convert -resize 150x75 #{filename} png:-")
         subject.render(size: '!150,75', format: 'png')
       end
       it "should raise an error for invalid size" do
@@ -107,15 +96,12 @@ describe Riiif::Image do
     end
 
     describe "rotate" do
-      let(:distorter) { double }
       it "should return the original when specifing full size" do
-        expect(combinator).to_not receive(:distort)
+        expect(subject.image).to receive(:execute).with("convert #{filename} png:-")
         subject.render(rotation: '0', format: 'png')
       end
       it "should handle floats" do
-        expect(combinator).to receive(:distort).and_return(distorter)
-        expect(combinator).to receive(:virtual_pixel).with('white')
-        expect(distorter).to receive(:+).with("srt", 22.5)
+        expect(subject.image).to receive(:execute).with("convert -virtual-pixel white +distort srt 22.5 #{filename} png:-")
         subject.render(rotation: '22.5', format: 'png')
       end
       it "should raise an error for invalid angle" do
@@ -125,20 +111,19 @@ describe Riiif::Image do
 
     describe "quality" do
       it "should return the original when specifing native" do
-        expect(combinator).to_not receive(:colorspace)
+        expect(subject.image).to receive(:execute).with("convert #{filename} png:-")
         subject.render(quality: 'native', format: 'png')
       end
       it "should return the original when specifing color" do
-        expect(combinator).to_not receive(:colorspace)
+        expect(subject.image).to receive(:execute).with("convert #{filename} png:-")
         subject.render(quality: 'color', format: 'png')
       end
       it "should convert to grayscale" do
-        expect(combinator).to receive(:colorspace).with('Gray')
+        expect(subject.image).to receive(:execute).with("convert -colorspace Gray #{filename} png:-")
         subject.render(quality: 'grey', format: 'png')
       end
       it "should convert to bitonal" do
-        expect(combinator).to receive(:colorspace).with('Gray')
-        expect(combinator).to receive(:type).with('Bilevel')
+        expect(subject.image).to receive(:execute).with("convert -colorspace Gray -type Bilevel #{filename} png:-")
         subject.render(quality: 'bitonal', format: 'png')
       end
       it "should raise an error for invalid angle" do

@@ -6,6 +6,8 @@ module Riiif
       send_data data, type: Mime::Type.lookup_by_extension(params[:format]), :disposition => 'inline'
     end
 
+    
+
     def info
       image = Image.new(params[:id])
       render json: image.info.merge(server_info)

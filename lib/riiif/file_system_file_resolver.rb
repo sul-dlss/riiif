@@ -13,7 +13,7 @@ module Riiif
 
     def self.pattern(id)
       raise ArgumentException, "Invalid characters in id `#{id}`" unless /^\w+$/.match(id)
-      File.join(base_path, "#{id}.{#{input_types.join(',')}}")
+      ::File.join(base_path, "#{id}.{#{input_types.join(',')}}")
     end
 
   end

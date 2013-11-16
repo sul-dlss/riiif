@@ -1,6 +1,6 @@
-require 'mini_magick'
 module Riiif
   class Image
+    
     class_attribute :file_resolver
     self.file_resolver = FileSystemFileResolver
 
@@ -14,30 +14,13 @@ module Riiif
     end
 
     def render(args)
-      options = decode_options!(args)
-
-      image.combine_options do |c|
-        c.crop options[:crop] if options[:crop]
-        c.resize options[:size] if options[:size]
-        if options[:rotation]
-          c.virtual_pixel 'white'
-          c.distort.+ 'srt', options[:rotation]
-        end
-
-        case options[:quality]
-        when 'grey'
-          c.colorspace "Gray"
-        when 'bitonal'
-          c.colorspace "Gray"
-          c.type 'Bilevel'
-        end
-      end
-      image.format(options[:format])
-      image.to_blob
+      image.extract(decode_options!(args))
     end
 
-    def info
-      {height: image[:height], width: image[:width]}
+    delegate :info, to: :image
+
+    def image
+      @image ||= Riiif::File.open(path_name)
     end
 
     private
@@ -78,8 +61,8 @@ module Riiif
           nil 
         elsif md = /^pct:(\d+),(\d+),(\d+),(\d+)$/.match(region)
           # Image magic can't do percentage offsets, so we have to calculate it
-          offset_x = (image[:width] * Integer(md[1]).to_f / 100).round
-          offset_y = (image[:height] * Integer(md[2]).to_f / 100).round
+          offset_x = (info[:width] * Integer(md[1]).to_f / 100).round
+          offset_y = (info[:height] * Integer(md[2]).to_f / 100).round
           "#{md[3]}%x#{md[4]}+#{offset_x}+#{offset_y}"
         elsif md = /^(\d+),(\d+),(\d+),(\d+)$/.match(region)
           "#{md[3]}x#{md[4]}+#{md[1]}+#{md[2]}"
@@ -106,18 +89,5 @@ module Riiif
         end
       end
 
-      def image
-        begin
-          @image ||= MiniMagick::Image.open(path_name)
-        rescue Errno::ENOENT => e
-          Rails.logger.error "Unable to find #{path_name}"
-          Rails.logger.error e.backtrace
-          raise Riiif::Error, "Unable to find #{path_name}"
-        rescue MiniMagick::Error => e
-          Rails.logger.error "Error trying to open #{path_name}"
-          Rails.logger.error e.backtrace
-          raise Riiif::Error, "Unable to open the image #{path_name}"
-        end
-      end
   end
 end
