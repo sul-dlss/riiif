@@ -6,9 +6,9 @@
             prefixUrl: "/assets/openseadragon/",
             tileSources:   [{
             "image_host":     "http://localhost:8080/image-service",
-            "identifier":   "irises",   
-            "width":        4264,   
-            "height":       3282,   
+            "identifier":   "<%= @image.id %>",   
+            "width":        <%= @image.info[:width] %>,   
+            "height":       <%= @image.info[:height] %>,   
             "scale_factors": [1, 2, 3, 4, 5],   
             "tile_width":   1024,   
             "tile_height":  1024,   
