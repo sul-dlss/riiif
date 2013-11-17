@@ -8,4 +8,8 @@ describe Riiif::FileSystemFileResolver do
   it "should get the jpeg2000 file" do
     expect(subject.find('world')).to eq Riiif::FileSystemFileResolver.root + '/spec/samples/world.jp2'
   end
+
+  it "should accept ids with dashes" do
+    subject.pattern('foo-bar-baz')
+  end
 end

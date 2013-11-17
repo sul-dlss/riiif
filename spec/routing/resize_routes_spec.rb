@@ -26,6 +26,13 @@ describe "routes" do
                     region: 'full', size: '100,50', rotation: '22.5', 
                     quality: 'native', format: 'jpg')
     end
+    it "routes requests with dashes in the id" do
+      expect(
+        get: "/abcd-1234-5678/full/full/0/native.jpg"
+      ).to route_to(controller: "riiif/images", id: 'abcd-1234-5678', action: "show", 
+                    region: 'full', size: 'full', rotation: '0', 
+                    quality: 'native', format: 'jpg')
+    end
   end
 
   describe "for info" do
