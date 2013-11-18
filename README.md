@@ -1,4 +1,5 @@
 # Riiif
+[![Gem Version](https://badge.fury.io/rb/riiif.png)](http://badge.fury.io/rb/riiif)
 
 A Ruby IIIF image server as a rails engine
 
