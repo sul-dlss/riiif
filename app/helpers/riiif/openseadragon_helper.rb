@@ -15,7 +15,8 @@ module Riiif
       options[:image_host] ||= '/image-service'
       options[:prefix_url] ||= '/assets/openseadragon/'
       js =<<-EOF
-        var viewer = OpenSeadragon({
+        window.onload = function () {
+          OpenSeadragon({
             id: "#{options[:html_id]}",
             prefixUrl: "#{options[:prefix_url]}",
             tileSources:   [{
@@ -29,8 +30,9 @@ module Riiif
             "formats":      [ "jpg", "png" ],   
             "qualities":    ["native", "bitonal", "grey", "color"],   
             "profile":      "http://library.stanford.edu/iiif/image-api/compliance.html#level3"
-          }]
-        });
+            }]
+          });
+        }
       EOF
 
       #<%=javascript_include_tag "openseadragon.js" %>

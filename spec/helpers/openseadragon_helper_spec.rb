@@ -6,7 +6,8 @@ describe Riiif::OpenseadragonHelper do
     out = openseadragon_viewer('world')
     out.should == '<div id="openseadragon1"></div><script>
 //<![CDATA[
-        var viewer = OpenSeadragon({
+        window.onload = function () {
+          OpenSeadragon({
             id: "openseadragon1",
             prefixUrl: "/assets/openseadragon/",
             tileSources:   [{
@@ -20,8 +21,9 @@ describe Riiif::OpenseadragonHelper do
             "formats":      [ "jpg", "png" ],   
             "qualities":    ["native", "bitonal", "grey", "color"],   
             "profile":      "http://library.stanford.edu/iiif/image-api/compliance.html#level3"
-          }]
-        });
+            }]
+          });
+        }
 
 //]]>
 </script>'
