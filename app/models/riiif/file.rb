@@ -2,7 +2,12 @@ require 'open3'
 module Riiif
   class File
     include Open3
+    include ActiveSupport::Benchmarkable
+
     attr_reader :path
+
+    delegate :logger, to: :Rails
+
     # @param input_path [String] The location of an image file
     def initialize(input_path, tempfile = nil)
       @path = input_path
@@ -46,7 +51,6 @@ module Riiif
         command << ' -type Bilevel'
       end
       command << " #{path} #{options[:format]}:-"
-      Rails.logger.debug "RIIIF executed: #{command}"
       execute(command)
     end
 
@@ -57,15 +61,19 @@ module Riiif
     end
 
     private
+
       def execute(command)
-          stdin, stdout, stderr, wait_thr = popen3(command)
-          stdin.close
-          stdout.binmode
-          out = stdout.read
-          stdout.close
-          err = stderr.read
-          stderr.close
-          raise "Unable to execute command \"#{command}\"\n#{err}" unless wait_thr.value.success?
+          out = nil
+          benchmark ("Riiif executed #{command}") do
+            stdin, stdout, stderr, wait_thr = popen3(command)
+            stdin.close
+            stdout.binmode
+            out = stdout.read
+            stdout.close
+            err = stderr.read
+            stderr.close
+            raise "Unable to execute command \"#{command}\"\n#{err}" unless wait_thr.value.success?
+          end
           out
       end
 

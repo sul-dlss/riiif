@@ -23,6 +23,8 @@ module Riiif
     end
 
     class RemoteFile
+      include ActiveSupport::Benchmarkable
+      delegate :logger, to: :Rails
       attr_reader :url
       def initialize(url)
         @url = url 
@@ -45,10 +47,12 @@ module Riiif
 
       def download_file
         ensure_cache_path(::File.dirname(file_name))
-        ::File.atomic_write(file_name, HTTPFileResolver.cache_path) do |local| 
-          Kernel::open(url) do |remote|
-            while chunk = remote.read(8192)
-              local.write(chunk)
+        benchmark ("Riiif downloaded #{url}") do
+          ::File.atomic_write(file_name, HTTPFileResolver.cache_path) do |local| 
+            Kernel::open(url) do |remote|
+              while chunk = remote.read(8192)
+                local.write(chunk)
+              end
             end
           end
         end

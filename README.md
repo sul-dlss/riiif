@@ -32,7 +32,7 @@ When the Id passed in is "foo_image", then it will look for an image file using 
 ```
 
 ### Images retrieved over HTTP
-To source the images from the network instead of the file system, we first configure Riiif to use an alternative resolver:
+It's preferable to use files on the filesystem, because this avoids the overhead of downloading the file.  If this is unavoidable, Riiif can be configured to fetch files from the network.  To enable this behavior, configure Riiif to use an alternative resolver:
 ```
       Riiif::Image.file_resolver = Riiif::HTTPFileResolver
 ```
