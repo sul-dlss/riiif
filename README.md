@@ -42,6 +42,11 @@ Then we configure the resolver with a mechanism for mapping the provided id to a
         "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/#{id}.jpg/600px-#{id}.jpg"
       end
 ```
+
+This file resolver caches the network files, so you will want to clear out the old files or the cache will expand until you run out of disk space.
+Using a script like this would be a good idea: https://github.com/pulibrary/loris/blob/607567b921404a15a2111fbd7123604f4fdec087/bin/loris-cache_clean.sh
+By default the cache is located in `tmp/network_files`. You can set the cache path like this: `Riiif::HTTPFileResolver.cache_path = '/var/cache'`
+
 ## Usage
 
 Mount the gem as an engine:

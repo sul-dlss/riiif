@@ -17,14 +17,18 @@ module Riiif
 
     def render(args)
       options = decode_options!(args)
-      # Use a MD5 digest to ensure the keys aren't too long.
-      digest = Digest::MD5.hexdigest(options.merge(id: id).to_s)
-      Rails.cache.fetch(digest, compress: true, expires_in: 3.days) do
+      Rails.cache.fetch(Image.cache_key(id, options), compress: true, expires_in: 3.days) do
         image.extract(options)
       end
     end
 
     delegate :info, to: :image
+
+    def self.cache_key(id, options)
+      str = options.merge(id: id).delete_if {|_, v| v.nil?}.to_s
+      # Use a MD5 digest to ensure the keys aren't too long.
+      Digest::MD5.hexdigest(str)
+    end
 
     private
 
