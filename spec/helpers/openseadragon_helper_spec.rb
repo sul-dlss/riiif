@@ -16,7 +16,7 @@ describe Riiif::OpenseadragonHelper do
             "height":       400,   
             "scale_factors": [1, 2, 3, 4, 5],   
             "tile_width":   1024,   
-            "tile_height":  ,   
+            "tile_height":  1024,   
             "formats":      [ "jpg", "png" ],   
             "qualities":    ["native", "bitonal", "grey", "color"],   
             "profile":      "http://library.stanford.edu/iiif/image-api/compliance.html#level3"

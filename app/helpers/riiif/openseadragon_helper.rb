@@ -8,7 +8,7 @@ module Riiif
         id_or_image
       end
       options[:tile_width] ||= '1024'
-      options[:tile_height] ||= '600'
+      options[:tile_height] ||= '1024'
       options[:html_id] ||= 'openseadragon1'
       options[:html] ||= {}
       options[:html][:id] = options[:html_id]
