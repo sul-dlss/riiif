@@ -6,7 +6,7 @@ describe Riiif::FileSystemFileResolver do
     expect{subject.find('1234')}.to raise_error Errno::ENOENT
   end
   it "should get the jpeg2000 file" do
-    expect(subject.find('world')).to eq Riiif::FileSystemFileResolver.root + '/spec/samples/world.jp2'
+    expect(subject.find('world').path).to eq Riiif::FileSystemFileResolver.root + '/spec/samples/world.jp2'
   end
 
   it "should accept ids with dashes" do

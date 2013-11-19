@@ -8,9 +8,14 @@ module Riiif
 
 
     def self.find(id)
+      Riiif::File.new(path(id))
+    end
+
+    def self.path(id)
       search = pattern(id)
       Dir.glob(search).first || raise(Errno::ENOENT, search)
     end
+
 
     def self.pattern(id)
       raise ArgumentError, "Invalid characters in id `#{id}`" unless /^[\w\-:]+$/.match(id)

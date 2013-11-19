@@ -5,22 +5,8 @@ module Riiif
     attr_reader :path
     # @param input_path [String] The location of an image file
     def initialize(input_path, tempfile = nil)
-      raise "HUH" if input_path.is_a? Riiif::File
       @path = input_path
       @tempfile = tempfile # ensures that the tempfile will stick around until this file is garbage collected.
-    end
-
-    def self.open(file_or_url, ext = nil)
-      file_or_url = file_or_url.to_s # Force it to be a String... hell or highwater
-      if file_or_url.include?("://")
-        require 'open-uri'
-        ext ||= ::File.extname(URI.parse(file_or_url).path)
-        Kernel::open(file_or_url) do |f|
-          self.read(f, ext)
-        end
-      else
-        self.new(file_or_url)
-      end
     end
 
     def self.read(stream, ext)

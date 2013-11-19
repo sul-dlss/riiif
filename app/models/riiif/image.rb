@@ -7,12 +7,12 @@ module Riiif
 
     OUTPUT_FORMATS = %W{jpg png}
 
-    attr_reader :path_name, :id
+    attr_reader :id, :image
 
     # @param [String] id The identifier of the file
     def initialize(id)
       @id = id
-      @path_name = file_resolver.find(id)
+      @image = file_resolver.find(id)
     end
 
     def render(args)
@@ -25,10 +25,6 @@ module Riiif
     end
 
     delegate :info, to: :image
-
-    def image
-      @image ||= Riiif::File.open(path_name)
-    end
 
     private
 

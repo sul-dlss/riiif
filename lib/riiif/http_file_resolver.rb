@@ -1,3 +1,4 @@
+require 'open-uri'
 module Riiif
   module HTTPFileResolver
 
@@ -11,7 +12,11 @@ module Riiif
     mattr_accessor :id_to_uri
 
     def self.find(id)
-      uri(id)
+      url = uri(id)
+      ext ||= ::File.extname(URI.parse(url).path)
+      Kernel::open(url) do |f|
+        Riiif::File.read(f, ext)
+      end
     end
 
     protected
