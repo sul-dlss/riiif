@@ -19,7 +19,6 @@ module Riiif
       options = decode_options!(args)
       # Use a MD5 digest to ensure the keys aren't too long.
       digest = Digest::MD5.hexdigest(options.merge(id: id).to_s)
-      puts digest
       Rails.cache.fetch(digest, compress: true, expires_in: 3.days) do
         image.extract(options)
       end

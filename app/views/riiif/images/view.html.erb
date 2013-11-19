@@ -1,21 +1,2 @@
-    <div id="openseadragon1" style="width: 800px; height: 600px;"></div>
     <%=javascript_include_tag "openseadragon.js" %>
-    <script type="text/javascript">
-        var viewer = OpenSeadragon({
-            id: "openseadragon1",
-            prefixUrl: "/assets/openseadragon/",
-            tileSources:   [{
-            "image_host":     "http://localhost:8080/image-service",
-            "identifier":   "<%= @image.id %>",   
-            "width":        <%= @image.info[:width] %>,   
-            "height":       <%= @image.info[:height] %>,   
-            "scale_factors": [1, 2, 3, 4, 5],   
-            "tile_width":   1024,   
-            "tile_height":  1024,   
-            "formats":      [ "jpg", "png" ],   
-            "qualities":    ["native", "bitonal", "grey", "color"],   
-            "profile":      "http://library.stanford.edu/iiif/image-api/compliance.html#level1"
-          }]
-        });
-    </script>
-DOOD
+    <%= openseadragon_viewer(@image.id, html: {style: 'width: 800px; height: 600px;'}) %>

@@ -58,6 +58,22 @@ Then you can make requests like this:
 * http://www.example.org/image-service/abcd1234/full/150,75/0/native.jpg
 * http://www.example.org/image-service/abcd1234/full/!150,75/0/native.jpg
 
-For more information see the IIIF spec:
+### OpenSeadragon
+
+Riiif ships with OpenSeaDragon support.  To use it add this in your controller:
+
+```ruby
+helper Riiif::OpenseadragonHelper
+```
+
+Then in your view you can do this:
+```erb
+    <%=javascript_include_tag "openseadragon.js" %>
+    <%= openseadragon_viewer(@image.id, html: {style: 'width: 800px; height: 600px;'}) %>
+```
+
+
+## For more information
+see the IIIF spec:
 
 http://www-sul.stanford.edu/iiif/image-api/1.1/
