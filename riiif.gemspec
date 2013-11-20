@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["justin@curationexperts.com"]
   spec.description   = %q{A IIIF image server}
   spec.summary       = %q{A rails engine that support IIIF requests}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/curationexperts/riiif"
   spec.license       = "APACHE2"
 
   spec.files         = `git ls-files|grep -v spec/samples`.split($/)
