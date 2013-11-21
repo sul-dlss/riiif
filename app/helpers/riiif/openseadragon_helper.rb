@@ -15,7 +15,7 @@ module Riiif
       options[:image_host] ||= '/image-service'
       options[:prefix_url] ||= '/assets/openseadragon/'
       js =<<-EOF
-        window.onload = function () {
+        function initOpenSeadragon() {
           OpenSeadragon({
             id: "#{options[:html_id]}",
             prefixUrl: "#{options[:prefix_url]}",
@@ -33,6 +33,8 @@ module Riiif
             }]
           });
         }
+        window.onload = initOpenSeadragon;
+        document.addEventListener("page:load", initOpenSeadragon); // Initialize when using turbolinks
       EOF
 
       #<%=javascript_include_tag "openseadragon.js" %>

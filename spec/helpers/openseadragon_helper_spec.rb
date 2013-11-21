@@ -6,7 +6,7 @@ describe Riiif::OpenseadragonHelper do
     out = openseadragon_viewer('world')
     out.should == '<div id="openseadragon1"></div><script>
 //<![CDATA[
-        window.onload = function () {
+        function initOpenSeadragon() {
           OpenSeadragon({
             id: "openseadragon1",
             prefixUrl: "/assets/openseadragon/",
@@ -24,6 +24,8 @@ describe Riiif::OpenseadragonHelper do
             }]
           });
         }
+        window.onload = initOpenSeadragon;
+        document.addEventListener("page:load", initOpenSeadragon); // Initialize when using turbolinks
 
 //]]>
 </script>'
