@@ -78,6 +78,23 @@ Then in your view you can do this:
 ```
 
 
+## Running the tests
+First, build the engine
+```bash
+rake engine_cart:generate
+```
+
+ImageMagick must be installed with jasper support
+```bash
+brew install imagemagick --with-jasper # if using Homebrew
+```
+
+Run the tests
+```bash
+rake spec
+```
+
+
 ## For more information
 see the IIIF spec:
 
