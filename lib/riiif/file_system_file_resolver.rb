@@ -13,7 +13,7 @@ module Riiif
 
     def self.path(id)
       search = pattern(id)
-      Dir.glob(search).first || raise(Errno::ENOENT, search)
+      Dir.glob(search).first || raise(ImageNotFoundError, search)
     end
 
 
