@@ -49,10 +49,14 @@ module Riiif
         ensure_cache_path(::File.dirname(file_name))
         benchmark ("Riiif downloaded #{url}") do
           ::File.atomic_write(file_name, HTTPFileResolver.cache_path) do |local| 
-            Kernel::open(url) do |remote|
-              while chunk = remote.read(8192)
-                local.write(chunk)
+            begin
+              Kernel::open(url) do |remote|
+                while chunk = remote.read(8192)
+                  local.write(chunk)
+                end
               end
+            rescue OpenURI::HTTPError => e
+              raise ImageNotFoundError.new(e)
             end
           end
         end

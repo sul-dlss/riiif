@@ -9,10 +9,11 @@ module Riiif
 
     attr_reader :id, :image
 
-    # @param [String] id The identifier of the file
-    def initialize(id)
+    # @param [String] id The identifier of the file to be looked up.
+    # @param [Riiif::File] file Optional: The Riiif::File to use instead of looking one up.
+    def initialize(id, file=nil)
       @id = id
-      @image = file_resolver.find(id)
+      @image = file.present? ? file : file_resolver.find(id)
     end
 
     def render(args)

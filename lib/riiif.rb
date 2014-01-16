@@ -9,4 +9,12 @@ module Riiif
 
   class Error < RuntimeError; end
   class InvalidAttributeError < Error; end
+  class ImageNotFoundError < Error
+    attr_reader :original_exception
+    def initialize(orig=nil)
+      @original_exception = orig
+    end
+  end
+
+  mattr_accessor :not_found_image # the image to use when a lookup fails
 end

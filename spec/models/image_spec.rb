@@ -13,6 +13,12 @@ describe Riiif::Image do
     end
   end
 
+  it "should be able to override the file used for the Image" do
+    img = Riiif::Image.new('some_id', Riiif::File.new(filename))
+    expect(img.id).to eq 'some_id'
+    expect(img.info).to eq height: 400, width: 800
+  end
+
   describe "without a format" do
     it "should raise an error" do
       expect { subject.render('size' => 'full') }.to raise_error ArgumentError
@@ -40,7 +46,6 @@ describe Riiif::Image do
       expect(subject.info).to eq height: 390, width:600
     end
   end
-
 
   describe "mogrify" do
     describe "region" do
