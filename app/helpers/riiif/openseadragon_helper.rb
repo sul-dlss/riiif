@@ -15,15 +15,32 @@ module Riiif
         tileSources: tile_sources,
       }.deep_merge(options.except(:html, :tileSources))
 
+      js_options = options_to_js(collection_options.except(:options_with_raw_js),
+                                 collection_options[:options_with_raw_js])
+
       js =<<-EOF
         function initOpenSeadragon() {
-          OpenSeadragon(#{JSON.pretty_generate(collection_options)});
+          OpenSeadragon(#{js_options});
         }
         window.onload = initOpenSeadragon;
         document.addEventListener("page:load", initOpenSeadragon); // Initialize when using turbolinks
       EOF
-      #<%=javascript_include_tag "openseadragon.js" %>
       content_tag(:div, '', html_options) + javascript_tag(js) 
+    end
+
+    # converts a ruby hash to a javascript object without stringifying the raw_js_keys
+    # so you can put js variables in there
+    def options_to_js(options, raw_js_keys=[])
+      normal = options.except(*raw_js_keys).map do |k, v|
+        val = if v.is_a?(Hash) or v.is_a?(Array)
+                JSON.pretty_generate(v)
+              else
+                JSON.dump(v)
+              end
+        JSON.dump(k) + ": " + val
+      end
+      raw_js = options.slice(*raw_js_keys).map{|k, v| k.to_s + ": " + v.to_s}
+      "{\n" + (normal + raw_js).join(",\n") + "}"
     end
 
     def openseadragon_viewer(id_or_image, options={})
