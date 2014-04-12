@@ -63,27 +63,6 @@ Then you can make requests like this:
 * http://www.example.org/image-service/abcd1234/full/150,75/0/native.jpg
 * http://www.example.org/image-service/abcd1234/full/!150,75/0/native.jpg
 
-### OpenSeadragon
-
-Riiif ships with OpenSeaDragon support.  To use it add this in your controller:
-
-```ruby
-helper Riiif::OpenseadragonHelper
-```
-
-Then in your view you can do this:
-```erb
-    <%=javascript_include_tag "openseadragon.js" %>
-    <%= openseadragon_collection_viewer [@image.id, @image], id: 'openseadragon', collectionRows: 1 %>
-```
-
-Sometimes you might want to put javascript variables in for the options. To stop certain keys from stringifying their values, use options_with_raw_js like this:
-
-```erb
-    <%=javascript_include_tag "openseadragon.js" %>
-    <%= openseadragon_collection_viewer [@image.id], element: "document.getElementById('openseadragon')", options_with_raw_js: [:element] %>
-```
-
 ### Using a default image
 
 If there is a request for an id that doesn't exist, a 404 will be returned. You can optionally return an image with this 404 by setting this in your initializer:
