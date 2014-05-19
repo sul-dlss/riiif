@@ -28,8 +28,10 @@ module Riiif
 
     protected
 
+    LEVEL2 = 'http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2'
+
     def link_header
-      response.headers["Link"] = '<http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2>;rel="profile"'
+      response.headers["Link"] = "<#{LEVEL2}>;rel=\"profile\""
     end
 
     def server_info
@@ -37,7 +39,7 @@ module Riiif
         "@context" => "http://library.stanford.edu/iiif/image-api/1.1/context.json",
         "@id" => request.original_url.sub('/info.json', ''), 
         "formats" => Image::OUTPUT_FORMATS,
-        "profile" => "http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level0"
+        "profile" => "#{LEVEL2}"
         
       }
     end

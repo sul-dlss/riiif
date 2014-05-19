@@ -29,7 +29,7 @@ describe Riiif::ImagesController do
       "width" =>6000,
       "height" =>4000,
       "formats" =>  [ "jpg", "png" ],
-      "profile" =>  "http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level0" 
+      "profile" =>  "http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2" 
     expect(response.headers['Link']).to eq '<http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2>;rel="profile"'
   end
 
