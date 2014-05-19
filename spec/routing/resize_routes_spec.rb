@@ -42,5 +42,8 @@ describe "routes" do
       ).to route_to(controller: "riiif/images", id: 'abcd1234', 
                     action: "info", format: 'json')
     end
+    it "should have a route helper" do
+      expect(info_path('abcd1234')).to eq '/image-service/abcd1234/info.json'
+    end
   end
 end
