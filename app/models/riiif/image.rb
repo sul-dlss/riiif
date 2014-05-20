@@ -23,7 +23,11 @@ module Riiif
       end
     end
 
-    delegate :info, to: :image
+    def info
+      Rails.cache.fetch(Image.cache_key(id, { info: true }), compress: true, expires_in: 3.days) do
+        image.info
+      end
+    end
 
     def self.cache_key(id, options)
       str = options.merge(id: id).delete_if {|_, v| v.nil?}.to_s
