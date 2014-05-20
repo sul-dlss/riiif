@@ -87,6 +87,8 @@ ImageMagick must be installed with jasper support
 ```bash
 brew install imagemagick --with-jasper # if using Homebrew
 ```
+It appears that as of imagemagick 6.8.8 you have to use openjpeg instead of jasper:
+http://www.imagemagick.org/discourse-server/viewtopic.php?f=2&t=25357#p109912
 
 Run the tests
 ```bash
