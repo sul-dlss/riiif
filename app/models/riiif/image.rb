@@ -2,8 +2,19 @@ require 'digest/md5'
 module Riiif
   class Image
     
-    class_attribute :file_resolver
+    class_attribute :file_resolver, :info_service
     self.file_resolver = FileSystemFileResolver
+
+    # this is the default info service
+    # returns a hash with the original image dimensions.
+    # You can set your own lambda if you want different behavior
+    # example:
+    #   {:height=>390, :width=>600}
+    self.info_service = lambda do |id, image|
+      Rails.cache.fetch(Image.cache_key(id, { info: true }), compress: true, expires_in: 3.days) do
+        image.info
+      end
+    end
 
     OUTPUT_FORMATS = %W{jpg png}
 
@@ -24,9 +35,7 @@ module Riiif
     end
 
     def info
-      Rails.cache.fetch(Image.cache_key(id, { info: true }), compress: true, expires_in: 3.days) do
-        image.info
-      end
+      info_service.call(id, image)
     end
 
     def self.cache_key(id, options)
