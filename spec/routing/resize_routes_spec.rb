@@ -33,6 +33,16 @@ describe "routes" do
                     region: 'full', size: 'full', rotation: '0', 
                     quality: 'native', format: 'jpg')
     end
+
+    describe "route helper" do
+      it "takes all the options" do
+        expect(image_path('abcd1234', region: 'full', size: '100,50', rotation: '22.5', quality: 'native',
+                          format: 'jpg')).to eq '/image-service/abcd1234/full/100,50/22.5/native.jpg'
+      end
+      it "has defaults" do
+        expect(image_path('abcd1234', size: '100,50')).to eq '/image-service/abcd1234/full/100,50/0/native.jpg'
+      end
+    end
   end
 
   describe "for info" do
