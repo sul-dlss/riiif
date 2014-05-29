@@ -11,7 +11,7 @@ module Riiif
     # example:
     #   {:height=>390, :width=>600}
     self.info_service = lambda do |id, image|
-      Rails.cache.fetch(Image.cache_key(id, { info: true }), compress: true, expires_in: 3.days) do
+      Rails.cache.fetch(cache_key(id, { info: true }), compress: true, expires_in: expires_in) do
         image.info
       end
     end
@@ -29,7 +29,7 @@ module Riiif
 
     def render(args)
       options = decode_options!(args)
-      Rails.cache.fetch(Image.cache_key(id, options), compress: true, expires_in: 3.days) do
+      Rails.cache.fetch(Image.cache_key(id, options), compress: true, expires_in: Image.expires_in) do
         image.extract(options)
       end
     end
@@ -38,10 +38,17 @@ module Riiif
       info_service.call(id, image)
     end
 
-    def self.cache_key(id, options)
-      str = options.merge(id: id).delete_if {|_, v| v.nil?}.to_s
-      # Use a MD5 digest to ensure the keys aren't too long.
-      Digest::MD5.hexdigest(str)
+    class << self
+      def expires_in
+        Riiif::Engine.config.cache_duration_in_days.days
+      end
+
+
+      def cache_key(id, options)
+        str = options.merge(id: id).delete_if {|_, v| v.nil?}.to_s
+        # Use a MD5 digest to ensure the keys aren't too long.
+        Digest::MD5.hexdigest(str)
+      end
     end
 
     private
