@@ -75,6 +75,14 @@ Then you can make requests like this:
 * http://www.example.org/image-service/abcd1234/full/150,75/0/native.jpg
 * http://www.example.org/image-service/abcd1234/full/!150,75/0/native.jpg
 
+### Route helpers
+
+It is prefereable that you use the provided route helpers to build these URIs. Here's an example:
+
+```ruby
+  image_tag(Riiif::Engine.routes.url_helpers.image_path(file_id, size: ',600'))
+```
+
 ### Using a default image
 
 If there is a request for an id that doesn't exist, a 404 will be returned. You can optionally return an image with this 404 by setting this in your initializer:
