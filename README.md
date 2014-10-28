@@ -127,7 +127,7 @@ First, build the engine
 rake engine_cart:generate
 ```
 
-ImageMagick may be installed with a few options:
+ImageMagick (6.8.8) may be installed with a few options:
 * `--with-ghostscript` Compile with Ghostscript for Postscript/PDF support
 * `--with-tiff` Compile with libtiff support for TIFF files
 * `--with-jp2` Compile with openjpeg2 support for jpeg2000
@@ -135,9 +135,6 @@ ImageMagick may be installed with a few options:
 ```bash
 brew install imagemagick --with-ghostscript --with-tiff --with-jp2
 ```
-It appears that as of imagemagick 6.8.8 you have to use openjpeg2 instead of jasper:
-http://www.imagemagick.org/discourse-server/viewtopic.php?f=2&t=25357#p109912
-This doesn't appear to be possible on homebrew until this ticket gets closed: https://github.com/Homebrew/homebrew/issues/28153
 
 Run the tests
 ```bash
