@@ -77,6 +77,50 @@ You can do this to create a default Riiif::Image to use (useful for passing "mis
 Riiif::Image.new('no_image', Riiif::File.new(Riiif.not_found_image))
 ```
 
+## Integration with Hydra/Fedora
+
+Create an initializer like this in `config/initializers/riiif_initializer.rb`
+
+```ruby
+# Tell RIIIF to get files via HTTP (not from the local disk)
+Riiif::Image.file_resolver = Riiif::HTTPFileResolver
+
+# This tells RIIIF how to resolve the identifier to a URI in Fedora
+DATASTREAM = 'imageContent'
+Riiif::HTTPFileResolver.id_to_uri = lambda do |id| 
+  connection = ActiveFedora::Base.connection_for_pid(id)
+  host = connection.config[:url]
+  path = connection.api.datastream_content_url(id, DATASTREAM, {})
+  host + '/' + path
+end
+
+# In order to return the info.json endpoint, we have to have the full height and width of
+# each image. If you are using hydra-file_characterization, you have the height & width 
+# cached in Solr. The following block directs the info_service to return those values:
+HEIGHT_SOLR_FIELD = 'height_isi'
+WIDTH_SOLR_FIELD = 'width_isi'
+Riiif::Image.info_service = lambda do |id, file|
+  resp = get_solr_response_for_doc_id id
+  doc = resp.first['response']['docs'].first
+  { height: doc[HEIGHT_SOLR_FIELD], width: doc[WIDTH_SOLR_FIELD] }
+end
+
+include Blacklight::SolrHelper
+def blacklight_config
+  CatalogController.blacklight_config
+end
+
+### ActiveSupport::Benchmarkable (used in Blacklight::SolrHelper) depends on a logger method
+
+def logger
+  Rails.logger
+end
+
+
+Riiif::Engine.config.cache_duration_in_days = 30
+```
+
+
 ## Running the tests
 First, build the engine
 ```bash
