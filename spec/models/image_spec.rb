@@ -31,19 +31,32 @@ describe Riiif::Image do
     end
   end
 
-  describe "get images from web" do
+  context "using HTTPFileResolver" do
     before do
       Riiif::Image.file_resolver = Riiif::HTTPFileResolver
-      Riiif::HTTPFileResolver.id_to_uri = lambda do |id| 
+      Riiif::HTTPFileResolver.id_to_uri = lambda do |id|
         "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/#{id}.jpg/600px-#{id}.jpg"
       end
     end
     after do
       Riiif::Image.file_resolver = Riiif::FileSystemFileResolver
     end
-    subject { Riiif::Image.new('Cave_26,_Ajanta') }
-    it "should be easy" do
-      expect(subject.info).to eq height: 390, width:600
+
+    describe "get info" do
+      subject { Riiif::Image.new('Cave_26,_Ajanta') }
+      it "should be easy" do
+        expect(subject.info).to eq height: 390, width:600
+      end
+    end
+
+    context "when the rendered image is in the cache" do
+      subject { Riiif::Image.new('Cave_26,_Ajanta') }
+      before { allow(Rails.cache).to receive(:fetch).and_return('expected') }
+
+      it "should not fetch the file" do
+        expect(Riiif::Image.file_resolver).not_to receive(:find)
+        expect(subject.render(region: 'full', format: 'png')).to eq 'expected'
+      end
     end
   end
 

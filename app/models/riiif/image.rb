@@ -1,7 +1,7 @@
 require 'digest/md5'
 module Riiif
   class Image
-    
+
     class_attribute :file_resolver, :info_service
     self.file_resolver = FileSystemFileResolver
 
@@ -18,13 +18,17 @@ module Riiif
 
     OUTPUT_FORMATS = %W{jpg png}
 
-    attr_reader :id, :image
+    attr_reader :id
 
     # @param [String] id The identifier of the file to be looked up.
     # @param [Riiif::File] file Optional: The Riiif::File to use instead of looking one up.
     def initialize(id, file=nil)
       @id = id
-      @image = file.present? ? file : file_resolver.find(id)
+      @image = file if file.present?
+    end
+
+    def image
+      @image ||= file_resolver.find(id)
     end
 
     def render(args)
