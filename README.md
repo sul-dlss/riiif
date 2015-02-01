@@ -36,7 +36,7 @@ Or install it yourself as:
 By default Riiif is set to load images from the filesystem using the Riiif::FileSystemFileResolver. 
 You can configure how this resolver finds the files by setting this property:
 ```
-    Riiif::FileSystemFileResolver.base_path = '/opt/repository/images/'
+    Riiif::Image.file_resolver.base_path = '/opt/repository/images/'
 ```
 When the Id passed in is "foo_image", then it will look for an image file using this glob: 
 ```
@@ -46,18 +46,18 @@ When the Id passed in is "foo_image", then it will look for an image file using 
 ### Images retrieved over HTTP
 It's preferable to use files on the filesystem, because this avoids the overhead of downloading the file.  If this is unavoidable, Riiif can be configured to fetch files from the network.  To enable this behavior, configure Riiif to use an alternative resolver:
 ```
-      Riiif::Image.file_resolver = Riiif::HTTPFileResolver
+      Riiif::Image.file_resolver = Riiif::HTTPFileResolver.new
 ```
 Then we configure the resolver with a mechanism for mapping the provided id to a url:
 ```
-      Riiif::HTTPFileResolver.id_to_uri = lambda do |id| 
+      Riiif::Image.file_resolver.id_to_uri = lambda do |id| 
         "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/#{id}.jpg/600px-#{id}.jpg"
       end
 ```
 
 This file resolver caches the network files, so you will want to clear out the old files or the cache will expand until you run out of disk space.
 Using a script like this would be a good idea: https://github.com/pulibrary/loris/blob/607567b921404a15a2111fbd7123604f4fdec087/bin/loris-cache_clean.sh
-By default the cache is located in `tmp/network_files`. You can set the cache path like this: `Riiif::HTTPFileResolver.cache_path = '/var/cache'`
+By default the cache is located in `tmp/network_files`. You can set the cache path like this: `Riiif::Image.file_resolver.cache_path = '/var/cache'`
 
 ## Usage
 
@@ -103,11 +103,11 @@ Create an initializer like this in `config/initializers/riiif_initializer.rb`
 
 ```ruby
 # Tell RIIIF to get files via HTTP (not from the local disk)
-Riiif::Image.file_resolver = Riiif::HTTPFileResolver
+Riiif::Image.file_resolver = Riiif::HTTPFileResolver.new
 
 # This tells RIIIF how to resolve the identifier to a URI in Fedora
 DATASTREAM = 'imageContent'
-Riiif::HTTPFileResolver.id_to_uri = lambda do |id| 
+Riiif::Image.file_resolver.id_to_uri = lambda do |id| 
   connection = ActiveFedora::Base.connection_for_pid(id)
   host = connection.config[:url]
   path = connection.api.datastream_content_url(id, DATASTREAM, {})
