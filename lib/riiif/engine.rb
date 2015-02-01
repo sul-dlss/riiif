@@ -1,6 +1,6 @@
 module Riiif
   class Engine < ::Rails::Engine
-    isolate_namespace Riiif
+    require 'riiif/rails/routes'
 
     # How long to cache the tiles for.
     config.cache_duration_in_days = 3

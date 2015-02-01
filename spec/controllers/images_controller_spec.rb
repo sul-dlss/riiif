@@ -25,7 +25,7 @@ describe Riiif::ImagesController do
     expect(response).to be_successful
     json = JSON.parse(response.body)
     expect(json).to eq "@context"=>"http://library.stanford.edu/iiif/image-api/1.1/context.json",
-      "@id" =>"http://test.host/image-service/abcd1234",
+      "@id" =>"http://test.host/abcd1234",
       "width" =>6000,
       "height" =>4000,
       "formats" =>  [ "jpg", "png" ],

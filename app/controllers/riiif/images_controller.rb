@@ -3,11 +3,11 @@ module Riiif
     before_filter :link_header, only: [:show, :info]
     def show
       begin
-        image = Image.new(params[:id])
+        image = model.new(image_id)
         status = :ok
       rescue ImageNotFoundError
         if Riiif.not_found_image.present?
-          image = Riiif::Image.new(params[:id], Riiif::File.new(Riiif.not_found_image))
+          image = model.new(image_id, Riiif::File.new(Riiif.not_found_image))
           status = :not_found
         else
           raise
@@ -18,17 +18,20 @@ module Riiif
     end
 
     def info
-      image = Image.new(params[:id])
+      image = model.new(image_id)
       render json: image.info.merge(server_info)
-    end
-
-    def view
-      @image = Image.new(params[:id])
     end
 
     protected
 
     LEVEL2 = 'http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2'
+    def model
+      params.fetch(:model, "riiif/image").camelize.constantize
+    end
+
+    def image_id
+      params[:id]
+    end
 
     def link_header
       response.headers["Link"] = "<#{LEVEL2}>;rel=\"profile\""
@@ -38,7 +41,7 @@ module Riiif
       {
         "@context" => "http://library.stanford.edu/iiif/image-api/1.1/context.json",
         "@id" => request.original_url.sub('/info.json', ''), 
-        "formats" => Image::OUTPUT_FORMATS,
+        "formats" => model::OUTPUT_FORMATS,
         "profile" => "#{LEVEL2}"
         
       }
