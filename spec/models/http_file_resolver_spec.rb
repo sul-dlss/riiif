@@ -1,12 +1,10 @@
 require 'spec_helper'
 
 describe Riiif::HTTPFileResolver do
-  subject { Riiif::HTTPFileResolver }
-  around do |example|
-    old_value = Riiif::HTTPFileResolver.id_to_uri
-    Riiif::HTTPFileResolver.id_to_uri = lambda {|id| id}
-    example.run
-    Riiif::HTTPFileResolver.id_to_uri = old_value
+  subject { Riiif::HTTPFileResolver.new }
+
+  before do
+    subject.id_to_uri = lambda {|id| id}
   end
 
   it "should raise an error when the file isn't found" do

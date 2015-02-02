@@ -33,13 +33,13 @@ describe Riiif::Image do
 
   context "using HTTPFileResolver" do
     before do
-      Riiif::Image.file_resolver = Riiif::HTTPFileResolver
-      Riiif::HTTPFileResolver.id_to_uri = lambda do |id|
+      Riiif::Image.file_resolver = Riiif::HTTPFileResolver.new
+      Riiif::Image.file_resolver.id_to_uri = lambda do |id|
         "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/#{id}.jpg/600px-#{id}.jpg"
       end
     end
     after do
-      Riiif::Image.file_resolver = Riiif::FileSystemFileResolver
+      Riiif::Image.file_resolver = Riiif::FileSystemFileResolver.new
     end
 
     describe "get info" do

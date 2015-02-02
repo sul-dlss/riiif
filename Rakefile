@@ -4,6 +4,8 @@ require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec)
 
 require 'engine_cart/rake_task'
-task :ci => ['engine_cart:generate'] do
-  # run the tests
+task ci: ['engine_cart:generate'] do
+  Rake::Task["spec"].invoke
 end
+
+task default: :ci

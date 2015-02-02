@@ -3,7 +3,7 @@ module Riiif
   class Image
 
     class_attribute :file_resolver, :info_service
-    self.file_resolver = FileSystemFileResolver
+    self.file_resolver = FileSystemFileResolver.new
 
     # this is the default info service
     # returns a hash with the original image dimensions.
