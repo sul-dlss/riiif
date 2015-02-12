@@ -6,6 +6,7 @@ module Riiif
   autoload :Image
   autoload :FileSystemFileResolver
   autoload :HTTPFileResolver
+  autoload :Routes
 
   class Error < RuntimeError; end
   class InvalidAttributeError < Error; end
