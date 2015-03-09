@@ -50,9 +50,13 @@ It's preferable to use files on the filesystem, because this avoids the overhead
 ```
 Then we configure the resolver with a mechanism for mapping the provided id to a url:
 ```
-      Riiif::Image.file_resolver.id_to_uri = lambda do |id| 
+      Riiif::Image.file_resolver.id_to_uri = lambda do |id|
         "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/#{id}.jpg/600px-#{id}.jpg"
       end
+```
+If you need to use HTTP basic authentication you can enable it like this:
+```
+      Riiif::Image.file_resolver.basic_auth_credentials = ['username', 's0s3kr3t']
 ```
 
 This file resolver caches the network files, so you will want to clear out the old files or the cache will expand until you run out of disk space.

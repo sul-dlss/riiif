@@ -8,12 +8,12 @@ module Riiif
     # Example:
     #
     # resolver = Riiif::HTTPFileResolver.new
-    # resolver.id_to_uri = lambda do |id| 
+    # resolver.id_to_uri = lambda do |id|
     #  "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/#{id}.jpg/600px-#{id}.jpg"
     # end
     #
     attr_accessor :id_to_uri
-
+    attr_accessor :basic_auth_credentials
     attr_accessor :cache_path
 
     def initialize
@@ -21,7 +21,9 @@ module Riiif
     end
 
     def find(id)
-      remote = RemoteFile.new(uri(id), cache_path: cache_path)
+      remote = RemoteFile.new(uri(id),
+                              cache_path: cache_path,
+                              basic_auth_credentials: basic_auth_credentials)
       Riiif::File.new(remote.fetch)
     end
 
@@ -30,8 +32,16 @@ module Riiif
       delegate :logger, to: :Rails
       attr_reader :url, :cache_path
       def initialize(url, options = {})
-        @url = url 
-        @cache_path = options[:cache_path]
+        @url = url
+        @options = options
+      end
+
+      def cache_path
+        @options.fetch(:cache_path)
+      end
+
+      def basic_auth_credentials
+        @options[:basic_auth_credentials]
       end
 
       def fetch
@@ -52,9 +62,9 @@ module Riiif
       def download_file
         ensure_cache_path(::File.dirname(file_name))
         benchmark ("Riiif downloaded #{url}") do
-          ::File.atomic_write(file_name, cache_path) do |local| 
+          ::File.atomic_write(file_name, cache_path) do |local|
             begin
-              Kernel::open(url) do |remote|
+              Kernel::open(url, download_opts) do |remote|
                 while chunk = remote.read(8192)
                   local.write(chunk)
                 end
@@ -64,6 +74,12 @@ module Riiif
             end
           end
         end
+      end
+
+      # Get a hash of options for passing to Kernel::open
+      # This is the primary pathway for passing basic auth credentials
+      def download_opts
+        basic_auth_credentials ? { http_basic_authentication: basic_auth_credentials } : {}
       end
 
       # Make sure a file path's directories exist.
