@@ -10,10 +10,4 @@ describe Riiif::AkubraSystemFileResolver do
     expect(subject.find('demo:1').path).to eq Riiif::File.new(Dir.glob(subject.pathroot + '22/7e/9/info%3Afedora%2Fdemo%3A1%2Fjp2%2Fjp2.0').first).path
   end
 
-  #it "should accept ids with dashes" do
-  #  subject.pattern('foo-bar-baz')
-  #end
-  #it "should accept ids with colins" do
-  #  subject.pattern('fo:baz')
-  #end
 end
