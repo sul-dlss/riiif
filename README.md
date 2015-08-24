@@ -65,7 +65,7 @@ By default the cache is located in `tmp/network_files`. You can set the cache pa
 
 ## Usage
 
-Mount the gem as an engine:
+Add the following line to `config/routes.rb` to mount the gem as an engine:
 ```
 mount Riiif::Engine => '/image-service'
 ```
