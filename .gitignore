@@ -12,5 +12,5 @@ lib/bundler/man
 pkg
 rdoc
 spec/reports
-spec/internal
+.internal_test_app
 tmp

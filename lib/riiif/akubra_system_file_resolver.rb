@@ -27,8 +27,7 @@ module Riiif
       directorystr = ""
       @akubraconfig.each { |a| directorystr << digest[a[0],a[1]] << "/" }
       filename = CGI.escape(fullpid)
-      fullpath = @pathroot + directorystr + filename
-      fullpath	  
+      @pathroot + directorystr + filename
     end
   end
 end

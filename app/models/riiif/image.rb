@@ -69,7 +69,7 @@ module Riiif
       end
 
       def decode_quality(quality)
-        return if quality.nil? || ['native', 'color'].include?(quality)
+        return if quality.nil? || ['default', 'color'].include?(quality)
         return quality if ['bitonal', 'grey'].include?(quality)
         raise InvalidAttributeError, "Unsupported quality: #{quality}" 
       end

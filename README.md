@@ -72,12 +72,12 @@ Add the routes to your application by inserting the following line into `config/
 
 Then you can make requests like this:
 
-* http://www.example.org/image-service/abcd1234/full/full/0/native.jpg
-* http://www.example.org/image-service/abcd1234/full/100,/0/native.jpg
-* http://www.example.org/image-service/abcd1234/full/,100/0/native.jpg
-* http://www.example.org/image-service/abcd1234/full/pct:50/0/native.jpg
-* http://www.example.org/image-service/abcd1234/full/150,75/0/native.jpg
-* http://www.example.org/image-service/abcd1234/full/!150,75/0/native.jpg
+* http://www.example.org/image-service/abcd1234/full/full/0/default.jpg
+* http://www.example.org/image-service/abcd1234/full/100,/0/default.jpg
+* http://www.example.org/image-service/abcd1234/full/,100/0/default.jpg
+* http://www.example.org/image-service/abcd1234/full/pct:50/0/default.jpg
+* http://www.example.org/image-service/abcd1234/full/150,75/0/default.jpg
+* http://www.example.org/image-service/abcd1234/full/!150,75/0/default.jpg
 
 ### Route helpers
 

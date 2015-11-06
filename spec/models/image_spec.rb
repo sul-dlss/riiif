@@ -35,7 +35,7 @@ describe Riiif::Image do
     before do
       Riiif::Image.file_resolver = Riiif::HTTPFileResolver.new
       Riiif::Image.file_resolver.id_to_uri = lambda do |id|
-        "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/#{id}.jpg/600px-#{id}.jpg"
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/#{id}.jpg/600px-#{id}.jpg"
       end
     end
     after do
@@ -129,9 +129,9 @@ describe Riiif::Image do
     end
 
     describe "quality" do
-      it "should return the original when specifing native" do
+      it "returns the original when specifing default" do
         expect(subject.image).to receive(:execute).with("convert #{filename} png:-")
-        subject.render(quality: 'native', format: 'png')
+        subject.render(quality: 'default', format: 'png')
       end
       it "should return the original when specifing color" do
         expect(subject.image).to receive(:execute).with("convert #{filename} png:-")

@@ -8,10 +8,10 @@ describe Riiif::ImagesController do
     image = double
     expect(Riiif::Image).to receive(:new).with('abcd1234').and_return(image)
     expect(image).to receive(:render).with("region" => 'full', "size" => 'full',
-                              "rotation" => '0', "quality" => 'native',
+                              "rotation" => '0', "quality" => 'default',
                               "format" => 'jpg').and_return("IMAGEDATA")
     get :show, id: 'abcd1234', action: "show", region: 'full', size: 'full', 
-               rotation: '0', quality: 'native', format: 'jpg'
+               rotation: '0', quality: 'default', format: 'jpg'
     expect(response).to be_successful
     expect(response.body).to eq 'IMAGEDATA'
     expect(response.headers['Link']).to eq '<http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2>;rel="profile"'
@@ -38,7 +38,7 @@ describe Riiif::ImagesController do
       expect(Riiif::Image).to receive(:new).with('bad_id').and_raise(OpenURI::HTTPError.new("fail", StringIO.new))
       expect do
         get :show, id: 'bad_id', action: "show", region: 'full', size: 'full',
-                   rotation: '0', quality: 'native', format: 'jpg'
+                   rotation: '0', quality: 'default', format: 'jpg'
       end.to raise_error(StandardError)
     end
 
@@ -60,11 +60,11 @@ describe Riiif::ImagesController do
           end
         end.twice
         expect(not_found_image).to receive(:render).with("region" => 'full', "size" => 'full',
-                                  "rotation" => '0', "quality" => 'native',
+                                  "rotation" => '0', "quality" => 'default',
                                   "format" => 'jpg').and_return("default-image-data")
 
         get :show, id: 'bad_id', action: "show", region: 'full', size: 'full',
-                   rotation: '0', quality: 'native', format: 'jpg'
+                   rotation: '0', quality: 'default', format: 'jpg'
         expect(response).to be_not_found
         expect(response.body).to eq 'default-image-data'
       end
@@ -79,11 +79,11 @@ describe Riiif::ImagesController do
           end
         end.twice
         expect(not_found_image).to receive(:render).with("region" => 'full', "size" => 'full',
-                                  "rotation" => '0', "quality" => 'native',
+                                  "rotation" => '0', "quality" => 'default',
                                   "format" => 'jpg').and_return("default-image-data")
 
-        get :show, id: 'bad_id', action: "show", region: 'full', size: 'full', 
-                   rotation: '0', quality: 'native', format: 'jpg'
+        get :show, id: 'bad_id', action: "show", region: 'full', size: 'full',
+                   rotation: '0', quality: 'default', format: 'jpg'
         expect(response).to be_not_found
         expect(response.body).to eq 'default-image-data'
       end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Riiif::AkubraSystemFileResolver do
-  subject { Riiif::AkubraSystemFileResolver.new(Rails.root.join('../../spec/samples/'),'jp2',[[0,2],[2,2],[4,1]]) }
+  subject { Riiif::AkubraSystemFileResolver.new(Rails.root.join('../spec/samples/'),'jp2',[[0,2],[2,2],[4,1]]) }
   it "should raise an error when the file isn't found" do
     expect{subject.find('demo:2')}.to raise_error Riiif::ImageNotFoundError
   end
