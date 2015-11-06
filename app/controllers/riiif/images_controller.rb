@@ -19,7 +19,7 @@ module Riiif
 
     def info
       image = model.new(image_id)
-      render json: image.info.merge(server_info)
+      render json: image.info.merge(server_info), content_type: 'application/ld+json'
     end
 
     protected

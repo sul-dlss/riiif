@@ -17,7 +17,7 @@ describe Riiif::ImagesController do
     expect(response.headers['Link']).to eq '<http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2>;rel="profile"'
   end
 
-  it "should return info" do
+  it "returns info" do
     image = double
     expect(Riiif::Image).to receive(:new).with('abcd1234').and_return(image)
     expect(image).to receive(:info).and_return({width: 6000, height: 4000 })
@@ -29,8 +29,9 @@ describe Riiif::ImagesController do
       "width" =>6000,
       "height" =>4000,
       "formats" =>  [ "jpg", "png" ],
-      "profile" =>  "http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2" 
+      "profile" =>  "http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2"
     expect(response.headers['Link']).to eq '<http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2>;rel="profile"'
+    expect(response.headers['Content-Type']).to eq 'application/ld+json; charset=utf-8'
   end
 
   context "with a nonexistent image" do
