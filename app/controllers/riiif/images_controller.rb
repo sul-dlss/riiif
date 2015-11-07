@@ -19,11 +19,16 @@ module Riiif
         end
       end
       data = image.render(params.permit(:region, :size, :rotation, :quality, :format))
-      send_data data, status: status, type: Mime::Type.lookup_by_extension(params[:format]), :disposition => 'inline'
+      headers['Access-Control-Allow-Origin'] = '*'
+      send_data data,
+                status: status,
+                type: Mime::Type.lookup_by_extension(params[:format]),
+                disposition: 'inline'
     end
 
     def info
       image = model.new(image_id)
+      headers['Access-Control-Allow-Origin'] = '*'
       render json: image.info.merge(server_info), content_type: 'application/ld+json'
     end
 

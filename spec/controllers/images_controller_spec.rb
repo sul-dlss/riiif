@@ -12,11 +12,12 @@ describe Riiif::ImagesController do
       expect(image).to receive(:render).with("region" => 'full', "size" => 'full',
                                 "rotation" => '0', "quality" => 'default',
                                 "format" => 'jpg').and_return("IMAGEDATA")
-      get :show, id: 'abcd1234', action: "show", region: 'full', size: 'full', 
+      get :show, id: 'abcd1234', action: "show", region: 'full', size: 'full',
                  rotation: '0', quality: 'default', format: 'jpg'
       expect(response).to be_successful
       expect(response.body).to eq 'IMAGEDATA'
       expect(response.headers['Link']).to eq '<http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2>;rel="profile"'
+      expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
     end
 
     context "with a invalid region" do
@@ -103,5 +104,6 @@ describe Riiif::ImagesController do
       "profile" =>  "http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2"
     expect(response.headers['Link']).to eq '<http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2>;rel="profile"'
     expect(response.headers['Content-Type']).to eq 'application/ld+json; charset=utf-8'
+    expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
   end
 end
