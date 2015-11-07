@@ -1,6 +1,11 @@
 module Riiif
   class ImagesController < ::ApplicationController
     before_filter :link_header, only: [:show, :info]
+
+    rescue_from Riiif::InvalidAttributeError do
+      render nothing: true, status: 400
+    end
+
     def show
       begin
         image = model.new(image_id)
