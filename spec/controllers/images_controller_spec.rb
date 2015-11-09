@@ -16,7 +16,7 @@ describe Riiif::ImagesController do
                  rotation: '0', quality: 'default', format: 'jpg'
       expect(response).to be_successful
       expect(response.body).to eq 'IMAGEDATA'
-      expect(response.headers['Link']).to eq '<http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2>;rel="profile"'
+      expect(response.headers['Link']).to eq '<http://iiif.io/api/image/2/level1.json>;rel="profile"'
       expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
     end
 
@@ -96,13 +96,13 @@ describe Riiif::ImagesController do
     get :info, id: 'abcd1234', format: 'json'
     expect(response).to be_successful
     json = JSON.parse(response.body)
-    expect(json).to eq "@context"=>"http://library.stanford.edu/iiif/image-api/1.1/context.json",
+    expect(json).to eq "@context" => "http://iiif.io/api/image/2/context.json",
       "@id" =>"http://test.host/abcd1234",
       "width" =>6000,
       "height" =>4000,
-      "formats" =>  [ "jpg", "png" ],
-      "profile" =>  "http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2"
-    expect(response.headers['Link']).to eq '<http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2>;rel="profile"'
+      "profile" => ["http://iiif.io/api/image/2/level1.json", "formats" => ["jpg", "png"]],
+      'protocol' => 'http://iiif.io/api/image'
+    expect(response.headers['Link']).to eq '<http://iiif.io/api/image/2/level1.json>;rel="profile"'
     expect(response.headers['Content-Type']).to eq 'application/ld+json; charset=utf-8'
     expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
   end

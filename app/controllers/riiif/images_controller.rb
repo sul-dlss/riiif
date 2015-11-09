@@ -34,7 +34,8 @@ module Riiif
 
     protected
 
-    LEVEL2 = 'http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2'
+    LEVEL1 = 'http://iiif.io/api/image/2/level1.json'
+
     def model
       params.fetch(:model, "riiif/image").camelize.constantize
     end
@@ -44,16 +45,22 @@ module Riiif
     end
 
     def link_header
-      response.headers["Link"] = "<#{LEVEL2}>;rel=\"profile\""
+      response.headers["Link"] = "<#{LEVEL1}>;rel=\"profile\""
     end
+
+    CONTEXT = '@context'
+    CONTEXT_URI = 'http://iiif.io/api/image/2/context.json'
+    ID = '@id'
+    PROTOCOL = 'protocol'
+    PROTOCOL_URI = 'http://iiif.io/api/image'
+    PROFILE = 'profile'
 
     def server_info
       {
-        "@context" => "http://library.stanford.edu/iiif/image-api/1.1/context.json",
-        "@id" => request.original_url.sub('/info.json', ''), 
-        "formats" => model::OUTPUT_FORMATS,
-        "profile" => "#{LEVEL2}"
-        
+        CONTEXT => CONTEXT_URI,
+        ID => request.original_url.sub('/info.json', ''),
+        PROTOCOL => PROTOCOL_URI,
+        PROFILE => [LEVEL1, 'formats' => model::OUTPUT_FORMATS]
       }
     end
   end
