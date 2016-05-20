@@ -67,7 +67,7 @@ By default the cache is located in `tmp/network_files`. You can set the cache pa
 
 Add the routes to your application by inserting the following line into `config/routes.rb` 
 ```
-  iiif_for 'riiif/image', at: '/image-service'
+  mount Riiif::Engine => '/image-service', as: 'riiif'
 ```
 
 Then you can make requests like this:

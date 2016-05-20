@@ -37,10 +37,10 @@ describe "routes" do
     describe "route helper" do
       it "takes all the options" do
         expect(image_path('abcd1234', region: 'full', size: '100,50', rotation: '22.5', quality: 'default',
-                          format: 'jpg')).to eq '/abcd1234/full/100,50/22.5/default.jpg'
+                          format: 'jpg')).to eq '/images/abcd1234/full/100,50/22.5/default.jpg'
       end
       it "has defaults" do
-        expect(image_path('abcd1234', size: '100,50')).to eq '/abcd1234/full/100,50/0/default.jpg'
+        expect(image_path('abcd1234', size: '100,50')).to eq '/images/abcd1234/full/100,50/0/default.jpg'
       end
     end
   end
@@ -53,7 +53,7 @@ describe "routes" do
                     action: "info", format: 'json', model: "riiif/image")
     end
     it "should have a route helper" do
-      expect(info_path('abcd1234')).to eq '/abcd1234/info.json'
+      expect(info_path('abcd1234')).to eq '/images/abcd1234/info.json'
     end
   end
 end

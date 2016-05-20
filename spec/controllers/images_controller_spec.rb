@@ -97,7 +97,7 @@ describe Riiif::ImagesController do
     expect(response).to be_successful
     json = JSON.parse(response.body)
     expect(json).to eq "@context" => "http://iiif.io/api/image/2/context.json",
-      "@id" =>"http://test.host/abcd1234",
+      "@id" =>"http://test.host/images/abcd1234",
       "width" =>6000,
       "height" =>4000,
       "profile" => ["http://iiif.io/api/image/2/level1.json", "formats" => ["jpg", "png"]],
