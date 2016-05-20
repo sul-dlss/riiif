@@ -24,7 +24,9 @@ module Riiif
 
         get "#{route_prefix}/:id/info.json" => "riiif/images#info", defaults: { format: 'json', model: resource  }, as: [options[:as], "info"].compact.join("_")
 
-        get "#{route_prefix}/:id", to: redirect("#{route_prefix}/%{id}/info.json")
+        # This doesn't work presently
+        # get "#{route_prefix}/:id", to: redirect("#{route_prefix}/%{id}/info.json")
+        get "#{route_prefix}/:id" => 'riiif/images#redirect'
       end
     end
   end

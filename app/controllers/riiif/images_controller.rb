@@ -32,6 +32,11 @@ module Riiif
       render json: image.info.merge(server_info), content_type: 'application/ld+json'
     end
 
+    # this is a workaround for https://github.com/rails/rails/issues/25087
+    def redirect
+      redirect_to info_path(params[:id])
+    end
+
     protected
 
     LEVEL1 = 'http://iiif.io/api/image/2/level1.json'
