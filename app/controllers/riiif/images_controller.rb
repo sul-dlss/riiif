@@ -34,7 +34,7 @@ module Riiif
 
     # this is a workaround for https://github.com/rails/rails/issues/25087
     def redirect
-      redirect_to info_path(params[:id])
+      redirect_to main_app.info_path(params[:id])
     end
 
     protected
