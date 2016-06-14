@@ -101,6 +101,25 @@ You can do this to create a default Riiif::Image to use (useful for passing "mis
 Riiif::Image.new('no_image', Riiif::File.new(Riiif.not_found_image))
 ```
 
+## Authorization
+
+The controller will call an authorization service with the controller context.  This service must have a method `can?(action, image)` which returns a boolean. The default service is the `RIIIF::NilAuthrorizationService` which permits all requests. 
+
+In this example we've dissallowed all requests:
+
+```ruby
+class NoService
+  def initalize(controller)
+  end
+
+  def can?(action, image)
+    false
+  end
+end
+
+Riiif::Image.authorization_service = NoService
+```
+
 ## Integration with Hydra/Fedora
 
 Create an initializer like this in `config/initializers/riiif_initializer.rb`
