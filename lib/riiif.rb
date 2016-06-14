@@ -8,6 +8,7 @@ module Riiif
   autoload :HTTPFileResolver
   autoload :Routes
   autoload :AkubraSystemFileResolver
+  autoload :NilAuthorizationService
 
   class Error < RuntimeError; end
   class InvalidAttributeError < Error; end

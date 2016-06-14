@@ -9,15 +9,17 @@ module Riiif
     def show
       begin
         image = model.new(image_id)
-        status = :ok
+        status = if authorization_service.can?(:show, image)
+                   :ok
+                 else
+                   :unauthorized
+                  end
       rescue ImageNotFoundError
-        if Riiif.not_found_image.present?
-          image = model.new(image_id, Riiif::File.new(Riiif.not_found_image))
-          status = :not_found
-        else
-          raise
-        end
+        status = :not_found
       end
+
+      image = not_found_image unless status == :ok 
+
       data = image.render(params.permit(:region, :size, :rotation, :quality, :format))
       headers['Access-Control-Allow-Origin'] = '*'
       send_data data,
@@ -28,8 +30,12 @@ module Riiif
 
     def info
       image = model.new(image_id)
-      headers['Access-Control-Allow-Origin'] = '*'
-      render json: image.info.merge(server_info), content_type: 'application/ld+json'
+      if authorization_service.can?(:info, image)
+        headers['Access-Control-Allow-Origin'] = '*'
+        render json: image.info.merge(server_info), content_type: 'application/ld+json'
+      else
+        render json: { error: 'unauthorized' }, status: :unauthorized
+      end
     end
 
     # this is a workaround for https://github.com/rails/rails/issues/25087
@@ -50,8 +56,17 @@ module Riiif
       params[:id]
     end
 
+    def authorization_service
+      model.authorization_service.new(self)
+    end
+
     def link_header
       response.headers["Link"] = "<#{LEVEL1}>;rel=\"profile\""
+    end
+
+    def not_found_image
+      raise "Not found image doesn't exist" unless Riiif.not_found_image
+      model.new(image_id, Riiif::File.new(Riiif.not_found_image))
     end
 
     CONTEXT = '@context'

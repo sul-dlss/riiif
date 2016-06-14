@@ -2,8 +2,9 @@ require 'digest/md5'
 module Riiif
   class Image
 
-    class_attribute :file_resolver, :info_service
+    class_attribute :file_resolver, :info_service, :authorization_service
     self.file_resolver = FileSystemFileResolver.new
+    self.authorization_service = NilAuthorizationService
 
     # this is the default info service
     # returns a hash with the original image dimensions.

@@ -6,7 +6,7 @@ describe Riiif::ImagesController do
   routes { Riiif::Engine.routes }
 
   describe "#show" do
-    it "should send images to the service" do
+    it "sends images to the service" do
       image = double
       expect(Riiif::Image).to receive(:new).with('abcd1234').and_return(image)
       expect(image).to receive(:render).with("region" => 'full', "size" => 'full',
@@ -18,6 +18,21 @@ describe Riiif::ImagesController do
       expect(response.body).to eq 'IMAGEDATA'
       expect(response.headers['Link']).to eq '<http://iiif.io/api/image/2/level1.json>;rel="profile"'
       expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
+    end
+
+    context "with an unauthorized image" do
+      let(:auth) { double("no auth service", can?: false) }
+      let(:not_found_image) { double("not_found_image", render: 'test data') }
+      before do
+        allow(controller).to receive(:authorization_service).and_return(auth)
+        allow(controller).to receive(:not_found_image).and_return(not_found_image)
+      end
+      it "renders 401" do
+        get :show, id: 'abcd1234', action: "show", region: 'full', size: 'full',
+                   rotation: '0', quality: 'default', format: 'jpg'
+        expect(response.body).to eq "test data"
+        expect(response.code).to eq "401"
+      end
     end
 
     context "with a invalid region" do
@@ -89,21 +104,35 @@ describe Riiif::ImagesController do
     end
   end
 
-  it "returns info" do
-    image = double
-    expect(Riiif::Image).to receive(:new).with('abcd1234').and_return(image)
-    expect(image).to receive(:info).and_return({width: 6000, height: 4000 })
-    get :info, id: 'abcd1234', format: 'json'
-    expect(response).to be_successful
-    json = JSON.parse(response.body)
-    expect(json).to eq "@context" => "http://iiif.io/api/image/2/context.json",
-      "@id" =>"http://test.host/images/abcd1234",
-      "width" =>6000,
-      "height" =>4000,
-      "profile" => ["http://iiif.io/api/image/2/level1.json", "formats" => ["jpg", "png"]],
-      'protocol' => 'http://iiif.io/api/image'
-    expect(response.headers['Link']).to eq '<http://iiif.io/api/image/2/level1.json>;rel="profile"'
-    expect(response.headers['Content-Type']).to eq 'application/ld+json; charset=utf-8'
-    expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
+  describe "info" do
+    it "returns info" do
+      image = double
+      expect(Riiif::Image).to receive(:new).with('abcd1234').and_return(image)
+      expect(image).to receive(:info).and_return({width: 6000, height: 4000 })
+      get :info, id: 'abcd1234', format: 'json'
+      expect(response).to be_successful
+      json = JSON.parse(response.body)
+      expect(json).to eq "@context" => "http://iiif.io/api/image/2/context.json",
+        "@id" =>"http://test.host/images/abcd1234",
+        "width" =>6000,
+        "height" =>4000,
+        "profile" => ["http://iiif.io/api/image/2/level1.json", "formats" => ["jpg", "png"]],
+        'protocol' => 'http://iiif.io/api/image'
+      expect(response.headers['Link']).to eq '<http://iiif.io/api/image/2/level1.json>;rel="profile"'
+      expect(response.headers['Content-Type']).to eq 'application/ld+json; charset=utf-8'
+      expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
+    end
+
+    context "with an unauthorized image" do
+      let(:auth) { double("no auth service", can?: false) }
+      before do
+        allow(controller).to receive(:authorization_service).and_return(auth)
+      end
+      it "renders 401" do
+        get :info, id: 'abcd1234', format: 'json'
+        expect(response.body).to eq "{\"error\":\"unauthorized\"}"
+        expect(response.code).to eq "401"
+      end
+    end
   end
 end
