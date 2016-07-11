@@ -1,5 +1,5 @@
-require "riiif/version"
-require "riiif/engine"
+require 'riiif/version'
+require 'riiif/engine'
 
 module Riiif
   extend ActiveSupport::Autoload
@@ -14,7 +14,7 @@ module Riiif
   class InvalidAttributeError < Error; end
   class ImageNotFoundError < Error
     attr_reader :original_exception
-    def initialize(orig=nil)
+    def initialize(orig = nil)
       @original_exception = orig
     end
   end

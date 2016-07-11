@@ -13,12 +13,12 @@ module Riiif
                    :ok
                  else
                    :unauthorized
-                  end
+                 end
       rescue ImageNotFoundError
         status = :not_found
       end
 
-      image = not_found_image unless status == :ok 
+      image = not_found_image unless status == :ok
 
       data = image.render(params.permit(:region, :size, :rotation, :quality, :format))
       headers['Access-Control-Allow-Origin'] = '*'
@@ -46,43 +46,43 @@ module Riiif
 
     protected
 
-    LEVEL1 = 'http://iiif.io/api/image/2/level1.json'
+      LEVEL1 = 'http://iiif.io/api/image/2/level1.json'.freeze
 
-    def model
-      params.fetch(:model, "riiif/image").camelize.constantize
-    end
+      def model
+        params.fetch(:model, 'riiif/image').camelize.constantize
+      end
 
-    def image_id
-      params[:id]
-    end
+      def image_id
+        params[:id]
+      end
 
-    def authorization_service
-      model.authorization_service.new(self)
-    end
+      def authorization_service
+        model.authorization_service.new(self)
+      end
 
-    def link_header
-      response.headers["Link"] = "<#{LEVEL1}>;rel=\"profile\""
-    end
+      def link_header
+        response.headers['Link'] = "<#{LEVEL1}>;rel=\"profile\""
+      end
 
-    def not_found_image
-      raise "Not found image doesn't exist" unless Riiif.not_found_image
-      model.new(image_id, Riiif::File.new(Riiif.not_found_image))
-    end
+      def not_found_image
+        raise "Not found image doesn't exist" unless Riiif.not_found_image
+        model.new(image_id, Riiif::File.new(Riiif.not_found_image))
+      end
 
-    CONTEXT = '@context'
-    CONTEXT_URI = 'http://iiif.io/api/image/2/context.json'
-    ID = '@id'
-    PROTOCOL = 'protocol'
-    PROTOCOL_URI = 'http://iiif.io/api/image'
-    PROFILE = 'profile'
+      CONTEXT = '@context'.freeze
+      CONTEXT_URI = 'http://iiif.io/api/image/2/context.json'.freeze
+      ID = '@id'.freeze
+      PROTOCOL = 'protocol'.freeze
+      PROTOCOL_URI = 'http://iiif.io/api/image'.freeze
+      PROFILE = 'profile'.freeze
 
-    def server_info
-      {
-        CONTEXT => CONTEXT_URI,
-        ID => request.original_url.sub('/info.json', ''),
-        PROTOCOL => PROTOCOL_URI,
-        PROFILE => [LEVEL1, 'formats' => model::OUTPUT_FORMATS]
-      }
-    end
+      def server_info
+        {
+          CONTEXT => CONTEXT_URI,
+          ID => request.original_url.sub('/info.json', ''),
+          PROTOCOL => PROTOCOL_URI,
+          PROFILE => [LEVEL1, 'formats' => model::OUTPUT_FORMATS]
+        }
+      end
   end
 end

@@ -51,48 +51,48 @@ module Riiif
 
       private
 
-      def ext
-        @ext ||= ::File.extname(URI.parse(url).path)
-      end
+        def ext
+          @ext ||= ::File.extname(URI.parse(url).path)
+        end
 
-      def file_name
-        @cache_file_name ||= ::File.join(cache_path, Digest::MD5.hexdigest(url)+"#{ext}")
-      end
+        def file_name
+          @cache_file_name ||= ::File.join(cache_path, Digest::MD5.hexdigest(url) + ext.to_s)
+        end
 
-      def download_file
-        ensure_cache_path(::File.dirname(file_name))
-        benchmark ("Riiif downloaded #{url}") do
-          ::File.atomic_write(file_name, cache_path) do |local|
-            begin
-              Kernel::open(url, download_opts) do |remote|
-                while chunk = remote.read(8192)
-                  local.write(chunk)
+        def download_file
+          ensure_cache_path(::File.dirname(file_name))
+          benchmark("Riiif downloaded #{url}") do
+            ::File.atomic_write(file_name, cache_path) do |local|
+              begin
+                Kernel::open(url, download_opts) do |remote|
+                  while chunk = remote.read(8192)
+                    local.write(chunk)
+                  end
                 end
+              rescue OpenURI::HTTPError => e
+                raise ImageNotFoundError, e
               end
-            rescue OpenURI::HTTPError => e
-              raise ImageNotFoundError.new(e)
             end
           end
         end
-      end
 
-      # Get a hash of options for passing to Kernel::open
-      # This is the primary pathway for passing basic auth credentials
-      def download_opts
-        basic_auth_credentials ? { http_basic_authentication: basic_auth_credentials } : {}
-      end
+        # Get a hash of options for passing to Kernel::open
+        # This is the primary pathway for passing basic auth credentials
+        def download_opts
+          basic_auth_credentials ? { http_basic_authentication: basic_auth_credentials } : {}
+        end
 
-      # Make sure a file path's directories exist.
-      def ensure_cache_path(path)
-        FileUtils.makedirs(path) unless ::File.exist?(path)
-      end
+        # Make sure a file path's directories exist.
+        def ensure_cache_path(path)
+          FileUtils.makedirs(path) unless ::File.exist?(path)
+        end
     end
 
 
     protected
 
       def uri(id)
-        raise "Must set the id_to_uri lambda" if id_to_uri.nil?
+        raise 'Must set the id_to_uri lambda' if id_to_uri.nil?
         id_to_uri.call(id)
       end
 
