@@ -22,16 +22,16 @@ module Riiif
       end
     end
 
-    def self.create(ext = nil, validate = true, &block)
-      begin
-        tempfile = Tempfile.new(['mini_magick', ext.to_s.downcase])
-        tempfile.binmode
-        block.call(tempfile)
-        tempfile.close
-        image = self.new(tempfile.path, tempfile)
-      ensure
-        tempfile.close if tempfile
-      end
+    def self.create(ext = nil, _validate = true, &block)
+
+      tempfile = Tempfile.new(['mini_magick', ext.to_s.downcase])
+      tempfile.binmode
+      block.call(tempfile)
+      tempfile.close
+      image = new(tempfile.path, tempfile)
+    ensure
+      tempfile.close if tempfile
+
     end
 
     def extract(options)
@@ -57,24 +57,24 @@ module Riiif
     def info
       return @info if @info
       height, width = execute("identify -format %hx%w #{path}").split('x')
-      @info = {height: Integer(height), width: Integer(width)}
+      @info = { height: Integer(height), width: Integer(width) }
     end
 
     private
 
       def execute(command)
-          out = nil
-          benchmark ("Riiif executed #{command}") do
-            stdin, stdout, stderr, wait_thr = popen3(command)
-            stdin.close
-            stdout.binmode
-            out = stdout.read
-            stdout.close
-            err = stderr.read
-            stderr.close
-            raise "Unable to execute command \"#{command}\"\n#{err}" unless wait_thr.value.success?
-          end
-          out
+        out = nil
+        benchmark("Riiif executed #{command}") do
+          stdin, stdout, stderr, wait_thr = popen3(command)
+          stdin.close
+          stdout.binmode
+          out = stdout.read
+          stdout.close
+          err = stderr.read
+          stderr.close
+          raise "Unable to execute command \"#{command}\"\n#{err}" unless wait_thr.value.success?
+        end
+        out
       end
 
   end

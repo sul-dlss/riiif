@@ -5,7 +5,7 @@ module Riiif
     def initialize
       @root = ::File.expand_path(::File.join(::File.dirname(__FILE__), '../..'))
       @base_path = ::File.join(root, 'spec/samples')
-      @input_types = %W{png jpg tiff jp jp2}
+      @input_types = %w(png jpg tiff jp jp2)
     end
 
     def find(id)

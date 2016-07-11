@@ -1,17 +1,17 @@
 require 'spec_helper'
 
 describe Riiif::HTTPFileResolver do
-  subject { Riiif::HTTPFileResolver.new }
+  subject { described_class.new }
 
   before do
-    Dir.glob("tmp/network_files/*") do |f|
+    Dir.glob('tmp/network_files/*') do |f|
       File.unlink(f)
     end
-    subject.id_to_uri = lambda {|id| id}
+    subject.id_to_uri = ->(id) { id }
   end
 
   it "raises an error when the file isn't found" do
-    expect(Kernel).to receive(:open).and_raise(OpenURI::HTTPError.new("failure", StringIO.new))
+    expect(Kernel).to receive(:open).and_raise(OpenURI::HTTPError.new('failure', StringIO.new))
     begin
       subject.find('1234')
     rescue Riiif::ImageNotFoundError => e
@@ -20,14 +20,14 @@ describe Riiif::HTTPFileResolver do
     expect(e.original_exception).to be_an OpenURI::HTTPError
   end
 
-  context "when basic authentication credentials are set" do
-    let(:credentials) { ['username', 's0s3kr3t'] }
+  context 'when basic authentication credentials are set' do
+    let(:credentials) { %w(username s0s3kr3t) }
     before do
       subject.basic_auth_credentials = credentials
     end
 
-    it "should use basic auth credentials" do
-      expect(Kernel).to receive(:open).with("1234", { http_basic_authentication: credentials })
+    it 'uses basic auth credentials' do
+      expect(Kernel).to receive(:open).with('1234', http_basic_authentication: credentials)
       subject.find('1234')
     end
   end

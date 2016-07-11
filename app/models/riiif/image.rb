@@ -17,13 +17,13 @@ module Riiif
       end
     end
 
-    OUTPUT_FORMATS = %W{jpg png}
+    OUTPUT_FORMATS = %w(jpg png).freeze
 
     attr_reader :id
 
     # @param [String] id The identifier of the file to be looked up.
     # @param [Riiif::File] file Optional: The Riiif::File to use instead of looking one up.
-    def initialize(id, file=nil)
+    def initialize(id, file = nil)
       @id = id
       @image = file if file.present?
     end
@@ -50,7 +50,7 @@ module Riiif
 
 
       def cache_key(id, options)
-        str = options.merge(id: id).delete_if {|_, v| v.nil?}.to_s
+        str = options.merge(id: id).delete_if { |_, v| v.nil? }.to_s
         # Use a MD5 digest to ensure the keys aren't too long.
         Digest::MD5.hexdigest(str)
       end
@@ -70,9 +70,9 @@ module Riiif
       end
 
       def decode_quality(quality)
-        return if quality.nil? || ['default', 'color'].include?(quality)
-        return quality if ['bitonal', 'grey'].include?(quality)
-        raise InvalidAttributeError, "Unsupported quality: #{quality}" 
+        return if quality.nil? || %w(default color).include?(quality)
+        return quality if %w(bitonal grey).include?(quality)
+        raise InvalidAttributeError, "Unsupported quality: #{quality}"
       end
 
       def decode_rotation(rotation)
@@ -91,7 +91,7 @@ module Riiif
 
       def decode_region(region)
         if region.nil? || region == 'full'
-          nil 
+          nil
         elsif md = /^pct:(\d+),(\d+),(\d+),(\d+)$/.match(region)
           # Image magic can't do percentage offsets, so we have to calculate it
           offset_x = (info[:width] * Integer(md[1]).to_f / 100).round
@@ -110,7 +110,7 @@ module Riiif
         elsif md = /^,(\d+)$/.match(size)
           "x#{md[1]}"
         elsif md = /^(\d+),$/.match(size)
-          "#{md[1]}"
+          (md[1]).to_s
         elsif md = /^pct:(\d+(.\d+)?)$/.match(size)
           "#{md[1]}%"
         elsif md = /^(\d+),(\d+)$/.match(size)
