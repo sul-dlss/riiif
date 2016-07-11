@@ -1,22 +1,13 @@
 require 'digest'
 require 'cgi'
 module Riiif
-  class AkubraSystemFileResolver
+  class AkubraSystemFileResolver < AbstractFileSystemResolver
     attr_accessor :pathroot, :imagetype, :akubraconfig
 
     def initialize(pr = '/yourfedora/data/datastreamStore/', ir = 'jp2', ac = [[0, 2], [2, 2], [4, 1]])
       @pathroot = pr
       @imagetype = ir
       @akubraconfig = ac
-    end
-
-    def find(id)
-      Riiif::File.new(path(id))
-    end
-
-    def path(id)
-      search = pattern(id)
-      Dir.glob(search).first || raise(ImageNotFoundError, search)
     end
 
     def pattern(id)
