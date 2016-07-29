@@ -75,6 +75,11 @@ describe Riiif::Image do
         expect(subject.image).to receive(:execute).with("convert -crop 80%x70+18+13 #{filename} png:-")
         subject.render(region: 'pct:10,10,80,70', format: 'png')
       end
+      it 'handles square geometry' do
+        expect(subject.image).to receive(:execute).with("identify -format %hx%w #{filename}").and_return('131x175')
+        expect(subject.image).to receive(:execute).with("convert -crop 131x131+22+0 #{filename} png:-")
+        subject.render(region: 'square', format: 'png')
+      end
       it 'raises an error for invalid geometry' do
         expect { subject.render(region: '150x75', format: 'png') }.to raise_error Riiif::InvalidAttributeError
       end

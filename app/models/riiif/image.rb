@@ -99,6 +99,17 @@ module Riiif
           "#{md[3]}%x#{md[4]}+#{offset_x}+#{offset_y}"
         elsif md = /^(\d+),(\d+),(\d+),(\d+)$/.match(region)
           "#{md[3]}x#{md[4]}+#{md[1]}+#{md[2]}"
+        elsif region == 'square'
+          w = info[:width]
+          h = info[:height]
+          min, max = [w, h].minmax
+
+          offset = (max - min) / 2
+          if h >= w
+            "#{min}x#{min}+0+#{offset}"
+          else
+            "#{min}x#{min}+#{offset}+0"
+          end
         else
           raise InvalidAttributeError, "Invalid region: #{region}"
         end
