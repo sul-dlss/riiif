@@ -7,13 +7,13 @@ A Ruby IIIF image server as a rails engine
 
 RIIIF depends on Imagemagick so you must install that first. On a mac using Homebrew you can follow these instructions:
 
-ImageMagick (6.8.8) may be installed with a few options:
+ImageMagick (7.0.4) may be installed with a few options:
 * `--with-ghostscript` Compile with Ghostscript for Postscript/PDF support
 * `--with-tiff` Compile with libtiff support for TIFF files
-* `--with-jp2` Compile with openjpeg2 support for jpeg2000
+* `--with-openjpeg` Compile with openjpeg2 support for jpeg2000
 
 ```bash
-brew install imagemagick --with-ghostscript --with-tiff --with-jp2
+brew install imagemagick --with-ghostscript --with-tiff --with-openjpeg
 ```
 
 ## Install the gem
