@@ -3,7 +3,7 @@ module Riiif
     before_action :link_header, only: [:show, :info]
 
     rescue_from Riiif::InvalidAttributeError do
-      render nothing: true, status: 400
+      head 400
     end
 
     def show
