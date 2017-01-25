@@ -20,7 +20,7 @@ module Riiif
 
       image = not_found_image unless status == :ok
 
-      data = image.render(params.permit(:region, :size, :rotation, :quality, :format))
+      data = image.render(image_request_params)
       headers['Access-Control-Allow-Origin'] = '*'
       send_data data,
                 status: status,
@@ -54,6 +54,12 @@ module Riiif
 
       def image_id
         params[:id]
+      end
+
+      ##
+      # @return [ActiveSupport::HashWithIndifferentAccess]
+      def image_request_params
+        params.permit(:region, :size, :rotation, :quality, :format).to_h
       end
 
       def authorization_service
