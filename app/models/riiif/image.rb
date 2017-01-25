@@ -32,6 +32,8 @@ module Riiif
       @image ||= file_resolver.find(id)
     end
 
+    ##
+    # @param [ActiveSupport::HashWithIndifferentAccess] args
     def render(args)
       options = decode_options!(args)
       Rails.cache.fetch(Image.cache_key(id, options), compress: true, expires_in: Image.expires_in) do
@@ -58,8 +60,9 @@ module Riiif
 
     private
 
-      def decode_options!(args)
-        options = args.with_indifferent_access
+      ##
+      # @param [ActiveSupport::HashWithIndifferentAccess] options
+      def decode_options!(options)
         raise ArgumentError, 'You must provide a format' unless options[:format]
         options[:crop] = decode_region(options.delete(:region))
         options[:size] = decode_size(options.delete(:size))

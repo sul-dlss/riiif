@@ -12,8 +12,8 @@ describe Riiif::ImagesController do
       expect(image).to receive(:render).with('region' => 'full', 'size' => 'full',
                                              'rotation' => '0', 'quality' => 'default',
                                              'format' => 'jpg').and_return('IMAGEDATA')
-      get :show, id: 'abcd1234', action: 'show', region: 'full', size: 'full',
-                 rotation: '0', quality: 'default', format: 'jpg'
+      get :show, params: { id: 'abcd1234', action: 'show', region: 'full', size: 'full',
+                           rotation: '0', quality: 'default', format: 'jpg' }
       expect(response).to be_successful
       expect(response.body).to eq 'IMAGEDATA'
       expect(response.headers['Link']).to eq '<http://iiif.io/api/image/2/level1.json>;rel="profile"'
@@ -28,8 +28,8 @@ describe Riiif::ImagesController do
         allow(controller).to receive(:not_found_image).and_return(not_found_image)
       end
       it 'renders 401' do
-        get :show, id: 'abcd1234', action: 'show', region: 'full', size: 'full',
-                   rotation: '0', quality: 'default', format: 'jpg'
+        get :show, params: { id: 'abcd1234', action: 'show', region: 'full', size: 'full',
+                             rotation: '0', quality: 'default', format: 'jpg' }
         expect(response.body).to eq 'test data'
         expect(response.code).to eq '401'
       end
@@ -40,8 +40,8 @@ describe Riiif::ImagesController do
         image = double('an image')
         allow(image).to receive(:render).and_raise Riiif::InvalidAttributeError
         allow(Riiif::Image).to receive(:new).with('abcd1234').and_return(image)
-        get :show, id: 'abcd1234', action: 'show', region: '`szoW0', size: 'full',
-                   rotation: '0', quality: 'default', format: 'jpg'
+        get :show, params: { id: 'abcd1234', action: 'show', region: '`szoW0', size: 'full',
+                             rotation: '0', quality: 'default', format: 'jpg' }
         expect(response.code).to eq '400'
       end
     end
@@ -50,8 +50,8 @@ describe Riiif::ImagesController do
       it "errors when a default image isn't sent" do
         expect(Riiif::Image).to receive(:new).with('bad_id').and_raise(OpenURI::HTTPError.new('fail', StringIO.new))
         expect do
-          get :show, id: 'bad_id', action: 'show', region: 'full', size: 'full',
-                     rotation: '0', quality: 'default', format: 'jpg'
+          get :show, params: { id: 'bad_id', action: 'show', region: 'full', size: 'full',
+                               rotation: '0', quality: 'default', format: 'jpg' }
         end.to raise_error(StandardError)
       end
 
@@ -73,8 +73,8 @@ describe Riiif::ImagesController do
                                                            'rotation' => '0', 'quality' => 'default',
                                                            'format' => 'jpg').and_return('default-image-data')
 
-          get :show, id: 'bad_id', action: 'show', region: 'full', size: 'full',
-                     rotation: '0', quality: 'default', format: 'jpg'
+          get :show, params: { id: 'bad_id', action: 'show', region: 'full', size: 'full',
+                               rotation: '0', quality: 'default', format: 'jpg' }
           expect(response).to be_not_found
           expect(response.body).to eq 'default-image-data'
         end
@@ -89,8 +89,8 @@ describe Riiif::ImagesController do
                                                            'rotation' => '0', 'quality' => 'default',
                                                            'format' => 'jpg').and_return('default-image-data')
 
-          get :show, id: 'bad_id', action: 'show', region: 'full', size: 'full',
-                     rotation: '0', quality: 'default', format: 'jpg'
+          get :show, params: { id: 'bad_id', action: 'show', region: 'full', size: 'full',
+                               rotation: '0', quality: 'default', format: 'jpg' }
           expect(response).to be_not_found
           expect(response.body).to eq 'default-image-data'
         end
@@ -103,11 +103,11 @@ describe Riiif::ImagesController do
       image = double
       expect(Riiif::Image).to receive(:new).with('abcd1234').and_return(image)
       expect(image).to receive(:info).and_return(width: 6000, height: 4000)
-      get :info, id: 'abcd1234', format: 'json'
+      get :info, params: { id: 'abcd1234', format: 'json' }
       expect(response).to be_successful
       json = JSON.parse(response.body)
       expect(json).to eq '@context' => 'http://iiif.io/api/image/2/context.json',
-                         '@id' => 'http://test.host/images/abcd1234',
+                         '@id' => 'http://test.host/abcd1234',
                          'width' => 6000,
                          'height' => 4000,
                          'profile' => ['http://iiif.io/api/image/2/level1.json', 'formats' => %w(jpg png)],
@@ -123,7 +123,7 @@ describe Riiif::ImagesController do
         allow(controller).to receive(:authorization_service).and_return(auth)
       end
       it 'renders 401' do
-        get :info, id: 'abcd1234', format: 'json'
+        get :info, params: { id: 'abcd1234', format: 'json' }
         expect(response.body).to eq '{"error":"unauthorized"}'
         expect(response.code).to eq '401'
       end
