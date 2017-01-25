@@ -18,9 +18,8 @@ module Riiif
       Dir.glob(search).first || raise(ImageNotFoundError, search)
     end
 
-    def pattern(id)
+    def pattern(_id)
       raise NotImplementedError, "Implement `pattern(id)' in the concrete class"
     end
   end
 end
-
