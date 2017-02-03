@@ -19,6 +19,13 @@ describe 'routes' do
                     region: 'full', size: 'pct:12.5', rotation: '22.5',
                     quality: 'default', format: 'jpg', model: 'riiif/image')
     end
+    it 'routes requests with proportional sizes' do
+      expect(
+        get: '/abcd1234/full/!400,400/22.5/default.jpg'
+      ).to route_to(controller: 'riiif/images', id: 'abcd1234', action: 'show',
+                    region: 'full', size: '!400,400', rotation: '22.5',
+                    quality: 'default', format: 'jpg', model: 'riiif/image')
+    end
     it 'routes requests with pixel size' do
       expect(
         get: '/abcd1234/full/100,50/22.5/default.jpg'
