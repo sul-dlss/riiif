@@ -1,7 +1,7 @@
 module Riiif
   class Routes
     ALLOW_DOTS ||= /[\w.]+/
-    SIZES ||= /(pct:)?[\w.,]+/
+    SIZES ||= /(!|pct:)?[\w.,]+/
 
     def initialize(router, options)
       @router = router
