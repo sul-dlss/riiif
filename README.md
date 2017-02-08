@@ -131,11 +131,12 @@ Riiif::Image.file_resolver = Riiif::HTTPFileResolver.new
 # This tells RIIIF how to resolve the identifier to a URI in Fedora
 DATASTREAM = 'imageContent'
 Riiif::Image.file_resolver.id_to_uri = lambda do |id| 
-  connection = ActiveFedora::Base.connection_for_pid(id)
-  host = connection.config[:url]
-  path = connection.api.datastream_content_url(id, DATASTREAM, {})
-  host + '/' + path
+  ActiveFedora::Base.id_to_uri(CGI.unescape(id)).tap do |url|
+    logger.info "Riiif resolved #{id} to #{url}"
+  end
 end
+
+
 
 # In order to return the info.json endpoint, we have to have the full height and width of
 # each image. If you are using hydra-file_characterization, you have the height & width 
@@ -143,17 +144,17 @@ end
 HEIGHT_SOLR_FIELD = 'height_isi'
 WIDTH_SOLR_FIELD = 'width_isi'
 Riiif::Image.info_service = lambda do |id, file|
-  resp = get_solr_response_for_doc_id id
-  doc = resp.first['response']['docs'].first
-  { height: doc[HEIGHT_SOLR_FIELD], width: doc[WIDTH_SOLR_FIELD] }
-end
+  # id will look like a path to a pcdm:file
+  # (e.g. rv042t299%2Ffiles%2F6d71677a-4f80-42f1-ae58-ed1063fd79c7)
+  # but we just want the id for the FileSet it's attached to.
 
-include Blacklight::SolrHelper
-def blacklight_config
-  CatalogController.blacklight_config
+  # Capture everything before the first slash
+  fs_id = id.sub(/\A([^\/]*)\/.*/, '\1')
+  resp = ActiveFedora::SolrService.get("id:#{fs_id}")
+  doc = resp['response']['docs'].first
+  raise "Unable to find solr document with id:#{fs_id}" unless doc
+  { height: doc['height_is'], width: doc['width_is'] }
 end
-
-### ActiveSupport::Benchmarkable (used in Blacklight::SolrHelper) depends on a logger method
 
 def logger
   Rails.logger
