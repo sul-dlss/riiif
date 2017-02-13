@@ -41,7 +41,7 @@ module Riiif
     # this is a workaround for https://github.com/rails/rails/issues/25087
     def redirect
       # This was attempted with just info_path, but it gave a NoMethodError
-      redirect_to Riiif::Engine.routes.url_helpers.info_path(params[:id])
+      redirect_to riiif.info_path(params[:id])
     end
 
     protected
