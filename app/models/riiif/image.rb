@@ -63,7 +63,7 @@ module Riiif
       ##
       # @param [ActiveSupport::HashWithIndifferentAccess] options
       def decode_options!(options)
-        raise ArgumentError, 'You must provide a format' unless options[:format]
+        raise ArgumentError, "You must provide a format. You provided #{options}" unless options[:format]
         options[:crop] = decode_region(options.delete(:region))
         options[:size] = decode_size(options.delete(:size))
         options[:quality] = decode_quality(options[:quality])
