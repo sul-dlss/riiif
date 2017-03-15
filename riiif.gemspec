@@ -24,6 +24,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'engine_cart', '~> 0.8'
   spec.add_development_dependency 'rspec-rails'
   spec.add_development_dependency 'sqlite3'
-  spec.add_development_dependency 'rubocop', '~> 0.41.2'
-  spec.add_development_dependency 'rubocop-rspec', '~> 1.5'
+  spec.add_development_dependency 'rubocop', '~> 0.47.1'
+  spec.add_development_dependency 'rubocop-rspec', '~> 1.13'
 end

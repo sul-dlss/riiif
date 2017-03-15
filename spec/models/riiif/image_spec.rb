@@ -125,7 +125,8 @@ describe Riiif::Image do
         subject.render(rotation: '0', format: 'png')
       end
       it 'handles floats' do
-        expect(subject.image).to receive(:execute).with("convert -virtual-pixel white +distort srt 22.5 #{filename} png:-")
+        expect(subject.image).to receive(:execute)
+          .with("convert -virtual-pixel white +distort srt 22.5 #{filename} png:-")
         subject.render(rotation: '22.5', format: 'png')
       end
       it 'raises an error for invalid angle' do
