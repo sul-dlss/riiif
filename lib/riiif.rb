@@ -20,5 +20,7 @@ module Riiif
     end
   end
 
+  Transformation = Struct.new(:crop, :size, :quality, :rotation, :format)
+
   mattr_accessor :not_found_image # the image to use when a lookup fails
 end

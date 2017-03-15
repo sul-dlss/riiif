@@ -52,7 +52,7 @@ module Riiif
 
 
       def cache_key(id, options)
-        str = options.merge(id: id).delete_if { |_, v| v.nil? }.to_s
+        str = options.to_h.merge(id: id).delete_if { |_, v| v.nil? }.to_s
         # Use a MD5 digest to ensure the keys aren't too long.
         Digest::MD5.hexdigest(str)
       end
@@ -62,14 +62,15 @@ module Riiif
 
       ##
       # @param [ActiveSupport::HashWithIndifferentAccess] options
+      # @return [Transformation]
       def decode_options!(options)
         raise ArgumentError, "You must provide a format. You provided #{options}" unless options[:format]
-        options[:crop] = decode_region(options.delete(:region))
-        options[:size] = decode_size(options.delete(:size))
-        options[:quality] = decode_quality(options[:quality])
-        options[:rotation] = decode_rotation(options[:rotation])
         validate_format!(options[:format])
-        options
+        Riiif::Transformation.new(decode_region(options.delete(:region)),
+                                  decode_size(options.delete(:size)),
+                                  decode_quality(options[:quality]),
+                                  decode_rotation(options[:rotation]),
+                                  options[:format])
       end
 
       def decode_quality(quality)

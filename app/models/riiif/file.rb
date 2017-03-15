@@ -34,23 +34,23 @@ module Riiif
 
     end
 
-    def extract(options)
-
+    # @param [Transformation] transformation
+    def extract(transformation)
       command = 'convert'
-      command << " -crop #{options[:crop]}" if options[:crop]
-      command << " -resize #{options[:size]}" if options[:size]
-      if options[:rotation]
-        command << " -virtual-pixel white +distort srt #{options[:rotation]}"
+      command << " -crop #{transformation.crop}" if transformation.crop
+      command << " -resize #{transformation.size}" if transformation.size
+      if transformation.rotation
+        command << " -virtual-pixel white +distort srt #{transformation.rotation}"
       end
 
-      case options[:quality]
+      case transformation.quality
       when 'grey'
         command << ' -colorspace Gray'
       when 'bitonal'
         command << ' -colorspace Gray'
         command << ' -type Bilevel'
       end
-      command << " #{path} #{options[:format]}:-"
+      command << " #{path} #{transformation.format}:-"
       execute(command)
     end
 
