@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Riiif::Image do
+RSpec.describe Riiif::Image do
   before { Rails.cache.clear }
   let(:filename) { File.expand_path('spec/samples/world.jp2') }
   subject { described_class.new('world') }
@@ -16,7 +16,7 @@ describe Riiif::Image do
   it 'is able to override the file used for the Image' do
     img = described_class.new('some_id', Riiif::File.new(filename))
     expect(img.id).to eq 'some_id'
-    expect(img.info).to eq height: 400, width: 800
+    expect(img.info).to eq Riiif::ImageInformation.new(800, 400)
   end
 
   describe 'without a format' do
@@ -27,7 +27,7 @@ describe Riiif::Image do
 
   describe 'info' do
     it 'returns the data' do
-      expect(subject.info).to eq height: 400, width: 800
+      expect(subject.info).to eq Riiif::ImageInformation.new(800, 400)
     end
   end
 
@@ -45,7 +45,7 @@ describe Riiif::Image do
     describe 'get info' do
       subject { described_class.new('Cave_26,_Ajanta') }
       it 'is easy' do
-        expect(subject.info).to eq height: 390, width: 600
+        expect(subject.info).to eq Riiif::ImageInformation.new(600, 390)
       end
     end
 

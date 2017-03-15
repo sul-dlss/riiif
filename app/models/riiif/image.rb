@@ -42,7 +42,10 @@ module Riiif
     end
 
     def info
-      info_service.call(id, image)
+      @info ||= begin
+                  result = info_service.call(id, image)
+                  ImageInformation.new(result[:width], result[:height])
+                end
     end
 
     class << self
@@ -95,47 +98,37 @@ module Riiif
 
       def decode_region(region)
         if region.nil? || region == 'full'
-          nil
+          Riiif::Region::Imagemagick::FullDecoder.new.decode
         elsif md = /^pct:(\d+),(\d+),(\d+),(\d+)$/.match(region)
-          # Image magic can't do percentage offsets, so we have to calculate it
-          offset_x = (info[:width] * Integer(md[1]).to_f / 100).round
-          offset_y = (info[:height] * Integer(md[2]).to_f / 100).round
-          "#{md[3]}%x#{md[4]}+#{offset_x}+#{offset_y}"
+          Riiif::Region::Imagemagick::PercentageDecoder
+            .new(info, md[1], md[2], md[3], md[4]).decode
         elsif md = /^(\d+),(\d+),(\d+),(\d+)$/.match(region)
-          "#{md[3]}x#{md[4]}+#{md[1]}+#{md[2]}"
+          Riiif::Region::Imagemagick::AbsoluteDecoder.new(md[1], md[2], md[3], md[4]).decode
         elsif region == 'square'
-          w = info[:width]
-          h = info[:height]
-          min, max = [w, h].minmax
-
-          offset = (max - min) / 2
-          if h >= w
-            "#{min}x#{min}+0+#{offset}"
-          else
-            "#{min}x#{min}+#{offset}+0"
-          end
+          Riiif::Region::Imagemagick::SquareDecoder.new(info).decode
         else
           raise InvalidAttributeError, "Invalid region: #{region}"
         end
       end
 
+      # rubocop:disable Metrics/PerceivedComplexity
       def decode_size(size)
         if size.nil? || size == 'full'
-          nil
+          Riiif::Size::Imagemagick::FullDecoder.new.decode
         elsif md = /^,(\d+)$/.match(size)
-          "x#{md[1]}"
+          Riiif::Size::Imagemagick::HeightDecoder.new(md[1]).decode
         elsif md = /^(\d+),$/.match(size)
-          (md[1]).to_s
+          Riiif::Size::Imagemagick::WidthDecoder.new(md[1]).decode
         elsif md = /^pct:(\d+(.\d+)?)$/.match(size)
-          "#{md[1]}%"
+          Riiif::Size::Imagemagick::PercentDecoder.new(md[1]).decode
         elsif md = /^(\d+),(\d+)$/.match(size)
-          "#{md[1]}x#{md[2]}!"
+          Riiif::Size::Imagemagick::AbsoluteDecoder.new(md[1], md[2]).decode
         elsif md = /^!(\d+),(\d+)$/.match(size)
-          "#{md[1]}x#{md[2]}"
+          Riiif::Size::Imagemagick::BestFitDecoder.new(md[1], md[2]).decode
         else
           raise InvalidAttributeError, "Invalid size: #{size}"
         end
       end
-
+    # rubocop:enable Metrics/PerceivedComplexity
   end
 end
