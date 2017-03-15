@@ -59,7 +59,9 @@ module Riiif
       ##
       # @return [ActiveSupport::HashWithIndifferentAccess]
       def image_request_params
-        params.permit(:region, :size, :rotation, :quality, :format).to_h
+        result = params.permit(:region, :size, :rotation, :quality, :format).to_h
+        return result.with_indifferent_access if Rails.version < '5'
+        result
       end
 
       def authorization_service
