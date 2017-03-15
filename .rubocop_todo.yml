@@ -28,11 +28,6 @@ Lint/UselessAssignment:
 Metrics/AbcSize:
   Max: 38
 
-# Offense count: 12
-# Configuration parameters: CountComments, ExcludedMethods.
-Metrics/BlockLength:
-  Max: 143
-
 # Offense count: 1
 # Configuration parameters: CountComments.
 Metrics/ClassLength:
@@ -46,7 +41,7 @@ Metrics/CyclomaticComplexity:
 # Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
 # URISchemes: http, https
 Metrics/LineLength:
-  Max: 160
+  Max: 120
 
 # Offense count: 7
 # Configuration parameters: CountComments.
