@@ -102,7 +102,7 @@ describe Riiif::ImagesController do
     it 'returns info' do
       image = double
       expect(Riiif::Image).to receive(:new).with('abcd1234').and_return(image)
-      expect(image).to receive(:info).and_return(width: 6000, height: 4000)
+      expect(image).to receive(:info).and_return(Riiif::ImageInformation.new(6000, 4000))
       get :info, params: { id: 'abcd1234', format: 'json' }
       expect(response).to be_successful
       json = JSON.parse(response.body)

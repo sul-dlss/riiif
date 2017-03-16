@@ -32,7 +32,7 @@ module Riiif
       image = model.new(image_id)
       if authorization_service.can?(:info, image)
         headers['Access-Control-Allow-Origin'] = '*'
-        render json: image.info.merge(server_info), content_type: 'application/ld+json'
+        render json: image.info.to_h.merge(server_info), content_type: 'application/ld+json'
       else
         render json: { error: 'unauthorized' }, status: :unauthorized
       end
