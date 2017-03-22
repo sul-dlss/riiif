@@ -28,17 +28,17 @@ And then execute:
 Or install it yourself as:
 
     $ gem install riiif
-    
+
 ## Configure
 
 ### Images on the servers file system.
 
-By default Riiif is set to load images from the filesystem using the Riiif::FileSystemFileResolver. 
+By default Riiif is set to load images from the filesystem using the Riiif::FileSystemFileResolver.
 You can configure how this resolver finds the files by setting this property:
 ```
     Riiif::Image.file_resolver.base_path = '/opt/repository/images/'
 ```
-When the Id passed in is "foo_image", then it will look for an image file using this glob: 
+When the Id passed in is "foo_image", then it will look for an image file using this glob:
 ```
 /opt/repository/images/foo_image.{png,jpg,tiff,jp,jp2}
 ```
@@ -65,7 +65,7 @@ By default the cache is located in `tmp/network_files`. You can set the cache pa
 
 ## Usage
 
-Add the routes to your application by inserting the following line into `config/routes.rb` 
+Add the routes to your application by inserting the following line into `config/routes.rb`
 ```
   mount Riiif::Engine => '/image-service', as: 'riiif'
 ```
@@ -103,7 +103,7 @@ Riiif::Image.new('no_image', Riiif::File.new(Riiif.not_found_image))
 
 ## Authorization
 
-The controller will call an authorization service with the controller context.  This service must have a method `can?(action, image)` which returns a boolean. The default service is the `RIIIF::NilAuthrorizationService` which permits all requests. 
+The controller will call an authorization service with the controller context.  This service must have a method `can?(action, image)` which returns a boolean. The default service is the `RIIIF::NilAuthrorizationService` which permits all requests.
 
 In this example we've dissallowed all requests:
 
@@ -129,14 +129,14 @@ Create an initializer like this in `config/initializers/riiif_initializer.rb`
 Riiif::Image.file_resolver = Riiif::HTTPFileResolver.new
 
 # This tells RIIIF how to resolve the identifier to a URI in Fedora
-Riiif::Image.file_resolver.id_to_uri = lambda do |id| 
+Riiif::Image.file_resolver.id_to_uri = lambda do |id|
   ActiveFedora::Base.id_to_uri(CGI.unescape(id)).tap do |url|
     logger.info "Riiif resolved #{id} to #{url}"
   end
 end
 
 # In order to return the info.json endpoint, we have to have the full height and width of
-# each image. If you are using hydra-file_characterization, you have the height & width 
+# each image. If you are using hydra-file_characterization, you have the height & width
 # cached in Solr. The following block directs the info_service to return those values:
 Riiif::Image.info_service = lambda do |id, file|
   # id will look like a path to a pcdm:file
@@ -144,7 +144,8 @@ Riiif::Image.info_service = lambda do |id, file|
   # but we just want the id for the FileSet it's attached to.
 
   # Capture everything before the first slash
-  fs_id = id.sub(/\A([^\/]*)\/.*/, '\1')
+  require "uri"
+  fs_id = URI.decode(id).sub(/\A([^\/]*)\/.*/, '\1')
   resp = ActiveFedora::SolrService.get("id:#{fs_id}")
   doc = resp['response']['docs'].first
   raise "Unable to find solr document with id:#{fs_id}" unless doc
