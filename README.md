@@ -158,7 +158,7 @@ end
 Riiif::Engine.config.cache_duration_in_days = 30
 ```
 #### Special note for Passenger and Apache users
-If you are running riiif in Passenger under Apache, and you don't have Apache's `AllowEncodedSlashes On` directive set, the above configuration won't work for you. You'll need to either fix your apache configuration, or explictly decode the url, like this:
+If you are running riiif in Passenger under Apache, you must set `AllowEncodedSlashes NoDecode` in your virtual host definition. For some uses, even with that directive set, the above configuration won't work for you. You may need to explicitly decode the url, like this:
 ```ruby
 require "uri"
 fs_id = URI.decode(id).sub(/\A([^\/]*)\/.*/, '\1')
