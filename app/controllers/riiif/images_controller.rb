@@ -23,7 +23,7 @@ module Riiif
       data = image.render(image_request_params)
       headers['Access-Control-Allow-Origin'] = '*'
       # Set a Cache-Control header
-      expires_in cache_expires, public: false if status == :ok
+      expires_in cache_expires, public: public_cache? if status == :ok
       send_data data,
                 status: status,
                 type: Mime::Type.lookup_by_extension(params[:format]),
@@ -35,7 +35,7 @@ module Riiif
       if authorization_service.can?(:info, image)
         headers['Access-Control-Allow-Origin'] = '*'
         # Set a Cache-Control header
-        expires_in cache_expires, public: false
+        expires_in cache_expires, public: public_cache?
         render json: image.info.to_h.merge(server_info), content_type: 'application/ld+json'
       else
         render json: { error: 'unauthorized' }, status: :unauthorized
