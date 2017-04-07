@@ -18,6 +18,7 @@ describe Riiif::ImagesController do
       expect(response.body).to eq 'IMAGEDATA'
       expect(response.headers['Link']).to eq '<http://iiif.io/api/image/2/level1.json>;rel="profile"'
       expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
+      expect(response.headers['Cache-Control']).to eq 'max-age=31557600, private'
     end
 
     context 'with an unauthorized image' do
@@ -115,6 +116,7 @@ describe Riiif::ImagesController do
       expect(response.headers['Link']).to eq '<http://iiif.io/api/image/2/level1.json>;rel="profile"'
       expect(response.headers['Content-Type']).to eq 'application/ld+json; charset=utf-8'
       expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
+      expect(response.headers['Cache-Control']).to eq 'max-age=31557600, private'
     end
 
     context 'with an unauthorized image' do

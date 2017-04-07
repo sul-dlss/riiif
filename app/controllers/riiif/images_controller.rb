@@ -22,6 +22,8 @@ module Riiif
 
       data = image.render(image_request_params)
       headers['Access-Control-Allow-Origin'] = '*'
+      # Set a Cache-Control header
+      expires_in cache_expires, public: false if status == :ok
       send_data data,
                 status: status,
                 type: Mime::Type.lookup_by_extension(params[:format]),
@@ -32,6 +34,8 @@ module Riiif
       image = model.new(image_id)
       if authorization_service.can?(:info, image)
         headers['Access-Control-Allow-Origin'] = '*'
+        # Set a Cache-Control header
+        expires_in cache_expires, public: false
         render json: image.info.to_h.merge(server_info), content_type: 'application/ld+json'
       else
         render json: { error: 'unauthorized' }, status: :unauthorized
@@ -47,6 +51,18 @@ module Riiif
     protected
 
       LEVEL1 = 'http://iiif.io/api/image/2/level1.json'.freeze
+
+      # @return seconds before the request expires. Defaults to 1 year.
+      def cache_expires
+        1.year
+      end
+
+      # Should the Cache-Control header be public? Override this if you want to have a
+      # public Cache-Control set.
+      # @return FalseClass
+      def public_cache?
+        false
+      end
 
       def model
         params.fetch(:model, 'riiif/image').camelize.constantize
