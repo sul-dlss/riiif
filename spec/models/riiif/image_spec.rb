@@ -6,7 +6,7 @@ RSpec.describe Riiif::Image do
   subject { described_class.new('world') }
   describe 'happy path' do
     before do
-      expect(subject.image).to receive(:execute).with("convert #{filename} jpg:-").and_return('imagedata')
+      expect(subject.image).to receive(:execute).with("convert -quality 85 #{filename} jpg:-").and_return('imagedata')
     end
     it 'renders' do
       expect(subject.render('size' => 'full', format: 'jpg')).to eq 'imagedata'

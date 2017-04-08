@@ -33,21 +33,7 @@ module Riiif
 
     # @param [Transformation] transformation
     def extract(transformation)
-      command = 'convert'
-      command << " -crop #{transformation.crop}" if transformation.crop
-      command << " -resize #{transformation.size}" if transformation.size
-      if transformation.rotation
-        command << " -virtual-pixel white +distort srt #{transformation.rotation}"
-      end
-
-      case transformation.quality
-      when 'grey'
-        command << ' -colorspace Gray'
-      when 'bitonal'
-        command << ' -colorspace Gray'
-        command << ' -type Bilevel'
-      end
-      command << " #{path} #{transformation.format}:-"
+      command = command_factory.build(path, transformation)
       execute(command)
     end
 
@@ -57,5 +43,11 @@ module Riiif
 
     delegate :execute, to: Riiif::CommandRunner
     private :execute
+
+    private
+
+      def command_factory
+        ImagemagickCommandFactory
+      end
   end
 end
