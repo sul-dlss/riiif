@@ -1,6 +1,5 @@
 require 'riiif/version'
 require 'riiif/engine'
-
 module Riiif
   extend ActiveSupport::Autoload
   autoload :Image
@@ -19,6 +18,8 @@ module Riiif
       @original_exception = orig
     end
   end
+  # This error is raised when Riiif can't convert an image
+  class ConversionError < Error; end
 
   Transformation = Struct.new(:crop, :size, :quality, :rotation, :format)
   ImageInformation = Struct.new(:width, :height)

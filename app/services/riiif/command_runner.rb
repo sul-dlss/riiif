@@ -16,7 +16,7 @@ module Riiif
         stdout.close
         err = stderr.read
         stderr.close
-        raise "Unable to execute command \"#{command}\"\n#{err}" unless wait_thr.value.success?
+        raise ConversionError, "Unable to execute command \"#{command}\"\n#{err}" unless wait_thr.value.success?
       end
       out
     end
