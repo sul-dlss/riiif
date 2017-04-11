@@ -20,7 +20,6 @@ module Riiif
     end
 
     def self.create(ext = nil, _validate = true, &block)
-
       tempfile = Tempfile.new(['mini_magick', ext.to_s.downcase])
       tempfile.binmode
       block.call(tempfile)
@@ -28,7 +27,6 @@ module Riiif
       image = new(tempfile.path, tempfile)
     ensure
       tempfile.close if tempfile
-
     end
 
     # @param [Transformation] transformation
