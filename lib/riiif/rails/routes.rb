@@ -6,7 +6,6 @@ module ActionDispatch::Routing
       options = resources.extract_options!
 
       Riiif::Routes.new(self, options.merge(resource: resources.first)).draw
-
     end
   end
 end

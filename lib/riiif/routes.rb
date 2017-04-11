@@ -18,12 +18,12 @@ module Riiif
         route_prefix = options[:at]
         route_prefix ||= "/#{options[:as]}" if options[:as]
         get "#{route_prefix}/:id/:region/:size/:rotation/:quality.:format" => 'riiif/images#show',
-          constraints: { rotation: ALLOW_DOTS, size: SIZES },
-          defaults: { format: 'jpg', rotation: '0', region: 'full', quality: 'default', model: resource },
-          as: options[:as] || 'image'
+            constraints: { rotation: ALLOW_DOTS, size: SIZES },
+            defaults: { format: 'jpg', rotation: '0', region: 'full', quality: 'default', model: resource },
+            as: options[:as] || 'image'
 
         get "#{route_prefix}/:id/info.json" => 'riiif/images#info',
-            defaults: { format: 'json', model: resource  },
+            defaults: { format: 'json', model: resource },
             as: [options[:as], 'info'].compact.join('_')
 
         # This doesn't work presently

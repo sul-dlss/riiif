@@ -3,7 +3,6 @@ require 'active_support/core_ext/file/atomic'
 
 module Riiif
   class HTTPFileResolver
-
     # Set a lambda that maps the first parameter (id) to a URL
     # Example:
     #
@@ -64,7 +63,7 @@ module Riiif
           benchmark("Riiif downloaded #{url}") do
             ::File.atomic_write(file_name, cache_path) do |local|
               begin
-                Kernel::open(url, download_opts) do |remote|
+                Kernel.open(url, download_opts) do |remote|
                   while chunk = remote.read(8192)
                     local.write(chunk)
                   end
@@ -88,13 +87,11 @@ module Riiif
         end
     end
 
-
     protected
 
       def uri(id)
         raise 'Must set the id_to_uri lambda' if id_to_uri.nil?
         id_to_uri.call(id)
       end
-
   end
 end

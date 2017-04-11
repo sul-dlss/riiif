@@ -1,7 +1,6 @@
 require 'digest/md5'
 module Riiif
   class Image
-
     class_attribute :file_resolver, :info_service, :authorization_service
     self.file_resolver = FileSystemFileResolver.new
     self.authorization_service = NilAuthorizationService
@@ -12,7 +11,7 @@ module Riiif
     # example:
     #   {:height=>390, :width=>600}
     self.info_service = lambda do |id, image|
-      Rails.cache.fetch(cache_key(id, { info: true }), compress: true, expires_in: expires_in) do
+      Rails.cache.fetch(cache_key(id, info: true), compress: true, expires_in: expires_in) do
         image.info
       end
     end
@@ -53,7 +52,6 @@ module Riiif
         Riiif::Engine.config.cache_duration_in_days.days
       end
 
-
       def cache_key(id, options)
         str = options.to_h.merge(id: id).delete_if { |_, v| v.nil? }.to_s
         # Use a MD5 digest to ensure the keys aren't too long.
@@ -93,7 +91,6 @@ module Riiif
 
       def validate_format!(format)
         raise InvalidAttributeError, "Unsupported format: #{format}" unless OUTPUT_FORMATS.include?(format)
-
       end
 
       def decode_region(region)
