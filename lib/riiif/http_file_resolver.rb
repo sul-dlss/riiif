@@ -15,8 +15,8 @@ module Riiif
     attr_accessor :basic_auth_credentials
     attr_accessor :cache_path
 
-    def initialize
-      @cache_path = 'tmp/network_files'
+    def initialize(cache_path: 'tmp/network_files')
+      @cache_path = cache_path
     end
 
     def find(id)
