@@ -87,12 +87,21 @@ It is prefereable that you use the provided route helpers to build these URIs. H
   image_tag(Riiif::Engine.routes.url_helpers.image_path(file_id, size: ',600'))
 ```
 
-### Using a default image
+### Using default images for missing and unauthorized requests
 
-If there is a request for an id that doesn't exist, a 404 will be returned. You can optionally return an image with this 404 by setting this in your initializer:
+If there is a request for an id that doesn't exist, a 404 will be
+returned. You can optionally return an image with this 404 by setting
+this in your initializer:
 
 ```ruby
-Riiif::not_found_image = 'path/to/image.png'
+Riiif.not_found_image = 'path/to/image.png'
+```
+
+If the request is unauthorized, a 401 will be returned, and a custom
+error image can also be configured.
+
+```ruby
+Riiif.unauthorized_image = 'path/to/unauthorized_image.png'
 ```
 
 You can do this to create a default Riiif::Image to use (useful for passing "missing" images to openseadragon_collection_viewer):

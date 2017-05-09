@@ -18,7 +18,7 @@ module Riiif
         status = :not_found
       end
 
-      image = not_found_image unless status == :ok
+      image = error_image(status) unless status == :ok
 
       data = image.render(image_request_params)
       headers['Access-Control-Allow-Origin'] = '*'
@@ -88,9 +88,22 @@ module Riiif
         response.headers['Link'] = "<#{LEVEL1}>;rel=\"profile\""
       end
 
-      def not_found_image
-        raise "Not found image doesn't exist" unless Riiif.not_found_image
-        model.new(image_id, Riiif::File.new(Riiif.not_found_image))
+      # @param [Symbol] err E.g., :not_found, :unauthorized
+      # @return [Image]
+      def error_image(err)
+        # rubocop:disable Lint/HandleExceptions
+        begin
+          image = Riiif.send("#{err}_image")
+        rescue NoMethodError
+        end
+        # rubocop:enable Lint/HandleExceptions
+
+        if image.nil?
+          raise ImageNotFoundError,
+                "Riiif.#{err}_image is not configured; assign it to an image path in your RIIIF initializer"
+        end
+
+        model.new(image_id, Riiif::File.new(image))
       end
 
       CONTEXT = '@context'.freeze
