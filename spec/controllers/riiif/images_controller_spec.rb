@@ -16,6 +16,7 @@ describe Riiif::ImagesController do
                            rotation: '0', quality: 'default', format: 'jpg' }
       expect(response).to be_successful
       expect(response.body).to eq 'IMAGEDATA'
+      expect(response.headers['Content-Type']).to eq 'image/jpeg'
       expect(response.headers['Link']).to eq '<http://iiif.io/api/image/2/level1.json>;rel="profile"'
       expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
       expect(response.headers['Cache-Control']).to eq "max-age=#{1.year.to_i}, private"
