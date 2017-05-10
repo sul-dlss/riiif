@@ -1,9 +1,10 @@
 require 'digest/md5'
 module Riiif
   class Image
-    class_attribute :file_resolver, :info_service, :authorization_service
+    class_attribute :file_resolver, :info_service, :authorization_service, :cache
     self.file_resolver = FileSystemFileResolver.new
     self.authorization_service = NilAuthorizationService
+    self.cache = Rails.cache
 
     # this is the default info service
     # returns a hash with the original image dimensions.
@@ -11,7 +12,7 @@ module Riiif
     # example:
     #   {:height=>390, :width=>600}
     self.info_service = lambda do |id, image|
-      Rails.cache.fetch(cache_key(id, info: true), compress: true, expires_in: expires_in) do
+      cache.fetch(cache_key(id, info: true), compress: true, expires_in: expires_in) do
         image.info
       end
     end
@@ -35,7 +36,7 @@ module Riiif
     # @param [ActiveSupport::HashWithIndifferentAccess] args
     def render(args)
       options = decode_options!(args)
-      Rails.cache.fetch(Image.cache_key(id, options), compress: true, expires_in: Image.expires_in) do
+      cache.fetch(Image.cache_key(id, options), compress: true, expires_in: Image.expires_in) do
         image.extract(options)
       end
     end

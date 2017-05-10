@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Riiif::Image do
-  before { Rails.cache.clear }
+  before { Riiif::Image.cache.clear }
   let(:filename) { File.expand_path('spec/samples/world.jp2') }
   subject { described_class.new('world') }
   describe 'happy path' do
@@ -53,7 +53,7 @@ RSpec.describe Riiif::Image do
 
     context 'when the rendered image is in the cache' do
       subject { described_class.new('Cave_26,_Ajanta') }
-      before { allow(Rails.cache).to receive(:fetch).and_return('expected') }
+      before { allow(Riiif::Image.cache).to receive(:fetch).and_return('expected') }
 
       it 'does not fetch the file' do
         expect(described_class.file_resolver).not_to receive(:find)
