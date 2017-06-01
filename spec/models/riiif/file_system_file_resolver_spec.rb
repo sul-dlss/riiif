@@ -13,11 +13,35 @@ describe Riiif::FileSystemFileResolver do
       end
     end
 
-    context 'when the file is found' do
+    context 'when a jpeg2000 file is found' do
       let(:id) { 'world' }
       it 'returns the jpeg2000 file' do
         expect(subject.path).to eq resolver.root + '/spec/samples/world.jp2'
       end
+    end
+  end
+
+  describe '#input_types' do
+    subject { described_class.new.send(:input_types) }
+
+    it 'includes jp2 extension' do
+      expect(subject).to include 'jp2'
+    end
+
+    it 'includes jpg extension' do
+      expect(subject).to include 'jpg'
+    end
+
+    it 'includes tif extension' do
+      expect(subject).to include 'tif'
+    end
+
+    it 'includes tiff extension' do
+      expect(subject).to include 'tiff'
+    end
+
+    it 'includes png extension' do
+      expect(subject).to include 'png'
     end
   end
 
@@ -31,9 +55,9 @@ describe Riiif::FileSystemFileResolver do
       end
     end
 
-    context 'with colins' do
+    context 'with colons' do
       let(:id) { 'fo:baz' }
-      it 'accepts ids with colins' do
+      it 'accepts ids with colons' do
         expect { subject }.not_to raise_error
       end
     end

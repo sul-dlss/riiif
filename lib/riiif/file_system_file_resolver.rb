@@ -10,7 +10,7 @@ module Riiif
     private
 
       def input_types
-        @input_types ||= %w(png jpg tiff jp2)
+        @input_types ||= %w(png jpg tif tiff jp2)
       end
   end
 end
