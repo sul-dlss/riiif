@@ -17,7 +17,7 @@ describe Riiif::HTTPFileResolver do
     rescue Riiif::ImageNotFoundError => e
     end
     expect(e).to be_a Riiif::ImageNotFoundError
-    expect(e.original_exception).to be_an OpenURI::HTTPError
+    expect(e.message).to eq 'failure'
   end
 
   context 'when basic authentication credentials are set' do
