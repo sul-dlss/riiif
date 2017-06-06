@@ -5,6 +5,20 @@ describe Riiif::ImagesController do
   let(:filename) { File.expand_path('spec/samples/world.jp2') }
   routes { Riiif::Engine.routes }
 
+  describe '#error_image' do
+    context 'with unauthorized' do
+      around do |example|
+        old_value = Riiif.unauthorized_image
+        Riiif.unauthorized_image = filename
+        example.run
+        Riiif.unauthorized_image = old_value
+      end
+      subject { controller.send(:error_image, :unauthorized) }
+      it 'gives the path to the image' do
+        subject
+      end
+    end
+  end
   describe '#show' do
     it 'sends images to the service' do
       image = double
