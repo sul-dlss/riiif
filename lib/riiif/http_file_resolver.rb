@@ -69,7 +69,7 @@ module Riiif
                   end
                 end
               rescue OpenURI::HTTPError => e
-                raise ImageNotFoundError, e
+                raise ImageNotFoundError, e.message
               end
             end
           end

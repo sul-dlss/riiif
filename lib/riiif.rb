@@ -12,12 +12,7 @@ module Riiif
 
   class Error < RuntimeError; end
   class InvalidAttributeError < Error; end
-  class ImageNotFoundError < Error
-    attr_reader :original_exception
-    def initialize(orig = nil)
-      @original_exception = orig
-    end
-  end
+  class ImageNotFoundError < Error; end
   # This error is raised when Riiif can't convert an image
   class ConversionError < Error; end
 
