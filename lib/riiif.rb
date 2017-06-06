@@ -19,4 +19,5 @@ module Riiif
   Transformation = Struct.new(:crop, :size, :quality, :rotation, :format)
   ImageInformation = Struct.new(:width, :height)
   mattr_accessor :not_found_image # the image to use when a lookup fails
+  mattr_accessor :unauthorized_image # the image to use when a lookup fails
 end
