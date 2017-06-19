@@ -172,7 +172,21 @@ end
 Riiif::Engine.config.cache_duration_in_days = 30
 ```
 #### Special note for Passenger and Apache users
-If you are running riiif in Passenger under Apache, you must set `AllowEncodedSlashes NoDecode` in your virtual host definition. For some uses, even with that directive set, the above configuration won't work for you. You may need to explicitly decode the url, like this:
+If you are running riiif in Passenger under Apache, you must set the following in your virtual host definition:
+ 
+```
+AllowEncodedSlashes NoDecode
+```
+
+You may also need to set the following in your virtual host definition, either at the top level, or within a 
+Location block for a specific path. See the [Passenger configuration reference](https://www.phusionpassenger.com/library/config/apache/reference/#passengerallowencodedslasheshttps://www.phusionpassenger.com/library/config/apache/reference/#passengerallowencodedslashes) for more info.
+
+```
+PassengerAllowEncodedSlashes on
+```
+
+An alternative approach to `PassengerAllowEncodedSlashes on` is to explicitly decode the url, like this:
+
 ```ruby
 require "uri"
 fs_id = URI.decode(id).sub(/\A([^\/]*)\/.*/, '\1')
