@@ -1,4 +1,21 @@
 require 'digest/md5'
+
+##
+# These explict requires are needed because in some contexts the Rails
+# autoloader can either: unload already loaded classes, or cause a lock while
+# trying to load a needed class.
+require_dependency 'riiif/region/imagemagick/absolute_decoder'
+require_dependency 'riiif/region/imagemagick/full_decoder'
+require_dependency 'riiif/region/imagemagick/percentage_decoder'
+require_dependency 'riiif/region/imagemagick/square_decoder'
+
+require_dependency 'riiif/size/imagemagick/absolute_decoder'
+require_dependency 'riiif/size/imagemagick/best_fit_decoder'
+require_dependency 'riiif/size/imagemagick/full_decoder'
+require_dependency 'riiif/size/imagemagick/height_decoder'
+require_dependency 'riiif/size/imagemagick/percent_decoder'
+require_dependency 'riiif/size/imagemagick/width_decoder'
+
 module Riiif
   class Image
     class_attribute :file_resolver, :info_service, :authorization_service, :cache
