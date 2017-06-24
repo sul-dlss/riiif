@@ -13,11 +13,11 @@ module Riiif
   class Error < RuntimeError; end
   class InvalidAttributeError < Error; end
   class ImageNotFoundError < Error; end
+
   # This error is raised when Riiif can't convert an image
   class ConversionError < Error; end
 
   Transformation = Struct.new(:crop, :size, :quality, :rotation, :format)
-  ImageInformation = Struct.new(:width, :height)
   mattr_accessor :not_found_image # the image to use when a lookup fails
-  mattr_accessor :unauthorized_image # the image to use when a lookup fails
+  mattr_accessor :unauthorized_image # the image to use when a user doesn't have access
 end

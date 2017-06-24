@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'open-uri'
 
-describe Riiif::ImagesController do
+RSpec.describe Riiif::ImagesController do
   let(:filename) { File.expand_path('spec/samples/world.jp2') }
   routes { Riiif::Engine.routes }
 
@@ -19,6 +19,7 @@ describe Riiif::ImagesController do
       end
     end
   end
+
   describe '#show' do
     it 'sends images to the service' do
       image = double
@@ -131,23 +132,45 @@ describe Riiif::ImagesController do
   end
 
   describe 'info' do
-    it 'returns info' do
-      image = double
-      expect(Riiif::Image).to receive(:new).with('abcd1234').and_return(image)
-      expect(image).to receive(:info).and_return(Riiif::ImageInformation.new(6000, 4000))
-      get :info, params: { id: 'abcd1234', format: 'json' }
-      expect(response).to be_successful
-      json = JSON.parse(response.body)
-      expect(json).to eq '@context' => 'http://iiif.io/api/image/2/context.json',
-                         '@id' => 'http://test.host/abcd1234',
-                         'width' => 6000,
-                         'height' => 4000,
-                         'profile' => ['http://iiif.io/api/image/2/level1.json', 'formats' => %w(jpg png)],
-                         'protocol' => 'http://iiif.io/api/image'
-      expect(response.headers['Link']).to eq '<http://iiif.io/api/image/2/level1.json>;rel="profile"'
-      expect(response.headers['Content-Type']).to eq 'application/ld+json; charset=utf-8'
-      expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
-      expect(response.headers['Cache-Control']).to eq "max-age=#{1.year.to_i}, private"
+    context 'the happy path' do
+      let(:image) { double }
+      let(:json) { JSON.parse(response.body) }
+
+      before do
+        allow(Riiif::Image).to receive(:new).with('abcd1234').and_return(image)
+        allow(image).to receive(:info).and_return(Riiif::ImageInformation.new(6000, 4000))
+      end
+
+      it 'returns info' do
+        get :info, params: { id: 'abcd1234', format: 'json' }
+        expect(response).to be_successful
+        expect(json).to eq '@context' => 'http://iiif.io/api/image/2/context.json',
+                           '@id' => 'http://test.host/abcd1234',
+                           'width' => 6000,
+                           'height' => 4000,
+                           'profile' => ['http://iiif.io/api/image/2/level1.json', 'formats' => %w(jpg png)],
+                           'protocol' => 'http://iiif.io/api/image'
+        expect(response.headers['Link']).to eq '<http://iiif.io/api/image/2/level1.json>;rel="profile"'
+        expect(response.headers['Content-Type']).to eq 'application/ld+json; charset=utf-8'
+        expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
+        expect(response.headers['Cache-Control']).to eq "max-age=#{1.year.to_i}, private"
+      end
+    end
+
+    context 'when the info_service has an invalid result' do
+      let(:image) { double }
+      let(:json) { JSON.parse(response.body) }
+
+      before do
+        allow(Riiif::Image).to receive(:new).with('abcd1234').and_return(image)
+        allow(image).to receive(:info).and_return(Riiif::ImageInformation.new(nil, nil))
+      end
+
+      it 'returns an error' do
+        get :info, params: { id: 'abcd1234', format: 'json' }
+        expect(response).to be_not_found
+        expect(json).to eq 'error' => 'no info'
+      end
     end
 
     context 'with an unauthorized image' do

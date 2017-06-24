@@ -33,10 +33,12 @@ module Riiif
     def info
       image = model.new(image_id)
       if authorization_service.can?(:info, image)
+        image_info = image.info
+        return render json: { error: 'no info' }, status: :not_found unless image_info.valid?
         headers['Access-Control-Allow-Origin'] = '*'
         # Set a Cache-Control header
         expires_in cache_expires, public: public_cache?
-        render json: image.info.to_h.merge(server_info), content_type: 'application/ld+json'
+        render json: image_info.to_h.merge(server_info), content_type: 'application/ld+json'
       else
         render json: { error: 'unauthorized' }, status: :unauthorized
       end
