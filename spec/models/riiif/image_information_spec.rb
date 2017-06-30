@@ -16,4 +16,12 @@ RSpec.describe Riiif::ImageInformation do
       it { is_expected.to be false }
     end
   end
+
+  describe '#[]' do
+    subject { info[:width] }
+    let(:info) { described_class.new(100, 200) }
+    before { allow(Deprecation).to receive(:warn) }
+
+    it { is_expected.to eq 100 }
+  end
 end
