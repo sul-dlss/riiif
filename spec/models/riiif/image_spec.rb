@@ -75,14 +75,14 @@ RSpec.describe Riiif::Image do
 
       it 'handles percent geometry' do
         expect(Riiif::CommandRunner).to receive(:execute)
-          .with("identify -format %hx%w #{filename}").and_return('131x175')
+          .with("identify -format %hx%w #{filename}[0]").and_return('131x175')
         expect(Riiif::CommandRunner).to receive(:execute).with("convert -crop 80%x70+18+13 -strip #{filename} png:-")
         subject.render(region: 'pct:10,10,80,70', format: 'png')
       end
 
       it 'handles square geometry' do
         expect(Riiif::CommandRunner).to receive(:execute)
-          .with("identify -format %hx%w #{filename}").and_return('131x175')
+          .with("identify -format %hx%w #{filename}[0]").and_return('131x175')
         expect(Riiif::CommandRunner).to receive(:execute).with("convert -crop 131x131+22+0 -strip #{filename} png:-")
         subject.render(region: 'square', format: 'png')
       end
