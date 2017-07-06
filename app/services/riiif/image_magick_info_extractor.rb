@@ -6,7 +6,7 @@ module Riiif
     end
 
     def extract
-      height, width = Riiif::CommandRunner.execute("identify -format %hx%w #{@path}").split('x')
+      height, width = Riiif::CommandRunner.execute("identify -format %hx%w #{@path}[0]").split('x')
       { height: Integer(height), width: Integer(width) }
     end
   end
