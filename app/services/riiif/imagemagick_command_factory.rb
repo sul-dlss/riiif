@@ -3,6 +3,10 @@
 module Riiif
   # Builds a command to run a transformation using Imagemagick
   class ImagemagickCommandFactory
+    # perhaps you want to use GraphicsMagick instead, set to "gm convert"
+    class_attribute :external_command
+    self.external_command = 'convert'
+
     # A helper method to instantiate and invoke build
     # @param [String] path the location of the file
     # @param [Transformation] transformation
@@ -33,14 +37,10 @@ module Riiif
 
     # @return [String] a command for running imagemagick to produce the requested output
     def build
-      [command, crop, size, rotation, colorspace, quality, sampling, metadata, output].join
+      [external_command, crop, size, rotation, colorspace, quality, sampling, metadata, output].join
     end
 
     private
-
-      def command
-        'convert'
-      end
 
       def use_compression?
         compression > 0 && jpeg?
