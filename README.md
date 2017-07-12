@@ -63,6 +63,15 @@ This file resolver caches the network files, so you will want to clear out the o
 Using a script like this would be a good idea: https://github.com/pulibrary/loris/blob/607567b921404a15a2111fbd7123604f4fdec087/bin/loris-cache_clean.sh
 By default the cache is located in `tmp/network_files`. You can set the cache path like this: `Riiif::Image.file_resolver.cache_path = '/var/cache'`
 
+### GraphicsMagick
+
+To use [GraphicsMagick](http://www.graphicsmagick.org/) instead of ImageMagick
+
+    Riiif::ImagemagickCommandFactory.external_command = "gm convert"
+    Riiif::ImageMagickInfoExtractor.external_command  = "gm identify"
+
+You will of course need to install GraphicsMagick on your system.
+
 ## Usage
 
 Add the routes to your application by inserting the following line into `config/routes.rb`
@@ -173,12 +182,12 @@ Riiif::Engine.config.cache_duration_in_days = 30
 ```
 #### Special note for Passenger and Apache users
 If you are running riiif in Passenger under Apache, you must set the following in your virtual host definition:
- 
+
 ```
 AllowEncodedSlashes NoDecode
 ```
 
-You may also need to set the following in your virtual host definition, either at the top level, or within a 
+You may also need to set the following in your virtual host definition, either at the top level, or within a
 Location block for a specific path. See the [Passenger configuration reference](https://www.phusionpassenger.com/library/config/apache/reference/#passengerallowencodedslasheshttps://www.phusionpassenger.com/library/config/apache/reference/#passengerallowencodedslashes) for more info.
 
 ```
