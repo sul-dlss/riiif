@@ -1,6 +1,10 @@
+require 'deprecation'
+
 module Riiif
   # This is the result of calling the Riiif.image_info service. It stores the height & width
   class ImageInformation
+    extend Deprecation
+
     def initialize(width, height)
       @width = width
       @height = height
@@ -11,6 +15,13 @@ module Riiif
     def to_h
       { width: width, height: height }
     end
+
+    def [](key)
+      to_h[key]
+    end
+    deprecation_deprecate :[] => 'Riiif::ImageInformation#[] has been deprecated ' \
+      'and will be removed in version 2.0. Use Riiif::ImageInformation#to_h and ' \
+      'call #[] on that result OR consider using #height and #width directly.'
 
     # Image information is only valid if height and width are present.
     # If an image info service doesn't have the value yet (not characterized perhaps?)
