@@ -52,9 +52,11 @@ module Riiif
     ##
     # @param [ActiveSupport::HashWithIndifferentAccess] args
     def render(args)
-      options = decode_options!(args)
-      cache.fetch(Image.cache_key(id, options), compress: true, expires_in: Image.expires_in) do
-        image.extract(options)
+      cache_opts = args.select { |a| %w(region size quality rotation format).include? a.to_s }
+      key = Image.cache_key(id, cache_opts)
+
+      cache.fetch(key, compress: true, expires_in: Image.expires_in) do
+        image.extract(decode_options!(args))
       end
     end
 
