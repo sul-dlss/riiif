@@ -73,7 +73,11 @@ module Riiif
       end
 
       def cache_key(id, options)
-        str = options.to_h.merge(id: id).delete_if { |_, v| v.nil? }.to_s
+        str = options.to_h.merge(id: id)
+                     .delete_if { |_, v| v.nil? }
+                     .sort_by { |k, _v| k.to_s }
+                     .to_s
+
         # Use a MD5 digest to ensure the keys aren't too long, and a prefix
         # to avoid collisions with other components in shared cache.
         'riiif:' + Digest::MD5.hexdigest(str)
