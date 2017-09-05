@@ -60,11 +60,13 @@ module Riiif
       end
 
       def crop
-        " -crop #{transformation.crop}" if transformation.crop
+        directive = transformation.crop.to_imagemagick
+        " -crop #{directive}" if directive
       end
 
       def size
-        " -resize #{transformation.size}" if transformation.size
+        directive = transformation.size.to_imagemagick
+        " -resize #{directive}" if directive
       end
 
       def rotation

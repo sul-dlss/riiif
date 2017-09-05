@@ -52,14 +52,14 @@ module Riiif
 
     def decode_region(region)
       if region.nil? || region == 'full'
-        Riiif::Region::Imagemagick::FullDecoder.new.decode
+        Riiif::Region::Full.new
       elsif md = /^pct:(\d+),(\d+),(\d+),(\d+)$/.match(region)
-        Riiif::Region::Imagemagick::PercentageDecoder
-          .new(image_info, md[1], md[2], md[3], md[4]).decode
+        Riiif::Region::Percentage
+          .new(info, md[1], md[2], md[3], md[4])
       elsif md = /^(\d+),(\d+),(\d+),(\d+)$/.match(region)
-        Riiif::Region::Imagemagick::AbsoluteDecoder.new(md[1], md[2], md[3], md[4]).decode
+        Riiif::Region::Absolute.new(md[1], md[2], md[3], md[4])
       elsif region == 'square'
-        Riiif::Region::Imagemagick::SquareDecoder.new(image_info).decode
+        Riiif::Region::Square.new(info)
       else
         raise InvalidAttributeError, "Invalid region: #{region}"
       end
@@ -68,21 +68,21 @@ module Riiif
     # rubocop:disable Metrics/PerceivedComplexity
     def decode_size(size)
       if size.nil? || size == 'full'
-        Riiif::Size::Imagemagick::FullDecoder.new.decode
+        Riiif::Size::Full.new
       elsif md = /^,(\d+)$/.match(size)
-        Riiif::Size::Imagemagick::HeightDecoder.new(md[1]).decode
+        Riiif::Size::Height.new(md[1])
       elsif md = /^(\d+),$/.match(size)
-        Riiif::Size::Imagemagick::WidthDecoder.new(md[1]).decode
+        Riiif::Size::Width.new(md[1])
       elsif md = /^pct:(\d+(.\d+)?)$/.match(size)
-        Riiif::Size::Imagemagick::PercentDecoder.new(md[1]).decode
+        Riiif::Size::Percent.new(md[1])
       elsif md = /^(\d+),(\d+)$/.match(size)
-        Riiif::Size::Imagemagick::AbsoluteDecoder.new(md[1], md[2]).decode
+        Riiif::Size::Absolute.new(md[1], md[2])
       elsif md = /^!(\d+),(\d+)$/.match(size)
-        Riiif::Size::Imagemagick::BestFitDecoder.new(md[1], md[2]).decode
+        Riiif::Size::BestFit.new(md[1], md[2])
       else
         raise InvalidAttributeError, "Invalid size: #{size}"
       end
     end
-    # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
   end
 end

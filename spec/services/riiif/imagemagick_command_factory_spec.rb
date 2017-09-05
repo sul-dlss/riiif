@@ -7,8 +7,8 @@ RSpec.describe Riiif::ImagemagickCommandFactory do
     subject { described_class.build(path, transformation) }
 
     let(:transformation) do
-      Riiif::Transformation.new('region',
-                                'size',
+      Riiif::Transformation.new(Riiif::Region::Full.new,
+                                Riiif::Size::Full.new,
                                 'quality',
                                 'rotation',
                                 format)
