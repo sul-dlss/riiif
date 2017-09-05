@@ -3,8 +3,15 @@ require 'spec_helper'
 RSpec.describe Riiif::Image do
   subject(:image) { described_class.new('world') }
 
-  before { Riiif::Image.cache.clear }
+  let(:root) { File.expand_path(::File.join(::File.dirname(__FILE__), '../../..')) }
+  let(:base_path) { ::File.join(root, 'spec/samples') }
+  let(:resolver) { Riiif::FileSystemFileResolver.new(base_path: base_path) }
   let(:filename) { File.expand_path('spec/samples/world.jp2') }
+
+  before do
+    described_class.file_resolver = resolver
+    Riiif::Image.cache.clear
+  end
 
   describe 'happy path' do
     before do
@@ -43,7 +50,7 @@ RSpec.describe Riiif::Image do
       end
     end
     after do
-      described_class.file_resolver = Riiif::FileSystemFileResolver.new
+      described_class.file_resolver = resolver
     end
 
     describe 'get info' do

@@ -19,7 +19,7 @@ require_dependency 'riiif/size/imagemagick/width_decoder'
 module Riiif
   class Image
     class_attribute :file_resolver, :info_service, :authorization_service, :cache
-    self.file_resolver = FileSystemFileResolver.new
+    self.file_resolver = FileSystemFileResolver.new(base_path: File.join(Rails.root, 'tmp'))
     self.authorization_service = NilAuthorizationService
     self.cache = Rails.cache
 
