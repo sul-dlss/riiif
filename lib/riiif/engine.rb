@@ -8,5 +8,8 @@ module Riiif
     config.action_dispatch.rescue_responses.merge!(
       'Riiif::ImageNotFoundError' => :not_found
     )
+
+    # Set to true to use kdu for jp2000 source images
+    config.kakadu_enabled = false
   end
 end

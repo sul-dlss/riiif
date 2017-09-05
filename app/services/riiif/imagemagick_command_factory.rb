@@ -37,7 +37,7 @@ module Riiif
 
     # @return [String] a command for running imagemagick to produce the requested output
     def build
-      [external_command, crop, size, rotation, colorspace, quality, sampling, metadata, output].join
+      [external_command, crop, size, rotation, colorspace, quality, sampling, metadata, input, output].join
     end
 
     private
@@ -50,8 +50,13 @@ module Riiif
         transformation.format == 'jpg'.freeze
       end
 
+      def input
+        " #{path}"
+      end
+
+      # pipe the output to STDOUT
       def output
-        " #{path} #{transformation.format}:-"
+        " #{transformation.format}:-"
       end
 
       def crop

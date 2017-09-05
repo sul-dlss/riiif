@@ -6,6 +6,7 @@ module Riiif
     include ActiveSupport::Benchmarkable
     delegate :logger, to: :Rails
 
+    # @return [Sting] all the image data
     def execute(command)
       out = nil
       benchmark("Riiif executed #{command}") do

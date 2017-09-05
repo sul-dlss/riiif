@@ -20,6 +20,8 @@ module Riiif
     end
     deprecation_deprecate read: 'Riiif::File.read is deprecated and will be removed in version 2.0'
 
+    # Yields a tempfile to the provided block
+    # @return [Riiif::File] a file backed by the Tempfile
     def self.create(ext = nil, _validate = true, &block)
       tempfile = Tempfile.new(['mini_magick', ext.to_s.downcase])
       tempfile.binmode
@@ -32,22 +34,21 @@ module Riiif
     deprecation_deprecate create: 'Riiif::File.create is deprecated and will be removed in version 2.0'
 
     # @param [Transformation] transformation
+    # @return [String] the image data
     def extract(transformation)
-      command = command_factory.build(path, transformation)
-      execute(command)
+      transformer.transform(path, transformation)
+    end
+
+    def transformer
+      if Riiif.kakadu_enabled? && path.ends_with?('.jp2')
+        KakaduTransformer
+      else
+        ImagemagickTransformer
+      end
     end
 
     def info
       @info ||= info_extractor_class.new(path).extract
     end
-
-    delegate :execute, to: Riiif::CommandRunner
-    private :execute
-
-    private
-
-      def command_factory
-        ImagemagickCommandFactory
-      end
   end
 end

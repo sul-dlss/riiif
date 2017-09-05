@@ -21,4 +21,8 @@ module Riiif
   Transformation = Struct.new(:crop, :size, :quality, :rotation, :format)
   mattr_accessor :not_found_image # the image to use when a lookup fails
   mattr_accessor :unauthorized_image # the image to use when a user doesn't have access
+
+  def self.kakadu_enabled?
+    Engine.config.kakadu_enabled
+  end
 end

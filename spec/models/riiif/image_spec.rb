@@ -14,12 +14,11 @@ RSpec.describe Riiif::Image do
   end
 
   describe 'happy path' do
-    before do
-      expect(subject.file).to receive(:execute)
+    it 'renders' do
+      expect(Riiif::CommandRunner).to receive(:execute)
         .with("convert -quality 85 -sampling-factor 4:2:0 -strip #{filename} jpg:-")
         .and_return('imagedata')
-    end
-    it 'renders' do
+
       expect(subject.render('size' => 'full', format: 'jpg')).to eq 'imagedata'
     end
   end

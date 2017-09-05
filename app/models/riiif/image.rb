@@ -54,6 +54,7 @@ module Riiif
 
     ##
     # @param [ActiveSupport::HashWithIndifferentAccess] args
+    # @return [String] the image data
     def render(args)
       cache_opts = args.select { |a| %w(region size quality rotation format).include? a.to_s }
       key = Image.cache_key(id, cache_opts)
