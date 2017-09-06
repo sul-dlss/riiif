@@ -14,6 +14,10 @@ RSpec.describe Riiif::Image do
   end
 
   describe 'happy path' do
+    before do
+      allow(image.info_service).to receive(:call).and_return({})
+    end
+
     it 'renders' do
       expect(Riiif::CommandRunner).to receive(:execute)
         .with("convert -quality 85 -sampling-factor 4:2:0 -strip #{filename} jpg:-")

@@ -43,6 +43,10 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Max: 18
 
+Metrics/ParameterLists:
+  Exclude:
+    - 'app/services/riiif/imagemagick_command_factory.rb'
+
 # Offense count: 1
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: nested, compact

@@ -2,12 +2,13 @@ require 'spec_helper'
 
 RSpec.describe Riiif::ImagemagickCommandFactory do
   let(:path) { 'foo.tiff' }
+  let(:info) { double('foo') }
 
   describe '.build' do
-    subject { described_class.build(path, transformation) }
+    subject { described_class.build(path, info, transformation) }
 
     let(:transformation) do
-      Riiif::Transformation.new(Riiif::Region::Full.new,
+      Riiif::Transformation.new(Riiif::Region::Full.new(info),
                                 Riiif::Size::Full.new,
                                 'quality',
                                 'rotation',

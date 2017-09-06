@@ -1,19 +1,18 @@
 module Riiif
   module Region
     # Represents an absolute specified region
-    class Absolute
-      def initialize(x, y, width, height)
-        @x = x
-        @y = y
+    class Absolute < Crop
+      # TODO: only kakadu needs image_info. So there's potenial to optimize by
+      # making image_info a proxy that fetches the info lazily when needed.
+      def initialize(image_info, x, y, width, height)
+        @image_info = image_info
+        @offset_x = x
+        @offset_y = y
         @width = width
         @height = height
       end
 
-      # @return [String] a region for imagemagick to decode
-      #                  (appropriate for passing to the -crop parameter)
-      def to_imagemagick
-        "#{@width}x#{@height}+#{@x}+#{@y}"
-      end
+      attr_reader :width, :height
     end
   end
 end

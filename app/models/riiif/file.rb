@@ -34,9 +34,10 @@ module Riiif
     deprecation_deprecate create: 'Riiif::File.create is deprecated and will be removed in version 2.0'
 
     # @param [Transformation] transformation
-    # @return [String] the image data
-    def extract(transformation)
-      transformer.transform(path, transformation)
+    # @param [ImageInformation] image_info
+    # @return [String] the processed image data
+    def extract(transformation, image_info = info)
+      transformer.transform(path, image_info, transformation)
     end
 
     def transformer
@@ -48,7 +49,11 @@ module Riiif
     end
 
     def info
-      @info ||= info_extractor_class.new(path).extract
+      @info ||= info_extractor.extract
+    end
+
+    def info_extractor
+      @info_extractor ||= info_extractor_class.new(path)
     end
   end
 end

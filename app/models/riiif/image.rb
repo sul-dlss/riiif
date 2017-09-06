@@ -60,7 +60,7 @@ module Riiif
       key = Image.cache_key(id, cache_opts)
 
       cache.fetch(key, compress: true, expires_in: Image.expires_in) do
-        file.extract(OptionDecoder.decode(args, info))
+        file.extract(OptionDecoder.decode(args, info), info)
       end
     end
 

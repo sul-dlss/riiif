@@ -52,14 +52,14 @@ module Riiif
 
     def decode_region(region)
       if region.nil? || region == 'full'
-        Riiif::Region::Full.new
+        Riiif::Region::Full.new(image_info)
       elsif md = /^pct:(\d+),(\d+),(\d+),(\d+)$/.match(region)
         Riiif::Region::Percentage
-          .new(info, md[1], md[2], md[3], md[4])
+          .new(image_info, md[1], md[2], md[3], md[4])
       elsif md = /^(\d+),(\d+),(\d+),(\d+)$/.match(region)
-        Riiif::Region::Absolute.new(md[1], md[2], md[3], md[4])
+        Riiif::Region::Absolute.new(image_info, md[1], md[2], md[3], md[4])
       elsif region == 'square'
-        Riiif::Region::Square.new(info)
+        Riiif::Region::Square.new(image_info)
       else
         raise InvalidAttributeError, "Invalid region: #{region}"
       end
@@ -70,15 +70,15 @@ module Riiif
       if size.nil? || size == 'full'
         Riiif::Size::Full.new
       elsif md = /^,(\d+)$/.match(size)
-        Riiif::Size::Height.new(md[1])
+        Riiif::Size::Height.new(image_info, md[1])
       elsif md = /^(\d+),$/.match(size)
-        Riiif::Size::Width.new(md[1])
+        Riiif::Size::Width.new(image_info, md[1])
       elsif md = /^pct:(\d+(.\d+)?)$/.match(size)
-        Riiif::Size::Percent.new(md[1])
+        Riiif::Size::Percent.new(image_info, md[1])
       elsif md = /^(\d+),(\d+)$/.match(size)
-        Riiif::Size::Absolute.new(md[1], md[2])
+        Riiif::Size::Absolute.new(image_info, md[1], md[2])
       elsif md = /^!(\d+),(\d+)$/.match(size)
-        Riiif::Size::BestFit.new(md[1], md[2])
+        Riiif::Size::BestFit.new(image_info, md[1], md[2])
       else
         raise InvalidAttributeError, "Invalid size: #{size}"
       end
