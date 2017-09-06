@@ -17,7 +17,10 @@ require_dependency 'riiif/size/imagemagick/percent_decoder'
 require_dependency 'riiif/size/imagemagick/width_decoder'
 
 module Riiif
+  # rubocop:disable Metrics/ClassLength
   class Image
+    extend Deprecation
+
     class_attribute :file_resolver, :info_service, :authorization_service, :cache
     self.file_resolver = FileSystemFileResolver.new
     self.authorization_service = NilAuthorizationService
@@ -40,14 +43,17 @@ module Riiif
 
     # @param [String] id The identifier of the file to be looked up.
     # @param [Riiif::File] file Optional: The Riiif::File to use instead of looking one up.
-    def initialize(id, file = nil)
+    def initialize(id, passed_file = nil)
       @id = id
-      @image = file if file.present?
+      @file = passed_file if passed_file.present?
     end
 
-    def image
-      @image ||= file_resolver.find(id)
+    def file
+      @file ||= file_resolver.find(id)
     end
+
+    alias image file
+    deprecation_deprecate image: 'Use Image#file instead. This will be removed in riiif 2.0'
 
     ##
     # @param [ActiveSupport::HashWithIndifferentAccess] args
@@ -56,13 +62,13 @@ module Riiif
       key = Image.cache_key(id, cache_opts)
 
       cache.fetch(key, compress: true, expires_in: Image.expires_in) do
-        image.extract(decode_options!(args))
+        file.extract(decode_options!(args))
       end
     end
 
     def info
       @info ||= begin
-                  result = info_service.call(id, image)
+                  result = info_service.call(id, file)
                   ImageInformation.new(result[:width], result[:height])
                 end
     end
@@ -153,4 +159,5 @@ module Riiif
       end
     # rubocop:enable Metrics/PerceivedComplexity
   end
+  # rubocop:enable Metrics/ClassLength
 end
