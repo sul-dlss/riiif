@@ -1,9 +1,11 @@
 require 'spec_helper'
 
 RSpec.describe Riiif::Image do
+  subject(:image) { described_class.new('world') }
+
   before { Riiif::Image.cache.clear }
   let(:filename) { File.expand_path('spec/samples/world.jp2') }
-  subject { described_class.new('world') }
+
   describe 'happy path' do
     before do
       expect(subject.image).to receive(:execute)
@@ -62,104 +64,226 @@ RSpec.describe Riiif::Image do
     end
   end
 
-  describe 'mogrify' do
+  describe '#render' do
     describe 'region' do
-      it 'returns the original when specifing full size' do
-        expect(Riiif::CommandRunner).to receive(:execute).with("convert -strip #{filename} png:-")
-        subject.render(region: 'full', format: 'png')
-      end
-      it 'handles absolute geometry' do
-        expect(Riiif::CommandRunner).to receive(:execute).with("convert -crop 60x75+80+15 -strip #{filename} png:-")
-        subject.render(region: '80,15,60,75', format: 'png')
+      subject(:render) { image.render(region: region, format: 'png') }
+
+      before do
+        allow(Riiif::CommandRunner).to receive(:execute)
+          .with("identify -format %hx%w #{filename}[0]").and_return('131x175')
       end
 
-      it 'handles percent geometry' do
-        expect(Riiif::CommandRunner).to receive(:execute)
-          .with("identify -format %hx%w #{filename}[0]").and_return('131x175')
-        expect(Riiif::CommandRunner).to receive(:execute).with("convert -crop 80%x70+18+13 -strip #{filename} png:-")
-        subject.render(region: 'pct:10,10,80,70', format: 'png')
+      context 'when specifing full size' do
+        let(:region) { 'full' }
+
+        it 'returns the original' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with("convert -strip #{filename} png:-")
+          render
+        end
       end
 
-      it 'handles square geometry' do
-        expect(Riiif::CommandRunner).to receive(:execute)
-          .with("identify -format %hx%w #{filename}[0]").and_return('131x175')
-        expect(Riiif::CommandRunner).to receive(:execute).with("convert -crop 131x131+22+0 -strip #{filename} png:-")
-        subject.render(region: 'square', format: 'png')
+      context 'when specifing absolute geometry' do
+        let(:region) { '80,15,60,75' }
+
+        it 'runs the correct imagemagick command' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with("convert -crop 60x75+80+15 -strip #{filename} png:-")
+          render
+        end
       end
-      it 'raises an error for invalid geometry' do
-        expect { subject.render(region: '150x75', format: 'png') }.to raise_error Riiif::InvalidAttributeError
+
+      context 'when specifing percent geometry' do
+        let(:region) { 'pct:10,10,80,70' }
+
+        it 'runs the correct imagemagick command' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with("convert -crop 80%x70+18+13 -strip #{filename} png:-")
+          render
+        end
+      end
+
+      context 'when specifing square geometry' do
+        let(:region) { 'square' }
+
+        it 'runs the correct imagemagick command' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with("convert -crop 131x131+22+0 -strip #{filename} png:-")
+          render
+        end
+      end
+
+      context 'when the geometry is invalid' do
+        let(:region) { '150x75' }
+
+        it 'raises an error' do
+          expect { render }.to raise_error Riiif::InvalidAttributeError
+        end
       end
     end
 
     describe 'resize' do
-      it 'returns the original when specifing full size' do
-        expect(Riiif::CommandRunner).to receive(:execute).with("convert -strip #{filename} png:-")
-        subject.render(size: 'full', format: 'png')
+      subject(:render) { image.render(size: size, format: 'png') }
+
+      context 'when specifing full size' do
+        let(:size) { 'full' }
+
+        it 'returns the original' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with("convert -strip #{filename} png:-")
+          render
+        end
       end
-      it 'handles integer percent sizes' do
-        expect(Riiif::CommandRunner).to receive(:execute).with("convert -resize 50% -strip #{filename} png:-")
-        subject.render(size: 'pct:50', format: 'png')
+
+      context 'when specifing percent size' do
+        let(:size) { 'pct:50' }
+
+        it 'runs the correct imagemagick command' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with("convert -resize 50% -strip #{filename} png:-")
+          render
+        end
       end
-      it 'handles float percent sizes' do
-        expect(Riiif::CommandRunner).to receive(:execute).with("convert -resize 12.5% -strip #{filename} png:-")
-        subject.render(size: 'pct:12.5', format: 'png')
+
+      context 'when specifing float percent size' do
+        let(:size) { 'pct:12.5' }
+
+        it 'runs the correct imagemagick command' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with("convert -resize 12.5% -strip #{filename} png:-")
+          render
+        end
       end
-      it 'handles w,' do
-        expect(Riiif::CommandRunner).to receive(:execute).with("convert -resize 50 -strip #{filename} png:-")
-        subject.render(size: '50,', format: 'png')
+
+      context 'when specifing w, size' do
+        let(:size) { '50,' }
+
+        it 'runs the correct imagemagick command' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with("convert -resize 50 -strip #{filename} png:-")
+          render
+        end
       end
-      it 'handles ,h' do
-        expect(Riiif::CommandRunner).to receive(:execute).with("convert -resize x50 -strip #{filename} png:-")
-        subject.render(size: ',50', format: 'png')
+
+      context 'when specifing ,h size' do
+        let(:size) { ',50' }
+
+        it 'runs the correct imagemagick command' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with("convert -resize x50 -strip #{filename} png:-")
+          render
+        end
       end
-      it 'handles w,h' do
-        expect(Riiif::CommandRunner).to receive(:execute).with("convert -resize 150x75! -strip #{filename} png:-")
-        subject.render(size: '150,75', format: 'png')
+
+      context 'when specifing w,h size' do
+        let(:size) { '150,75' }
+
+        it 'runs the correct imagemagick command' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with("convert -resize 150x75! -strip #{filename} png:-")
+          render
+        end
       end
-      it 'handles bestfit (!w,h)' do
-        expect(Riiif::CommandRunner).to receive(:execute).with("convert -resize 150x75 -strip #{filename} png:-")
-        subject.render(size: '!150,75', format: 'png')
+      context 'when specifing bestfit (!w,h) size' do
+        let(:size) { '!150,75' }
+
+        it 'runs the correct imagemagick command' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with("convert -resize 150x75 -strip #{filename} png:-")
+          render
+        end
       end
-      it 'raises an error for invalid size' do
-        expect { subject.render(size: '150x75', format: 'png') }.to raise_error Riiif::InvalidAttributeError
+
+      context 'when the geometry is invalid' do
+        let(:size) { '150x75' }
+
+        it 'raises an error' do
+          expect { render }.to raise_error Riiif::InvalidAttributeError
+        end
       end
     end
 
     describe 'rotate' do
-      it 'returns the original when specifing full size' do
-        expect(Riiif::CommandRunner).to receive(:execute).with("convert -strip #{filename} png:-")
-        subject.render(rotation: '0', format: 'png')
+      subject(:render) { image.render(rotation: rotation, format: 'png') }
+
+      context 'without rotating' do
+        let(:rotation) { '0' }
+
+        it 'returns the original' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with("convert -strip #{filename} png:-")
+          render
+        end
       end
-      it 'handles floats' do
-        expect(Riiif::CommandRunner).to receive(:execute)
-          .with("convert -virtual-pixel white +distort srt 22.5 -strip #{filename} png:-")
-        subject.render(rotation: '22.5', format: 'png')
+
+      context 'with a float value' do
+        let(:rotation) { '22.5' }
+
+        it 'handles floats' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with("convert -virtual-pixel white +distort srt 22.5 -strip #{filename} png:-")
+          render
+        end
       end
-      it 'raises an error for invalid angle' do
-        expect { subject.render(rotation: '150x', format: 'png') }.to raise_error Riiif::InvalidAttributeError
+
+      context 'with an invalid value' do
+        let(:rotation) { '150x' }
+
+        it 'raises an error for invalid angle' do
+          expect { render }.to raise_error Riiif::InvalidAttributeError
+        end
       end
     end
 
     describe 'quality' do
-      it 'returns the original when specifing default' do
-        expect(Riiif::CommandRunner).to receive(:execute).with("convert -strip #{filename} png:-")
-        subject.render(quality: 'default', format: 'png')
+      subject(:render) { image.render(quality: quality, format: 'png') }
+
+      context 'when default is specified' do
+        let(:quality) { 'default' }
+
+        it 'returns the original when specifing default' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with("convert -strip #{filename} png:-")
+          render
+        end
       end
-      it 'returns the original when specifing color' do
-        expect(Riiif::CommandRunner).to receive(:execute).with("convert -strip #{filename} png:-")
-        subject.render(quality: 'color', format: 'png')
+
+      context 'when color is specified' do
+        let(:quality) { 'color' }
+
+        it 'returns the original when specifing color' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with("convert -strip #{filename} png:-")
+          render
+        end
       end
-      it 'converts to grayscale' do
-        expect(Riiif::CommandRunner).to receive(:execute).with("convert -colorspace Gray -strip #{filename} png:-")
-        subject.render(quality: 'grey', format: 'png')
+
+      context 'when grey is specified' do
+        let(:quality) { 'grey' }
+
+        it 'converts to grayscale' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with("convert -colorspace Gray -strip #{filename} png:-")
+          render
+        end
       end
-      it 'converts to bitonal' do
-        expect(Riiif::CommandRunner).to receive(:execute)
-          .with("convert -colorspace Gray -type Bilevel -strip #{filename} png:-")
-        subject.render(quality: 'bitonal', format: 'png')
+
+      context 'when bitonal is specified' do
+        let(:quality) { 'bitonal' }
+
+        it 'converts to bitonal' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with("convert -colorspace Gray -type Bilevel -strip #{filename} png:-")
+          render
+        end
       end
-      it 'raises an error for invalid angle' do
-        expect { subject.render(rotation: '150x', format: 'png') }.to raise_error Riiif::InvalidAttributeError
+
+      context 'when an invalid quality is specified' do
+        let(:quality) { 'best' }
+
+        it 'raises an error' do
+          expect { render }.to raise_error Riiif::InvalidAttributeError
+        end
       end
     end
   end
