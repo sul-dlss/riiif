@@ -4,8 +4,9 @@ RSpec.describe Riiif::ImagemagickCommandFactory do
   let(:path) { 'foo.tiff' }
   let(:info) { double('foo') }
 
-  describe '.build' do
-    subject { described_class.build(path, info, transformation) }
+  describe '.command' do
+    subject { instance.command }
+    let(:instance) { described_class.new(path, info, transformation) }
 
     let(:transformation) do
       Riiif::Transformation.new(Riiif::Region::Full.new(info),

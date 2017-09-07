@@ -10,15 +10,6 @@ module Riiif
     # @param [String] path the location of the file
     # @param info [ImageInformation] information about the source
     # @param [Transformation] transformation
-    # @return [String] a command for running imagemagick to produce the requested output
-    def self.build(path, info, transformation)
-      new(path, info, transformation).build
-    end
-
-    # A helper method to instantiate and invoke build
-    # @param [String] path the location of the file
-    # @param info [ImageInformation] information about the source
-    # @param [Transformation] transformation
     def initialize(path, info, transformation)
       @path = path
       @info = info
@@ -28,10 +19,17 @@ module Riiif
     attr_reader :path, :info, :transformation
 
     # @return [String] a command for running kdu_expand to produce the requested output
-    def build
+    def command
       # TODO: we must delete this link
       ::File.symlink('/dev/stdout', link_path)
       [external_command, quiet, input, threads, region, reduce, output(link_path)].join
+    end
+
+    def reduction_factor
+      @reduction_factor ||= begin
+        reduced_size = transformation.crop
+        transformation.size.reduction_factor(reduced_size)
+      end
     end
 
     private
@@ -67,12 +65,7 @@ module Riiif
       # use it if either the percent is <=50, or the height/width
       # are <=50% of full size.
       def reduce
-        " -reduce #{reduction_arg}" if reduction_arg
-      end
-
-      def reduction_arg
-        reduced_size = transformation.crop
-        transformation.size.reduction_factor(reduced_size)
+        " -reduce #{reduction_factor}" if reduction_factor
       end
   end
 end

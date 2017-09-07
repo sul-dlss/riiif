@@ -17,12 +17,12 @@ module Riiif
     attr_reader :path, :info, :transformation
 
     def transform
-      command = command_factory.build(path, info, transformation)
-      post_process(execute(command))
+      builder = command_factory.new(path, info, transformation)
+      post_process(execute(builder.command), builder.reduction_factor)
     end
 
     # override this method in subclasses if we need to transform the output data
-    def post_process(image)
+    def post_process(image, _reduction_factor)
       image
     end
 

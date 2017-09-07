@@ -3,6 +3,7 @@ module Riiif
     attr_reader :path
 
     class_attribute :info_extractor_class
+    # TODO: add alternative that uses kdu_jp2info
     self.info_extractor_class = ImageMagickInfoExtractor
 
     # @param input_path [String] The location of an image file

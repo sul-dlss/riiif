@@ -7,8 +7,9 @@ module Riiif
 
     # The data we get back from kdu_expand is a bmp and we need to change it
     # to the requested format by calling Imagemagick.
-    # rubocop:disable Lint/AssignmentInCondition
-    def post_process(data)
+    # TODO: Calculate a new set of transforms with respect to reduction_factor
+    def post_process(data, reduction_factor)
+      puts "Reduction factor is #{reduction_factor}"
       data_io = StringIO.new(data)
       data_io.binmode
       out = ''
@@ -21,6 +22,5 @@ module Riiif
       end
       out
     end
-    # rubocop:enable Lint/AssignmentInCondition
   end
 end

@@ -14,20 +14,7 @@ module Riiif
     # @param [Integer] compression (85) the compression level to use (set 0 for no compression)
     # @param [String] sampling_factor ("4:2:0") the chroma sample factor (set 0 for no compression)
     # @param [Boolean] strip_metadata (true) do we want to strip EXIF tags?
-    # @return [String] a command for running imagemagick to produce the requested output
-    def self.build(path, info, transformation, compression: 85, sampling_factor: '4:2:0', strip_metadata: true)
-      new(path, info, transformation,
-          compression: compression,
-          sampling_factor: sampling_factor,
-          strip_metadata: strip_metadata).build
-    end
-
-    # A helper method to instantiate and invoke build
-    # @param [String] path the location of the file
-    # @param info [ImageInformation] information about the source
-    # @param [Transformation] transformation
-    # @param [Integer] compression the compression level to use (set 0 for no compression)
-    def initialize(path, info, transformation, compression:, sampling_factor:, strip_metadata:)
+    def initialize(path, info, transformation, compression: 85, sampling_factor: '4:2:0', strip_metadata: true)
       @path = path
       @info = info
       @transformation = transformation
@@ -39,8 +26,12 @@ module Riiif
     attr_reader :path, :info, :transformation, :compression, :sampling_factor, :strip_metadata
 
     # @return [String] a command for running imagemagick to produce the requested output
-    def build
+    def command
       [external_command, crop, size, rotation, colorspace, quality, sampling, metadata, input, output].join
+    end
+
+    def reduction_factor
+      nil
     end
 
     private

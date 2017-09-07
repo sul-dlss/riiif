@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe Riiif::KakaduCommandFactory do
-  subject { described_class.build(path, info, transformation) }
+  subject(:instance) { described_class.new(path, info, transformation) }
 
   let(:info) { double(:info) }
   let(:path) { 'foo.jp2' }
@@ -21,7 +21,8 @@ RSpec.describe Riiif::KakaduCommandFactory do
                               fmt)
   end
 
-  describe '#build' do
+  describe '#command' do
+    subject { instance.command }
     before do
       allow(::File).to receive(:symlink)
       allow(Riiif::LinkNameService).to receive(:create).and_return('/tmp/bar.bmp')
@@ -56,10 +57,9 @@ RSpec.describe Riiif::KakaduCommandFactory do
     end
   end
 
-  describe '#reduction_arg' do
-    subject { instance.send(:reduction_arg) }
+  describe '#reduction_factor' do
+    subject { instance.send(:reduction_factor) }
 
-    let(:instance) { described_class.new(path, info, transformation) }
     let(:info) { Riiif::ImageInformation.new(300, 300) }
 
     context 'for a full size image' do
