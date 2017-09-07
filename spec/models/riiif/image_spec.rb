@@ -8,7 +8,7 @@ RSpec.describe Riiif::Image do
 
   describe 'happy path' do
     before do
-      expect(subject.image).to receive(:execute)
+      expect(subject.file).to receive(:execute)
         .with("convert -quality 85 -sampling-factor 4:2:0 -strip #{filename} jpg:-")
         .and_return('imagedata')
     end
