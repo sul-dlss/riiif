@@ -5,22 +5,35 @@ module Riiif
       KakaduCommandFactory
     end
 
+    def transform
+      with_tempfile do |file_name|
+        execute(command_builder.command(file_name))
+        post_process(file_name, command_builder.reduction_factor)
+      end
+    end
+
+    def with_tempfile
+      Tempfile.open(['riiif-intermediate', '.bmp']) do |f|
+        yield f.path
+      end
+    end
+
     # The data we get back from kdu_expand is a bmp and we need to change it
     # to the requested format by calling Imagemagick.
-    # TODO: Calculate a new set of transforms with respect to reduction_factor
-    def post_process(data, reduction_factor)
-      puts "Reduction factor is #{reduction_factor}"
-      data_io = StringIO.new(data)
-      data_io.binmode
-      out = ''
-      command = "/usr/local/bin/convert - #{transformation.format}:-"
-      IO.popen(command, 'r+b') do |io|
-        io.write(data_io.read(4096)) until data_io.eof?
-        io.close_write
-        # Read from convert into our buffer
-        out << io.read(4096) until io.eof?
-      end
-      out
+    def post_process(intermediate_file, reduction_factor)
+      # Calculate a new set of transforms with respect to reduction_factor
+      transformation = if reduction_factor
+                         self.transformation.without_crop(image_info).reduce(reduction_factor)
+                       else
+                         self.transformation.without_crop(image_info)
+                       end
+      Riiif::File.new(intermediate_file).extract(transformation, image_info)
     end
+
+    private
+
+      def tmp_path
+        @link_path ||= LinkNameService.create
+      end
   end
 end

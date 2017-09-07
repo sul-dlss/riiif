@@ -6,7 +6,8 @@ module Riiif
     include ActiveSupport::Benchmarkable
     delegate :logger, to: :Rails
 
-    # @return [Sting] all the image data
+    # TODO: this is being loaded into memory.  We could make this a stream.
+    # @return [String] all the image data
     def execute(command)
       out = nil
       benchmark("Riiif executed #{command}") do

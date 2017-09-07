@@ -22,11 +22,7 @@ RSpec.describe Riiif::KakaduCommandFactory do
   end
 
   describe '#command' do
-    subject { instance.command }
-    before do
-      allow(::File).to receive(:symlink)
-      allow(Riiif::LinkNameService).to receive(:create).and_return('/tmp/bar.bmp')
-    end
+    subject { instance.command '/tmp/bar.bmp' }
 
     context 'with a full size image' do
       it { is_expected.to eq 'kdu_expand -quiet -i foo.jp2 -num_threads 4 -o /tmp/bar.bmp' }
@@ -43,17 +39,17 @@ RSpec.describe Riiif::KakaduCommandFactory do
 
     context 'with absolute' do
       let(:region) { Riiif::Region::Absolute.new(info, 25, 75, 150, 100) }
-      it { is_expected.to eq ' -region {0.25,0.08333333333333333},{0.3333333333333333,0.5}' }
+      it { is_expected.to eq ' -region "{0.25,0.08333333333333333},{0.3333333333333333,0.5}"' }
     end
 
     context 'with a square' do
       let(:region) { Riiif::Region::Square.new(info) }
-      it { is_expected.to eq ' -region {0.0,0},{1.0,1.0}' }
+      it { is_expected.to eq ' -region "{0.0,0},{1.0,1.0}"' }
     end
 
     context 'with a percentage' do
       let(:region) { Riiif::Region::Percentage.new(info, 20, 30, 40, 50) }
-      it { is_expected.to eq ' -region {0.3,0.2},{0.5,0.4}' }
+      it { is_expected.to eq ' -region "{0.3,0.2},{0.5,0.4}"' }
     end
   end
 

@@ -18,11 +18,10 @@ module Riiif
 
     attr_reader :path, :info, :transformation
 
+    # @param tmp_file [String] the path to the temporary file
     # @return [String] a command for running kdu_expand to produce the requested output
-    def command
-      # TODO: we must delete this link
-      ::File.symlink('/dev/stdout', link_path)
-      [external_command, quiet, input, threads, region, reduce, output(link_path)].join
+    def command(tmp_file)
+      [external_command, quiet, input, threads, region, reduce, output(tmp_file)].join
     end
 
     def reduction_factor
@@ -34,16 +33,12 @@ module Riiif
 
     private
 
-      def link_path
-        @link_path ||= LinkNameService.create
-      end
-
       def input
         " -i #{path}"
       end
 
-      def output(link_path)
-        " -o #{link_path}"
+      def output(output_filename)
+        " -o #{output_filename}"
       end
 
       def threads
@@ -56,7 +51,7 @@ module Riiif
 
       def region
         region_arg = transformation.crop.to_kakadu
-        " -region #{region_arg}" if region_arg
+        " -region \"#{region_arg}\"" if region_arg
       end
 
       # kdu_expand is not capable of arbitrary scaling, but it does
