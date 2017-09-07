@@ -4,7 +4,6 @@ require 'riiif/engine'
 module Riiif
   extend ActiveSupport::Autoload
   autoload :Routes
-  autoload :NilAuthorizationService
 
   class Error < RuntimeError; end
   class InvalidAttributeError < Error; end

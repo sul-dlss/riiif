@@ -12,7 +12,7 @@ Lint/AssignmentInCondition:
   Exclude:
     - 'app/models/riiif/file.rb'
     - 'app/services/riiif/option_decoder.rb'
-    - 'lib/riiif/http_file_resolver.rb'
+    - 'app/resolvers/riiif/http_file_resolver.rb'
 
 # Offense count: 1
 Lint/HandleExceptions:
@@ -58,12 +58,12 @@ Style/Documentation:
     - 'app/controllers/riiif/images_controller.rb'
     - 'app/models/riiif/file.rb'
     - 'app/models/riiif/image.rb'
+    - 'app/resolvers/riiif/abstract_file_system_resolver.rb'
+    - 'app/resolvers/riiif/akubra_system_file_resolver.rb'
+    - 'app/resolvers/riiif/file_system_file_resolver.rb'
+    - 'app/resolvers/riiif/http_file_resolver.rb'
+    - 'app/services/riiif/nil_authorization_service.rb'
     - 'lib/riiif.rb'
-    - 'lib/riiif/abstract_file_system_resolver.rb'
-    - 'lib/riiif/akubra_system_file_resolver.rb'
     - 'lib/riiif/engine.rb'
-    - 'lib/riiif/file_system_file_resolver.rb'
-    - 'lib/riiif/http_file_resolver.rb'
-    - 'lib/riiif/nil_authorization_service.rb'
     - 'lib/riiif/rails/routes.rb'
     - 'lib/riiif/routes.rb'
