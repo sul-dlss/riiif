@@ -1,5 +1,6 @@
 # Riiif
 [![Gem Version](https://badge.fury.io/rb/riiif.png)](http://badge.fury.io/rb/riiif)
+[![Coverage Status](https://coveralls.io/repos/github/curationexperts/riiif/badge.svg?branch=master)](https://coveralls.io/github/curationexperts/riiif?branch=master)
 
 A Ruby IIIF image server as a rails engine
 
