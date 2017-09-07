@@ -18,6 +18,7 @@ module Riiif
         end
       end
     end
+    deprecation_deprecate read: 'Riiif::File.read is deprecated and will be removed in version 2.0'
 
     def self.create(ext = nil, _validate = true, &block)
       tempfile = Tempfile.new(['mini_magick', ext.to_s.downcase])
@@ -28,6 +29,7 @@ module Riiif
     ensure
       tempfile.close if tempfile
     end
+    deprecation_deprecate create: 'Riiif::File.create is deprecated and will be removed in version 2.0'
 
     # @param [Transformation] transformation
     def extract(transformation)
