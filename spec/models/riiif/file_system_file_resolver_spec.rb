@@ -1,7 +1,9 @@
 require 'spec_helper'
 
 describe Riiif::FileSystemFileResolver do
-  let(:resolver) { described_class.new }
+  let(:root) { File.expand_path(::File.join(::File.dirname(__FILE__), '../../..')) }
+  let(:base_path) { ::File.join(root, 'spec/samples') }
+  let(:resolver) { described_class.new(base_path: base_path) }
 
   describe '#find' do
     subject { resolver.find(id) }
@@ -16,13 +18,13 @@ describe Riiif::FileSystemFileResolver do
     context 'when a jpeg2000 file is found' do
       let(:id) { 'world' }
       it 'returns the jpeg2000 file' do
-        expect(subject.path).to eq resolver.root + '/spec/samples/world.jp2'
+        expect(subject.path).to eq base_path + '/world.jp2'
       end
     end
   end
 
   describe '#input_types' do
-    subject { described_class.new.send(:input_types) }
+    subject { resolver.send(:input_types) }
 
     it 'includes jp2 extension' do
       expect(subject).to include 'jp2'
