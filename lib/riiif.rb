@@ -3,12 +3,7 @@ require 'deprecation'
 require 'riiif/engine'
 module Riiif
   extend ActiveSupport::Autoload
-  autoload :Image
-  autoload :AbstractFileSystemResolver
-  autoload :FileSystemFileResolver
-  autoload :HTTPFileResolver
   autoload :Routes
-  autoload :AkubraSystemFileResolver
   autoload :NilAuthorizationService
 
   class Error < RuntimeError; end
