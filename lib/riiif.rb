@@ -1,4 +1,5 @@
 require 'riiif/version'
+require 'deprecation'
 require 'riiif/engine'
 module Riiif
   extend ActiveSupport::Autoload

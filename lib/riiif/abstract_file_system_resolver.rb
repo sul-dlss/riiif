@@ -1,4 +1,3 @@
-require 'deprecation'
 module Riiif
   class AbstractFileSystemResolver
     extend Deprecation

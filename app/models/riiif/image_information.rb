@@ -1,5 +1,3 @@
-require 'deprecation'
-
 module Riiif
   # This is the result of calling the Riiif.image_info service. It stores the height & width
   class ImageInformation
