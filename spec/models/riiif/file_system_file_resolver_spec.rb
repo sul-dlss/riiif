@@ -21,6 +21,14 @@ describe Riiif::FileSystemFileResolver do
         expect(subject.path).to eq base_path + '/world.jp2'
       end
     end
+
+    context 'when pattern is not permitted' do
+      let(:id) { 'foo/bar' } # slashes are not permitted by default
+
+      it 'casts the error to a not found (required by the IIIF spec)' do
+        expect { subject.path }.to raise_error Riiif::ImageNotFoundError
+      end
+    end
   end
 
   describe '#input_types' do
@@ -61,6 +69,13 @@ describe Riiif::FileSystemFileResolver do
       let(:id) { 'fo:baz' }
       it 'accepts ids with colons' do
         expect { subject }.not_to raise_error
+      end
+    end
+
+    context 'with slashes (unallowed by default)' do
+      let(:id) { 'fo/baz' }
+      it 'returns nil' do
+        expect(subject).to be_nil
       end
     end
   end
