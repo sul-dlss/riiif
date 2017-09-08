@@ -83,6 +83,6 @@ module Riiif
         raise InvalidAttributeError, "Invalid size: #{size}"
       end
     end
-  # rubocop:enable Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
   end
 end
