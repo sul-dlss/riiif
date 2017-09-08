@@ -4,10 +4,13 @@ module Riiif
     # The aspect ratio of the returned image may be different than the extracted
     # region, resulting in a distorted image.
     class Absolute < Resize
+      # @param [ImageInformation] info
+      # @param [String] width
+      # @param [String] height
       def initialize(info, width, height)
         @image_info = info
-        @width = width
-        @height = height
+        @width = width.to_i
+        @height = height.to_i
       end
 
       # @return [String] a resize directive for imagemagick to use
