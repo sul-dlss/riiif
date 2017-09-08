@@ -9,35 +9,29 @@ module Riiif
 
     # A helper method to instantiate and invoke build
     # @param [String] path the location of the file
+    # @param info [ImageInformation] information about the source
     # @param [Transformation] transformation
     # @param [Integer] compression (85) the compression level to use (set 0 for no compression)
     # @param [String] sampling_factor ("4:2:0") the chroma sample factor (set 0 for no compression)
     # @param [Boolean] strip_metadata (true) do we want to strip EXIF tags?
-    # @return [String] a command for running imagemagick to produce the requested output
-    def self.build(path, transformation, compression: 85, sampling_factor: '4:2:0', strip_metadata: true)
-      new(path, transformation,
-          compression: compression,
-          sampling_factor: sampling_factor,
-          strip_metadata: strip_metadata).build
-    end
-
-    # A helper method to instantiate and invoke build
-    # @param [String] path the location of the file
-    # @param [Transformation] transformation
-    # @param [Integer] compression the compression level to use (set 0 for no compression)
-    def initialize(path, transformation, compression:, sampling_factor:, strip_metadata:)
+    def initialize(path, info, transformation, compression: 85, sampling_factor: '4:2:0', strip_metadata: true)
       @path = path
+      @info = info
       @transformation = transformation
       @compression = compression
       @sampling_factor = sampling_factor
       @strip_metadata = strip_metadata
     end
 
-    attr_reader :path, :transformation, :compression, :sampling_factor, :strip_metadata
+    attr_reader :path, :info, :transformation, :compression, :sampling_factor, :strip_metadata
 
     # @return [String] a command for running imagemagick to produce the requested output
-    def build
-      [external_command, crop, size, rotation, colorspace, quality, sampling, metadata, output].join
+    def command
+      [external_command, crop, size, rotation, colorspace, quality, sampling, metadata, input, output].join
+    end
+
+    def reduction_factor
+      nil
     end
 
     private
@@ -50,16 +44,23 @@ module Riiif
         transformation.format == 'jpg'.freeze
       end
 
+      def input
+        " #{path}"
+      end
+
+      # pipe the output to STDOUT
       def output
-        " #{path} #{transformation.format}:-"
+        " #{transformation.format}:-"
       end
 
       def crop
-        " -crop #{transformation.crop}" if transformation.crop
+        directive = transformation.crop.to_imagemagick
+        " -crop #{directive}" if directive
       end
 
       def size
-        " -resize #{transformation.size}" if transformation.size
+        directive = transformation.size.to_imagemagick
+        " -resize #{directive}" if directive
       end
 
       def rotation

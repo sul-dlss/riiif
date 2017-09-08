@@ -14,6 +14,10 @@ module Riiif
       { width: width, height: height }
     end
 
+    def aspect_ratio
+      width.to_f / height
+    end
+
     def [](key)
       to_h[key]
     end

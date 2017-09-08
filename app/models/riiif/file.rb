@@ -3,6 +3,7 @@ module Riiif
     attr_reader :path
 
     class_attribute :info_extractor_class
+    # TODO: add alternative that uses kdu_jp2info
     self.info_extractor_class = ImageMagickInfoExtractor
 
     # @param input_path [String] The location of an image file
@@ -20,6 +21,8 @@ module Riiif
     end
     deprecation_deprecate read: 'Riiif::File.read is deprecated and will be removed in version 2.0'
 
+    # Yields a tempfile to the provided block
+    # @return [Riiif::File] a file backed by the Tempfile
     def self.create(ext = nil, _validate = true, &block)
       tempfile = Tempfile.new(['mini_magick', ext.to_s.downcase])
       tempfile.binmode
@@ -32,22 +35,26 @@ module Riiif
     deprecation_deprecate create: 'Riiif::File.create is deprecated and will be removed in version 2.0'
 
     # @param [Transformation] transformation
-    def extract(transformation)
-      command = command_factory.build(path, transformation)
-      execute(command)
+    # @param [ImageInformation] image_info
+    # @return [String] the processed image data
+    def extract(transformation, image_info = info)
+      transformer.transform(path, image_info, transformation)
+    end
+
+    def transformer
+      if Riiif.kakadu_enabled? && path.ends_with?('.jp2')
+        KakaduTransformer
+      else
+        ImagemagickTransformer
+      end
     end
 
     def info
-      @info ||= info_extractor_class.new(path).extract
+      @info ||= info_extractor.extract
     end
 
-    delegate :execute, to: Riiif::CommandRunner
-    private :execute
-
-    private
-
-      def command_factory
-        ImagemagickCommandFactory
-      end
+    def info_extractor
+      @info_extractor ||= info_extractor_class.new(path)
+    end
   end
 end

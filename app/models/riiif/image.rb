@@ -4,17 +4,17 @@ require 'digest/md5'
 # These explict requires are needed because in some contexts the Rails
 # autoloader can either: unload already loaded classes, or cause a lock while
 # trying to load a needed class.
-require_dependency 'riiif/region/imagemagick/absolute_decoder'
-require_dependency 'riiif/region/imagemagick/full_decoder'
-require_dependency 'riiif/region/imagemagick/percentage_decoder'
-require_dependency 'riiif/region/imagemagick/square_decoder'
+require_dependency 'riiif/region/absolute'
+require_dependency 'riiif/region/full'
+require_dependency 'riiif/region/percentage'
+require_dependency 'riiif/region/square'
 
-require_dependency 'riiif/size/imagemagick/absolute_decoder'
-require_dependency 'riiif/size/imagemagick/best_fit_decoder'
-require_dependency 'riiif/size/imagemagick/full_decoder'
-require_dependency 'riiif/size/imagemagick/height_decoder'
-require_dependency 'riiif/size/imagemagick/percent_decoder'
-require_dependency 'riiif/size/imagemagick/width_decoder'
+require_dependency 'riiif/size/absolute'
+require_dependency 'riiif/size/best_fit'
+require_dependency 'riiif/size/full'
+require_dependency 'riiif/size/height'
+require_dependency 'riiif/size/percent'
+require_dependency 'riiif/size/width'
 
 module Riiif
   class Image
@@ -54,12 +54,13 @@ module Riiif
 
     ##
     # @param [ActiveSupport::HashWithIndifferentAccess] args
+    # @return [String] the image data
     def render(args)
       cache_opts = args.select { |a| %w(region size quality rotation format).include? a.to_s }
       key = Image.cache_key(id, cache_opts)
 
       cache.fetch(key, compress: true, expires_in: Image.expires_in) do
-        file.extract(OptionDecoder.decode(args, info))
+        file.extract(OptionDecoder.decode(args, info), info)
       end
     end
 
