@@ -20,10 +20,27 @@ module Riiif
 
       attr_reader :height, :width
 
-      # Should we reduce this image?
+      # Reduce this if the aspect ratio of the image is maintained.
       def reduce?
-        width == height
+        in_delta?(image_info.aspect_ratio, aspect_ratio, 0.001)
       end
+
+      # Note: Absolute sizes don't get scaled. Imagemagick will take care of it.
+      # @param [Integer] factor to scale by
+      # @return [Absolute] a copy of self
+      def reduce(_factor)
+        dup
+      end
+
+      private
+
+        def aspect_ratio
+          width.to_f / height
+        end
+
+        def in_delta?(x1, x2, delta)
+          (x1 - x2).abs <= delta
+        end
     end
   end
 end
