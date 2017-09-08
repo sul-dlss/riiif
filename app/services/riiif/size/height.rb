@@ -6,7 +6,7 @@ module Riiif
     class Height < Resize
       def initialize(info, height)
         @image_info = info
-        @height = height
+        @height = height.to_i
       end
 
       # @return [String] a resize directive for imagemagick to use

@@ -6,7 +6,7 @@ module Riiif
     class Width < Resize
       def initialize(info, width)
         @image_info = info
-        @width = width
+        @width = width.to_i
       end
 
       # @return [String] a resize directive for imagemagick to use
