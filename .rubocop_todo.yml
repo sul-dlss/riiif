@@ -11,7 +11,7 @@
 Lint/AssignmentInCondition:
   Exclude:
     - 'app/models/riiif/file.rb'
-    - 'app/models/riiif/image.rb'
+    - 'app/services/riiif/option_decoder.rb'
     - 'lib/riiif/http_file_resolver.rb'
 
 # Offense count: 1

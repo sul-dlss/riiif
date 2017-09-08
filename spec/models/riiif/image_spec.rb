@@ -72,13 +72,13 @@ RSpec.describe Riiif::Image do
   end
 
   describe '#render' do
+    before do
+      allow(Riiif::CommandRunner).to receive(:execute)
+        .with("identify -format %hx%w #{filename}[0]").and_return('131x175')
+    end
+
     describe 'region' do
       subject(:render) { image.render(region: region, format: 'png') }
-
-      before do
-        allow(Riiif::CommandRunner).to receive(:execute)
-          .with("identify -format %hx%w #{filename}[0]").and_return('131x175')
-      end
 
       context 'when specifing full size' do
         let(:region) { 'full' }

@@ -120,7 +120,7 @@ module Riiif
           CONTEXT => CONTEXT_URI,
           ID => request.original_url.sub('/info.json', ''),
           PROTOCOL => PROTOCOL_URI,
-          PROFILE => [LEVEL1, 'formats' => model::OUTPUT_FORMATS]
+          PROFILE => [LEVEL1, 'formats' => OptionDecoder::OUTPUT_FORMATS]
         }
       end
   end
