@@ -25,7 +25,7 @@ module Riiif
     # @return the path of the file
     def path(id)
       search = pattern(id)
-      Dir.glob(search).first || raise(ImageNotFoundError, search)
+      search && Dir.glob(search).first || raise(ImageNotFoundError, search)
     end
 
     def pattern(_id)
