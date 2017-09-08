@@ -30,14 +30,59 @@ RSpec.describe Riiif::KakaduTransformer do
       allow(instance).to receive(:with_tempfile).and_yield('/tmp/foo.bmp')
     end
 
-    context 'when reduction_factor is 0' do
-      let(:reduction_factor) { 0 }
+    context 'resize and region' do
+      # This is the validator test for size_region
+      let(:size) { Riiif::Size::Absolute.new(image_info, 38, 38) }
+      let(:region) { Riiif::Region::Absolute.new(image_info, 200, 100, 100, 100) }
+
+      let(:image_info) { Riiif::ImageInformation.new(1000, 1000) }
+
       it 'calls the Imagemagick transform' do
         expect(Riiif::CommandRunner).to receive(:execute)
-          .with('kdu_expand -quiet -i baseball.jp2 -num_threads 4 -o /tmp/foo.bmp')
+          .with('kdu_expand -quiet -i baseball.jp2 -num_threads 4 ' \
+                '-region "{0.1,0.2},{0.1,0.1}" -reduce 4 -o /tmp/foo.bmp')
         expect(Riiif::CommandRunner).to receive(:execute)
-          .with('convert -quality 85 -sampling-factor 4:2:0 -strip /tmp/foo.bmp jpg:-')
+          .with('convert -resize 38x38! -quality 85 -sampling-factor 4:2:0 -strip /tmp/foo.bmp jpg:-')
         transform
+      end
+    end
+
+    context 'when reduction_factor is 0' do
+      let(:reduction_factor) { 0 }
+      context 'and the size is full' do
+        it 'calls the Imagemagick transform' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with('kdu_expand -quiet -i baseball.jp2 -num_threads 4 -o /tmp/foo.bmp')
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with('convert -quality 85 -sampling-factor 4:2:0 -strip /tmp/foo.bmp jpg:-')
+          transform
+        end
+      end
+
+      context 'and size is a width' do
+        let(:size) { Riiif::Size::Width.new(image_info, 651) }
+        let(:image_info) { Riiif::ImageInformation.new(1000, 1000) }
+
+        it 'calls the Imagemagick transform' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with('kdu_expand -quiet -i baseball.jp2 -num_threads 4 -o /tmp/foo.bmp')
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with('convert -resize 651 -quality 85 -sampling-factor 4:2:0 -strip /tmp/foo.bmp jpg:-')
+          transform
+        end
+      end
+
+      context 'and size is a height' do
+        let(:size) { Riiif::Size::Height.new(image_info, 581) }
+        let(:image_info) { Riiif::ImageInformation.new(1000, 1000) }
+
+        it 'calls the Imagemagick transform' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with('kdu_expand -quiet -i baseball.jp2 -num_threads 4 -o /tmp/foo.bmp')
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with('convert -resize x581 -quality 85 -sampling-factor 4:2:0 -strip /tmp/foo.bmp jpg:-')
+          transform
+        end
       end
     end
 
@@ -56,18 +101,28 @@ RSpec.describe Riiif::KakaduTransformer do
         end
       end
 
-      context 'and size is Absolute (and maintains aspect)' do
-        let(:size) { Riiif::Size::Absolute.new(image_info, 38, 38) }
-        let(:region) { Riiif::Region::Absolute.new(image_info, 200, 100, 100, 100) }
-
+      context 'and size is a width' do
+        let(:size) { Riiif::Size::Width.new(image_info, 408) }
         let(:image_info) { Riiif::ImageInformation.new(1000, 1000) }
 
         it 'calls the Imagemagick transform' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with('kdu_expand -quiet -i baseball.jp2 -num_threads 4 ' \
-                  '-region "{0.1,0.2},{0.1,0.1}" -reduce 1 -o /tmp/foo.bmp')
+            .with('kdu_expand -quiet -i baseball.jp2 -num_threads 4 -reduce 1 -o /tmp/foo.bmp')
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with('convert -resize 38x38! -quality 85 -sampling-factor 4:2:0 -strip /tmp/foo.bmp jpg:-')
+            .with('convert -resize 408 -quality 85 -sampling-factor 4:2:0 -strip /tmp/foo.bmp jpg:-')
+          transform
+        end
+      end
+
+      context 'and size is a height' do
+        let(:size) { Riiif::Size::Height.new(image_info, 481) }
+        let(:image_info) { Riiif::ImageInformation.new(1000, 1000) }
+
+        it 'calls the Imagemagick transform' do
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with('kdu_expand -quiet -i baseball.jp2 -num_threads 4 -reduce 1 -o /tmp/foo.bmp')
+          expect(Riiif::CommandRunner).to receive(:execute)
+            .with('convert -resize x481 -quality 85 -sampling-factor 4:2:0 -strip /tmp/foo.bmp jpg:-')
           transform
         end
       end

@@ -13,12 +13,25 @@ module Riiif
       image_info.width
     end
 
-    # @param [Crop] reduced_size
+    # Should we reduce this image with KDU?
+    def reduce?
+      true
+    end
+
+    # This is used for a second resize by imagemagick after resizing
+    # by kdu.
+    # No need to scale most resize operations (only percent)
+    # @param [Integer] factor to scale by
+    # @return [Absolute] a copy of self if factor is zero.
+    def reduce(_factor)
+      dup
+    end
+
     # @return [Integer] the reduction factor for this operation
-    def reduction_factor(reduced_size, max_factor = 5)
+    def reduction_factor(max_factor = 5)
       return nil unless reduce?
-      scale = [width.to_f / reduced_size.width,
-               height.to_f / reduced_size.height].min
+      scale = [width.to_f / image_info.width,
+               height.to_f / image_info.height].min
       factor = 0
       raise "I don't know how to scale to #{scale}" if scale > 1
       next_pct = 0.5

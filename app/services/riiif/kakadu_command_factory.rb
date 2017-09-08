@@ -25,10 +25,7 @@ module Riiif
     end
 
     def reduction_factor
-      @reduction_factor ||= begin
-        reduced_size = transformation.crop
-        transformation.size.reduction_factor(reduced_size)
-      end
+      @reduction_factor ||= transformation.size.reduction_factor
     end
 
     private
@@ -60,7 +57,7 @@ module Riiif
       # use it if either the percent is <=50, or the height/width
       # are <=50% of full size.
       def reduce
-        " -reduce #{reduction_factor}" if reduction_factor
+        " -reduce #{reduction_factor}" if reduction_factor && reduction_factor != 0
       end
   end
 end

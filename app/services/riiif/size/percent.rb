@@ -26,11 +26,6 @@ module Riiif
         percent_of(image_info.width)
       end
 
-      # Should we reduce this image?
-      def reduce?
-        true
-      end
-
       # @param [Integer] factor number of times to reduce by 1/2
       def reduce(factor)
         pct = percentage.to_f * 2**factor

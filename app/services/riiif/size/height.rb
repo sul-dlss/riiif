@@ -14,10 +14,11 @@ module Riiif
         "x#{@height}"
       end
 
-      # Should we reduce this image?
-      def reduce?
-        true
+      def width
+        height * image_info.width / image_info.height
       end
+
+      attr_reader :height
     end
   end
 end

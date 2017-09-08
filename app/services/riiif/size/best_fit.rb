@@ -13,10 +13,6 @@ module Riiif
       def to_imagemagick
         "#{@width}x#{@height}"
       end
-
-      def reduce?
-        true
-      end
     end
   end
 end

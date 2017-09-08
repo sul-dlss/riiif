@@ -25,13 +25,6 @@ module Riiif
         in_delta?(image_info.aspect_ratio, aspect_ratio, 0.001)
       end
 
-      # Note: Absolute sizes don't get scaled. Imagemagick will take care of it.
-      # @param [Integer] factor to scale by
-      # @return [Absolute] a copy of self
-      def reduce(_factor)
-        dup
-      end
-
       private
 
         def aspect_ratio
