@@ -5,12 +5,12 @@ module Riiif
     # region, resulting in a distorted image.
     class Absolute < Resize
       # @param [ImageInformation] info
-      # @param [String] width
-      # @param [String] height
+      # @param [Integer] width
+      # @param [Integer] height
       def initialize(info, width, height)
         @image_info = info
-        @width = width.to_i
-        @height = height.to_i
+        @width = width
+        @height = height
       end
 
       # @return [String] a resize directive for imagemagick to use

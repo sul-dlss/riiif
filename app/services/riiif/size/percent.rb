@@ -4,6 +4,8 @@ module Riiif
     # of the extracted region. The aspect ratio of the returned image is the same as that
     # of the extracted region.
     class Percent < Resize
+      # @param info [ImageInformation]
+      # @param percentage [Float]
       def initialize(info, percentage)
         @image_info = info
         @percentage = percentage
@@ -28,7 +30,7 @@ module Riiif
 
       # @param [Integer] factor number of times to reduce by 1/2
       def reduce(factor)
-        pct = percentage.to_f * 2**factor
+        pct = percentage * 2**factor
         Percent.new(image_info, pct)
       end
 

@@ -4,9 +4,11 @@ module Riiif
     # to the provided parameter, and the width will be a calculated value that
     # maintains the aspect ratio of the extracted region
     class Height < Resize
+      # @param [ImageInformation] info
+      # @param [Integer] height
       def initialize(info, height)
         @image_info = info
-        @height = height.to_i
+        @height = height
       end
 
       # @return [String] a resize directive for imagemagick to use

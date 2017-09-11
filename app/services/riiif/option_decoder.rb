@@ -50,14 +50,15 @@ module Riiif
       raise InvalidAttributeError, "Unsupported format: #{format}" unless OUTPUT_FORMATS.include?(format)
     end
 
+    # rubocop:disable Metrics/AbcSize
     def decode_region(region)
       if region.nil? || region == 'full'
         Riiif::Region::Full.new(image_info)
-      elsif md = /^pct:(\d+),(\d+),(\d+),(\d+)$/.match(region)
+      elsif md = /^pct:(\d+(?:.\d+)?),(\d+(?:.\d+)?),(\d+(?:.\d+)?),(\d+(?:.\d+)?)$/.match(region)
         Riiif::Region::Percentage
-          .new(image_info, md[1], md[2], md[3], md[4])
+          .new(image_info, md[1].to_f, md[2].to_f, md[3].to_f, md[4].to_f)
       elsif md = /^(\d+),(\d+),(\d+),(\d+)$/.match(region)
-        Riiif::Region::Absolute.new(image_info, md[1], md[2], md[3], md[4])
+        Riiif::Region::Absolute.new(image_info, md[1].to_i, md[2].to_i, md[3].to_i, md[4].to_i)
       elsif region == 'square'
         Riiif::Region::Square.new(image_info)
       else
@@ -70,19 +71,19 @@ module Riiif
       if size.nil? || size == 'full'
         Riiif::Size::Full.new
       elsif md = /^,(\d+)$/.match(size)
-        Riiif::Size::Height.new(image_info, md[1])
+        Riiif::Size::Height.new(image_info, md[1].to_i)
       elsif md = /^(\d+),$/.match(size)
-        Riiif::Size::Width.new(image_info, md[1])
-      elsif md = /^pct:(\d+(.\d+)?)$/.match(size)
-        Riiif::Size::Percent.new(image_info, md[1])
+        Riiif::Size::Width.new(image_info, md[1].to_i)
+      elsif md = /^pct:(\d+(?:.\d+)?)$/.match(size)
+        Riiif::Size::Percent.new(image_info, md[1].to_f)
       elsif md = /^(\d+),(\d+)$/.match(size)
-        Riiif::Size::Absolute.new(image_info, md[1], md[2])
+        Riiif::Size::Absolute.new(image_info, md[1].to_i, md[2].to_i)
       elsif md = /^!(\d+),(\d+)$/.match(size)
-        Riiif::Size::BestFit.new(image_info, md[1], md[2])
+        Riiif::Size::BestFit.new(image_info, md[1].to_i, md[2].to_i)
       else
         raise InvalidAttributeError, "Invalid size: #{size}"
       end
     end
-    # rubocop:enable Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/PerceivedComplexity, Metrics/AbcSize
   end
 end
