@@ -131,6 +131,14 @@ RSpec.describe Riiif::ImagesController do
     end
   end
 
+  describe 'info_options' do
+    it 'is successful' do
+      process :info_options, method: 'OPTIONS', params: { id: 'abcd123', format: 'json' }
+      expect(response).to be_successful
+      expect(response.headers['Access-Control-Allow-Headers']).to eq 'Authorization'
+    end
+  end
+
   describe 'info' do
     context 'the happy path' do
       let(:image) { double }
