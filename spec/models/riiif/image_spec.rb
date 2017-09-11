@@ -108,7 +108,7 @@ RSpec.describe Riiif::Image do
 
         it 'runs the correct imagemagick command' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -crop 80%x70+18+13 -strip #{filename} png:-")
+            .with("convert -crop 80.0%x70.0+18+13 -strip #{filename} png:-")
           render
         end
       end
@@ -150,7 +150,7 @@ RSpec.describe Riiif::Image do
 
         it 'runs the correct imagemagick command' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -resize 50% -strip #{filename} png:-")
+            .with("convert -resize 50.0% -strip #{filename} png:-")
           render
         end
       end

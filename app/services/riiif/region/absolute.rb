@@ -5,16 +5,16 @@ module Riiif
       # TODO: only kakadu needs image_info. So there's potenial to optimize by
       # making image_info a proxy that fetches the info lazily when needed.
       # @param [ImageInformation] image_info
-      # @param [String] x
-      # @param [String] y
-      # @param [String] width
-      # @param [String] height
+      # @param [Integer] x
+      # @param [Integer] y
+      # @param [Integer] width
+      # @param [Integer] height
       def initialize(image_info, x, y, width, height)
         @image_info = image_info
-        @offset_x = x.to_i
-        @offset_y = y.to_i
-        @width = width.to_i
-        @height = height.to_i
+        @offset_x = x
+        @offset_y = y
+        @width = width
+        @height = height
       end
 
       attr_reader :width, :height

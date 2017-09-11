@@ -48,7 +48,7 @@ RSpec.describe Riiif::KakaduCommandFactory do
     end
 
     context 'with a percentage' do
-      let(:region) { Riiif::Region::Percentage.new(info, 20, 30, 40, 50) }
+      let(:region) { Riiif::Region::Percentage.new(info, 20.0, 30.0, 40.0, 50.0) }
       it { is_expected.to eq ' -region "{0.3,0.2},{0.5,0.4}"' }
     end
   end
@@ -73,12 +73,12 @@ RSpec.describe Riiif::KakaduCommandFactory do
     end
 
     context 'when aspect ratio is maintained for 45 pct' do
-      let(:size) { Riiif::Size::Percent.new(info, 45) }
+      let(:size) { Riiif::Size::Percent.new(info, 45.0) }
       it { is_expected.to eq 1 }
     end
 
     context 'when aspect ratio is maintained for 20 pct' do
-      let(:size) { Riiif::Size::Percent.new(info, 20) }
+      let(:size) { Riiif::Size::Percent.new(info, 20.0) }
       it { is_expected.to eq 2 }
     end
   end

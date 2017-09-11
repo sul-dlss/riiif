@@ -90,7 +90,7 @@ RSpec.describe Riiif::KakaduTransformer do
       let(:reduction_factor) { 1 }
 
       context 'and size is a Percent' do
-        let(:size) { Riiif::Size::Percent.new(image_info, 30) }
+        let(:size) { Riiif::Size::Percent.new(image_info, 30.0) }
 
         it 'calls the Imagemagick transform' do
           expect(Riiif::CommandRunner).to receive(:execute)
@@ -129,7 +129,7 @@ RSpec.describe Riiif::KakaduTransformer do
     end
 
     context 'when reduction_factor is 2' do
-      let(:size) { Riiif::Size::Percent.new(image_info, 20) }
+      let(:size) { Riiif::Size::Percent.new(image_info, 20.0) }
       let(:reduction_factor) { 2 }
       it 'calls the Imagemagick transform' do
         expect(Riiif::CommandRunner).to receive(:execute)

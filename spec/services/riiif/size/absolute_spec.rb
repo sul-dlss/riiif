@@ -2,16 +2,14 @@ require 'spec_helper'
 
 RSpec.describe Riiif::Size::Absolute do
   let(:image_info) { double }
+  let(:instance) { described_class.new(image_info, 50, 100) }
+  describe 'height' do
+    subject { instance.height }
+    it { is_expected.to eq 100 }
+  end
 
-  context 'when initialized with strings' do
-    let(:instance) { described_class.new(image_info, '50', '100') }
-
-    it 'casts height to an integer' do
-      expect(instance.height).to eq 100
-    end
-
-    it 'casts width to an integer' do
-      expect(instance.width).to eq 50
-    end
+  describe 'width' do
+    subject { instance.width }
+    it { is_expected.to eq 50 }
   end
 end
