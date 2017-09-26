@@ -64,6 +64,11 @@ This file resolver caches the network files, so you will want to clear out the o
 Using a script like this would be a good idea: https://github.com/pulibrary/loris/blob/607567b921404a15a2111fbd7123604f4fdec087/bin/loris-cache_clean.sh
 By default the cache is located in `tmp/network_files`. You can set the cache path like this: `Riiif::Image.file_resolver.cache_path = '/var/cache'`
 ### Kakadu (for faster jp2 decoding)
+To configure Riiif to use Kakadu set:
+
+```ruby
+Riiif::Engine.config.kakadu_enabled = true
+```
 
 See [benchmark](docs/benchmark.md) for details
 
