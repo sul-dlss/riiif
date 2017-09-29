@@ -5,20 +5,20 @@ require 'spec_helper'
 RSpec.describe Riiif::KakaduTransformer do
   subject(:instance) { described_class.new(path, image_info, transformation) }
 
-  let(:image_info) { Riiif::ImageInformation.new(6501, 4381) }
+  let(:image_info) { Riiif::ImageInformation.new(width: 6501, height: 4381) }
   let(:path) { 'baseball.jp2' }
-  let(:region) { Riiif::Region::Full.new(image_info) }
-  let(:size) { Riiif::Size::Full.new }
+  let(:region) { IIIF::Image::Region::Full.new }
+  let(:size) { IIIF::Image::Size::Full.new }
   let(:quality) { nil }
-  let(:rotation) { nil }
+  let(:rotation) { 0 }
   let(:fmt) { 'jpg' }
 
   let(:transformation) do
-    Riiif::Transformation.new(region,
-                              size,
-                              quality,
-                              rotation,
-                              fmt)
+    IIIF::Image::Transformation.new(region: region,
+                                    size: size,
+                                    quality: quality,
+                                    rotation: rotation,
+                                    format: fmt)
   end
 
   describe '#transform' do
@@ -32,10 +32,10 @@ RSpec.describe Riiif::KakaduTransformer do
 
     context 'resize and region' do
       # This is the validator test for size_region
-      let(:size) { Riiif::Size::Absolute.new(image_info, 38, 38) }
-      let(:region) { Riiif::Region::Absolute.new(image_info, 200, 100, 100, 100) }
+      let(:size) { IIIF::Image::Size::Absolute.new(38, 38) }
+      let(:region) { IIIF::Image::Region::Absolute.new(200, 100, 100, 100) }
 
-      let(:image_info) { Riiif::ImageInformation.new(1000, 1000) }
+      let(:image_info) { Riiif::ImageInformation.new(width: 1000, height: 1000) }
 
       it 'calls the Imagemagick transform' do
         expect(Riiif::CommandRunner).to receive(:execute)
@@ -60,8 +60,8 @@ RSpec.describe Riiif::KakaduTransformer do
       end
 
       context 'and size is a width' do
-        let(:size) { Riiif::Size::Width.new(image_info, 651) }
-        let(:image_info) { Riiif::ImageInformation.new(1000, 1000) }
+        let(:size) { IIIF::Image::Size::Width.new(651) }
+        let(:image_info) { Riiif::ImageInformation.new(width: 1000, height: 1000) }
 
         it 'calls the Imagemagick transform' do
           expect(Riiif::CommandRunner).to receive(:execute)
@@ -73,8 +73,8 @@ RSpec.describe Riiif::KakaduTransformer do
       end
 
       context 'and size is a height' do
-        let(:size) { Riiif::Size::Height.new(image_info, 581) }
-        let(:image_info) { Riiif::ImageInformation.new(1000, 1000) }
+        let(:size) { IIIF::Image::Size::Height.new(581) }
+        let(:image_info) { Riiif::ImageInformation.new(width: 1000, height: 1000) }
 
         it 'calls the Imagemagick transform' do
           expect(Riiif::CommandRunner).to receive(:execute)
@@ -90,7 +90,7 @@ RSpec.describe Riiif::KakaduTransformer do
       let(:reduction_factor) { 1 }
 
       context 'and size is a Percent' do
-        let(:size) { Riiif::Size::Percent.new(image_info, 30.0) }
+        let(:size) { IIIF::Image::Size::Percent.new(30.0) }
 
         it 'calls the Imagemagick transform' do
           expect(Riiif::CommandRunner).to receive(:execute)
@@ -102,8 +102,8 @@ RSpec.describe Riiif::KakaduTransformer do
       end
 
       context 'and size is a width' do
-        let(:size) { Riiif::Size::Width.new(image_info, 408) }
-        let(:image_info) { Riiif::ImageInformation.new(1000, 1000) }
+        let(:size) { IIIF::Image::Size::Width.new(408) }
+        let(:image_info) { Riiif::ImageInformation.new(width: 1000, height: 1000) }
 
         it 'calls the Imagemagick transform' do
           expect(Riiif::CommandRunner).to receive(:execute)
@@ -115,8 +115,8 @@ RSpec.describe Riiif::KakaduTransformer do
       end
 
       context 'and size is a height' do
-        let(:size) { Riiif::Size::Height.new(image_info, 481) }
-        let(:image_info) { Riiif::ImageInformation.new(1000, 1000) }
+        let(:size) { IIIF::Image::Size::Height.new(481) }
+        let(:image_info) { Riiif::ImageInformation.new(width: 1000, height: 1000) }
 
         it 'calls the Imagemagick transform' do
           expect(Riiif::CommandRunner).to receive(:execute)
@@ -129,7 +129,7 @@ RSpec.describe Riiif::KakaduTransformer do
     end
 
     context 'when reduction_factor is 2' do
-      let(:size) { Riiif::Size::Percent.new(image_info, 20.0) }
+      let(:size) { IIIF::Image::Size::Percent.new(20.0) }
       let(:reduction_factor) { 2 }
       it 'calls the Imagemagick transform' do
         expect(Riiif::CommandRunner).to receive(:execute)

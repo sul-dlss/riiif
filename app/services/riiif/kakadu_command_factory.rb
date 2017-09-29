@@ -25,7 +25,7 @@ module Riiif
     end
 
     def reduction_factor
-      @reduction_factor ||= transformation.size.reduction_factor
+      @reduction_factor ||= Resize.new(transformation.size, info).reduction_factor
     end
 
     private
@@ -47,7 +47,7 @@ module Riiif
       end
 
       def region
-        region_arg = transformation.crop.to_kakadu
+        region_arg = Crop.new(transformation.region, info).to_kakadu
         " -region \"#{region_arg}\"" if region_arg
       end
 

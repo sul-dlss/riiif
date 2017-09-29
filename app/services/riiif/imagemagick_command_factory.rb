@@ -54,17 +54,18 @@ module Riiif
       end
 
       def crop
-        directive = transformation.crop.to_imagemagick
+        directive = Crop.new(transformation.region, info).to_imagemagick
         " -crop #{directive}" if directive
       end
 
       def size
-        directive = transformation.size.to_imagemagick
+        directive = Resize.new(transformation.size, info).to_imagemagick
         " -resize #{directive}" if directive
       end
 
       def rotation
-        " -virtual-pixel white +distort srt #{transformation.rotation}" if transformation.rotation
+        return if transformation.rotation.zero?
+        " -virtual-pixel white +distort srt #{transformation.rotation}"
       end
 
       def quality

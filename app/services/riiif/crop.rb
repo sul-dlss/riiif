@@ -1,54 +1,123 @@
 module Riiif
   # Represents a cropping operation
   class Crop
-    attr_reader :image_info
+    # @param transformation [IIIF::Image::Region] the result the user requested
+    # @param image_info []
+    def initialize(region, image_info)
+      @region = region
+      @image_info = image_info
+    end
+
+    attr_reader :image_info, :region
 
     # @return [String] a region for imagemagick to decode
     #                  (appropriate for passing to the -crop parameter)
     def to_imagemagick
-      "#{width}x#{height}+#{offset_x}+#{offset_y}"
+      case region
+      when IIIF::Image::Region::Full
+        nil
+      when IIIF::Image::Region::Absolute
+        "#{region.width}x#{region.height}+#{region.offset_x}+#{region.offset_y}"
+      when IIIF::Image::Region::Square
+        imagemagick_square
+      when IIIF::Image::Region::Percent
+        imagemagick_percent
+      else
+        raise "Unknown region #{region.class}"
+      end
     end
 
     # @return [String] a region for kakadu to decode
     #                  (appropriate for passing to the -region parameter)
     def to_kakadu
-      "\{#{decimal_offset_y},#{decimal_offset_x}\},\{#{decimal_height},#{decimal_width}\}"
+      case region
+      when IIIF::Image::Region::Full
+        nil
+      when IIIF::Image::Region::Absolute
+        "\{#{decimal_offset_y(region.offset_y)},#{decimal_offset_x(region.offset_x)}\}," \
+        "\{#{decimal_height(region.height)},#{decimal_width(region.width)}\}"
+      when IIIF::Image::Region::Square
+        kakadu_square
+      when IIIF::Image::Region::Percent
+        kakadu_percent
+      else
+        raise "Unknown region #{region.class}"
+      end
     end
 
-    attr_reader :offset_x
+    private
 
-    attr_reader :offset_y
+      def imagemagick_percent
+        offset_x = (image_info.width * percentage_to_fraction(region.x_pct)).round
+        offset_y = (image_info.height * percentage_to_fraction(region.y_pct)).round
+        "#{region.width_pct}%x#{region.height_pct}+#{offset_x}+#{offset_y}"
+      end
 
-    # @return [Integer] the height in pixels
-    def height
-      image_info.height
-    end
+      def kakadu_percent
+        offset_x = (image_info.width * percentage_to_fraction(region.x_pct)).round
+        offset_y = (image_info.height * percentage_to_fraction(region.y_pct)).round
+        "\{#{decimal_offset_y(offset_y)},#{decimal_offset_x(offset_x)}\}," \
+        "\{#{percentage_to_fraction(region.height_pct)},#{percentage_to_fraction(region.width_pct)}\}"
+      end
 
-    # @return [Integer] the width in pixels
-    def width
-      image_info.width
-    end
+      def kakadu_square
+        min, max = [image_info.width, image_info.height].minmax
+        offset = (max - min) / 2
+        if image_info.height >= image_info.width
+          # Portrait
+          "\{#{decimal_height(offset)},0\}," \
+          "\{#{decimal_height(image_info.height)},#{decimal_width(image_info.height)}\}"
+        else
+          # Landscape
+          "\{0,#{decimal_width(offset)}\}," \
+          "\{#{decimal_height(image_info.width)},#{decimal_width(image_info.width)}\}"
+        end
+      end
 
-    # @return [Float] the fractional height with respect to the original size
-    def decimal_height(n = height)
-      n.to_f / image_info.height
-    end
+      def imagemagick_square
+        min, max = [image_info.width, image_info.height].minmax
+        offset = (max - min) / 2
+        if image_info.height >= image_info.width
+          "#{min}x#{min}+0+#{offset}"
+        else
+          "#{min}x#{min}+#{offset}+0"
+        end
+      end
 
-    # @return [Float] the fractional width with respect to the original size
-    def decimal_width(n = width)
-      n.to_f / image_info.width
-    end
+      # @return [Integer] the height in pixels
+      def height
+        image_info.height
+      end
 
-    def decimal_offset_x
-      offset_x.to_f / image_info.width
-    end
+      # @return [Integer] the width in pixels
+      def width
+        image_info.width
+      end
 
-    def decimal_offset_y
-      offset_y.to_f / image_info.height
-    end
+      # @return [Float] the fractional height with respect to the original size
+      def decimal_height(n = height)
+        n.to_f / image_info.height
+      end
 
-    def maintain_aspect_ratio?
-      (height / width) == (image_info.height / image_info.width)
-    end
+      # @return [Float] the fractional width with respect to the original size
+      def decimal_width(n = width)
+        n.to_f / image_info.width
+      end
+
+      def decimal_offset_x(offset_x)
+        offset_x.to_f / image_info.width
+      end
+
+      def decimal_offset_y(offset_y)
+        offset_y.to_f / image_info.height
+      end
+
+      def maintain_aspect_ratio?
+        (height / width) == (image_info.height / image_info.width)
+      end
+
+      def percentage_to_fraction(n)
+        n / 100.0
+      end
   end
 end

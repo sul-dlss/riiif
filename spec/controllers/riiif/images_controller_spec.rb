@@ -72,7 +72,7 @@ RSpec.describe Riiif::ImagesController do
     context 'with a invalid region' do
       it 'renders 400' do
         image = double('an image')
-        allow(image).to receive(:render).and_raise Riiif::InvalidAttributeError
+        allow(image).to receive(:render).and_raise IIIF::Image::InvalidAttributeError
         allow(Riiif::Image).to receive(:new).with('abcd1234').and_return(image)
         get :show, params: { id: 'abcd1234', action: 'show', region: '`szoW0', size: 'full',
                              rotation: '0', quality: 'default', format: 'jpg' }
@@ -138,7 +138,7 @@ RSpec.describe Riiif::ImagesController do
 
       before do
         allow(Riiif::Image).to receive(:new).with('abcd1234').and_return(image)
-        allow(image).to receive(:info).and_return(Riiif::ImageInformation.new(6000, 4000))
+        allow(image).to receive(:info).and_return(Riiif::ImageInformation.new(width: 6000, height: 4000))
       end
 
       it 'returns info' do
@@ -163,7 +163,7 @@ RSpec.describe Riiif::ImagesController do
 
       before do
         allow(Riiif::Image).to receive(:new).with('abcd1234').and_return(image)
-        allow(image).to receive(:info).and_return(Riiif::ImageInformation.new(nil, nil))
+        allow(image).to receive(:info).and_return(Riiif::ImageInformation.new(width: nil, height: nil))
       end
 
       it 'returns an error' do
