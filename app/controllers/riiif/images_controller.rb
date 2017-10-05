@@ -2,7 +2,7 @@ module Riiif
   class ImagesController < ::ApplicationController
     before_action :link_header, only: [:show, :info]
 
-    rescue_from Riiif::InvalidAttributeError do
+    rescue_from IIIF::Image::InvalidAttributeError do
       head 400
     end
 
@@ -120,7 +120,7 @@ module Riiif
           CONTEXT => CONTEXT_URI,
           ID => request.original_url.sub('/info.json', ''),
           PROTOCOL => PROTOCOL_URI,
-          PROFILE => [LEVEL1, 'formats' => OptionDecoder::OUTPUT_FORMATS]
+          PROFILE => [LEVEL1, 'formats' => IIIF::Image::OptionDecoder::OUTPUT_FORMATS]
         }
       end
   end

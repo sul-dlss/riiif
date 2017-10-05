@@ -30,18 +30,12 @@ RSpec.describe Riiif::Image do
   it 'is able to override the file used for the Image' do
     img = described_class.new('some_id', Riiif::File.new(filename))
     expect(img.id).to eq 'some_id'
-    expect(img.info).to eq Riiif::ImageInformation.new(800, 400)
-  end
-
-  describe 'without a format' do
-    it 'raises an error' do
-      expect { subject.render('size' => 'full') }.to raise_error ArgumentError
-    end
+    expect(img.info).to eq Riiif::ImageInformation.new(width: 800, height: 400)
   end
 
   describe 'info' do
     it 'returns the data' do
-      expect(subject.info).to eq Riiif::ImageInformation.new(800, 400)
+      expect(subject.info).to eq Riiif::ImageInformation.new(width: 800, height: 400)
     end
   end
 
@@ -59,7 +53,7 @@ RSpec.describe Riiif::Image do
     describe 'get info' do
       subject { described_class.new('Cave_26,_Ajanta') }
       it 'is easy' do
-        expect(subject.info).to eq Riiif::ImageInformation.new(600, 390)
+        expect(subject.info).to eq Riiif::ImageInformation.new(width: 600, height: 390)
       end
     end
 
@@ -127,7 +121,7 @@ RSpec.describe Riiif::Image do
         let(:region) { '150x75' }
 
         it 'raises an error' do
-          expect { render }.to raise_error Riiif::InvalidAttributeError
+          expect { render }.to raise_error IIIF::Image::InvalidAttributeError
         end
       end
     end
@@ -208,7 +202,7 @@ RSpec.describe Riiif::Image do
         let(:size) { '150x75' }
 
         it 'raises an error' do
-          expect { render }.to raise_error Riiif::InvalidAttributeError
+          expect { render }.to raise_error IIIF::Image::InvalidAttributeError
         end
       end
     end
@@ -240,7 +234,7 @@ RSpec.describe Riiif::Image do
         let(:rotation) { '150x' }
 
         it 'raises an error for invalid angle' do
-          expect { render }.to raise_error Riiif::InvalidAttributeError
+          expect { render }.to raise_error IIIF::Image::InvalidAttributeError
         end
       end
     end
@@ -292,7 +286,7 @@ RSpec.describe Riiif::Image do
         let(:quality) { 'best' }
 
         it 'raises an error' do
-          expect { render }.to raise_error Riiif::InvalidAttributeError
+          expect { render }.to raise_error IIIF::Image::InvalidAttributeError
         end
       end
     end

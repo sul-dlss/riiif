@@ -5,23 +5,15 @@ RSpec.describe Riiif::ImageInformation do
     subject { info.valid? }
 
     context 'with valid dimensions' do
-      let(:info) { described_class.new(100, 200) }
+      let(:info) { described_class.new(width: 100, height: 200) }
 
       it { is_expected.to be true }
     end
 
     context 'with nil dimensions' do
-      let(:info) { described_class.new(nil, nil) }
+      let(:info) { described_class.new(width: nil, height: nil) }
 
       it { is_expected.to be false }
     end
-  end
-
-  describe '#[]' do
-    subject { info[:width] }
-    let(:info) { described_class.new(100, 200) }
-    before { allow(Deprecation).to receive(:warn) }
-
-    it { is_expected.to eq 100 }
   end
 end

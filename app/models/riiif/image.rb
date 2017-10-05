@@ -1,21 +1,5 @@
 require 'digest/md5'
 
-##
-# These explict requires are needed because in some contexts the Rails
-# autoloader can either: unload already loaded classes, or cause a lock while
-# trying to load a needed class.
-require_dependency 'riiif/region/absolute'
-require_dependency 'riiif/region/full'
-require_dependency 'riiif/region/percentage'
-require_dependency 'riiif/region/square'
-
-require_dependency 'riiif/size/absolute'
-require_dependency 'riiif/size/best_fit'
-require_dependency 'riiif/size/full'
-require_dependency 'riiif/size/height'
-require_dependency 'riiif/size/percent'
-require_dependency 'riiif/size/width'
-
 module Riiif
   class Image
     extend Deprecation
@@ -60,14 +44,14 @@ module Riiif
       key = Image.cache_key(id, cache_opts)
 
       cache.fetch(key, compress: true, expires_in: Image.expires_in) do
-        file.extract(OptionDecoder.decode(args, info), info)
+        file.extract(IIIF::Image::OptionDecoder.decode(args), info)
       end
     end
 
     def info
       @info ||= begin
                   result = info_service.call(id, file)
-                  ImageInformation.new(result[:width], result[:height])
+                  ImageInformation.new(width: result[:width], height: result[:height])
                 end
     end
 

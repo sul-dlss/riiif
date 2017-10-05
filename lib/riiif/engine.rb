@@ -1,3 +1,4 @@
+require 'iiif-image-api'
 module Riiif
   class Engine < ::Rails::Engine
     require 'riiif/rails/routes'

@@ -9,11 +9,11 @@ RSpec.describe Riiif::ImagemagickCommandFactory do
     let(:instance) { described_class.new(path, info, transformation) }
 
     let(:transformation) do
-      Riiif::Transformation.new(Riiif::Region::Full.new(info),
-                                Riiif::Size::Full.new,
-                                'quality',
-                                'rotation',
-                                format)
+      IIIF::Image::Transformation.new(region: IIIF::Image::Region::Full.new,
+                                      size: IIIF::Image::Size::Full.new,
+                                      quality: 'quality',
+                                      rotation: 15.2,
+                                      format: format)
     end
 
     context "when it's a jpeg" do
