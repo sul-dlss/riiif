@@ -4,7 +4,7 @@ module Riiif
     require 'riiif/rails/routes'
 
     # How long to cache the tiles for.
-    config.cache_duration_in_days = 3
+    config.cache_duration = 3.days
 
     config.action_dispatch.rescue_responses['Riiif::ImageNotFoundError'] = :not_found
 

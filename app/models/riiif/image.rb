@@ -57,7 +57,14 @@ module Riiif
 
     class << self
       def expires_in
-        Riiif::Engine.config.cache_duration_in_days.days
+        if Riiif::Engine.config.respond_to?(:cache_duration_in_days)
+          Deprecation.warn(self,
+                           'Riiif::Engine.config.cache_duration_in_days is deprecated; '\
+                           'use #cache_duration instead and pass a fully-qualified date (e.g., `3.days`)')
+          Riiif::Engine.config.cache_duration_in_days.days
+        else
+          Riiif::Engine.config.cache_duration
+        end
       end
 
       def cache_key(id, options)
