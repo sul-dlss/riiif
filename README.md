@@ -187,7 +187,7 @@ end
 # Rails.cache. Some cache stores may not automatically purge expired content,
 # such as the default FileStore.
 # http://guides.rubyonrails.org/caching_with_rails.html#cache-stores
-Riiif::Engine.config.cache_duration_in_days = 30
+Riiif::Engine.config.cache_duration = 30.days
 ```
 #### Special note for Passenger and Apache users
 If you are running riiif in Passenger under Apache, you must set the following in your virtual host definition:
