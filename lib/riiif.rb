@@ -1,8 +1,10 @@
 require 'riiif/version'
 require 'deprecation'
 require 'riiif/engine'
+
 module Riiif
   extend ActiveSupport::Autoload
+  autoload :Image
   autoload :Routes
 
   class Error < RuntimeError; end
