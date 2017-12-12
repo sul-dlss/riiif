@@ -138,7 +138,9 @@ RSpec.describe Riiif::ImagesController do
 
       before do
         allow(Riiif::Image).to receive(:new).with('abcd1234').and_return(image)
-        allow(image).to receive(:info).and_return(Riiif::ImageInformation.new(width: 6000, height: 4000))
+        allow(image).to(
+          receive(:info).and_return(Riiif::ImageInformation.new(width: 6000, height: 4000, format: 'JPEG'))
+        )
       end
 
       it 'returns info' do
@@ -148,6 +150,7 @@ RSpec.describe Riiif::ImagesController do
                            '@id' => 'http://test.host/abcd1234',
                            'width' => 6000,
                            'height' => 4000,
+                           'format' => 'JPEG',
                            'profile' => ['http://iiif.io/api/image/2/level1.json', 'formats' => %w(jpg png)],
                            'protocol' => 'http://iiif.io/api/image'
         expect(response.headers['Link']).to eq '<http://iiif.io/api/image/2/level1.json>;rel="profile"'

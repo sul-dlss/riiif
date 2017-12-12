@@ -51,7 +51,11 @@ module Riiif
     def info
       @info ||= begin
                   result = info_service.call(id, file)
-                  ImageInformation.new(width: result[:width], height: result[:height])
+                  ImageInformation.new(
+                    width: result[:width],
+                    height: result[:height],
+                    format: result[:format]
+                  )
                 end
     end
 
