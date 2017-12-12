@@ -175,7 +175,14 @@ Riiif::Image.info_service = lambda do |id, file|
   resp = ActiveFedora::SolrService.get("id:#{fs_id}")
   doc = resp['response']['docs'].first
   raise "Unable to find solr document with id:#{fs_id}" unless doc
-  { height: doc['height_is'], width: doc['width_is'] }
+
+  # You’ll want default values if you make thumbnails of PDFs or other
+  # file types that `identify` won’t return dimensions for
+  {
+    height: doc["height_is"] || 100,
+    width: doc["width_is"] || 100,
+    format: doc["mime_type_ssi"],
+  }
 end
 
 def logger

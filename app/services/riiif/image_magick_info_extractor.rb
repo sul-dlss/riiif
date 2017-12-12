@@ -10,8 +10,15 @@ module Riiif
     end
 
     def extract
-      height, width = Riiif::CommandRunner.execute("#{external_command} -format %hx%w #{@path}[0]").split('x')
-      { height: Integer(height), width: Integer(width) }
+      height, width, format = Riiif::CommandRunner.execute(
+        "#{external_command} -format '%h %w %m' #{@path}[0]"
+      ).split(' ')
+
+      {
+        height: Integer(height),
+        width: Integer(width),
+        format: format
+      }
     end
   end
 end

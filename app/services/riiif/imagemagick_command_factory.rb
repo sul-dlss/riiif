@@ -44,8 +44,12 @@ module Riiif
         transformation.format == 'jpg'.freeze
       end
 
+      def layer_spec
+        '[0]' if info.format =~ /pdf/i
+      end
+
       def input
-        " #{path}"
+        " #{path}#{layer_spec}"
       end
 
       # pipe the output to STDOUT

@@ -71,7 +71,7 @@ RSpec.describe Riiif::Image do
   describe '#render' do
     before do
       allow(Riiif::CommandRunner).to receive(:execute)
-        .with("identify -format %hx%w #{filename}[0]").and_return('131x175')
+        .with("identify -format '%h %w %m' #{filename}[0]").and_return('131 175 JPEG')
     end
 
     describe 'region' do

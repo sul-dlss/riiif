@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe Riiif::ImagemagickCommandFactory do
   let(:path) { 'foo.tiff' }
-  let(:info) { double('foo') }
+  let(:info) { double(height: 100, width: 100, format: 'JPEG') }
 
   describe '.command' do
     subject { instance.command }
