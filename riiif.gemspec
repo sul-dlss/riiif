@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = 'riiif'
   spec.version       = Riiif::VERSION
   spec.authors       = ['Justin Coyne']
-  spec.email         = ['justin@curationexperts.com']
+  spec.email         = ['administrator@curationexperts.com']
   spec.description   = 'A IIIF image server'
   spec.summary       = 'A rails engine that support IIIF requests'
   spec.homepage      = 'https://github.com/curationexperts/riiif'
