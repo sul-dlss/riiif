@@ -44,6 +44,12 @@ module Riiif
       end
     end
 
+    # See https://fetch.spec.whatwg.org/#http-access-control-allow-headers
+    def info_options
+      response.headers['Access-Control-Allow-Headers'] = 'Authorization'
+      self.response_body = ''
+    end
+
     # this is a workaround for https://github.com/rails/rails/issues/25087
     def redirect
       # This was attempted with just info_path, but it gave a NoMethodError
