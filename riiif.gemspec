@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'deprecation', '>= 1.0.0'
   spec.add_development_dependency 'bundler', '~> 1.3'
   spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'engine_cart', '~> 0.8'
+  spec.add_development_dependency 'engine_cart', '~> 2.0'
   spec.add_development_dependency 'rspec-rails'
   spec.add_development_dependency 'sqlite3'
   spec.add_development_dependency 'rubocop', '~> 0.47.1'
