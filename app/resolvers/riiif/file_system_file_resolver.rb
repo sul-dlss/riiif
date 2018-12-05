@@ -25,7 +25,7 @@ module Riiif
       end
 
       def input_types
-        @input_types ||= %w(png jpg tif tiff jp2)
+        @input_types ||= %w(png jpg tif tiff jp2 pdf)
       end
   end
 end
