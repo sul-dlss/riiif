@@ -27,7 +27,19 @@ module Riiif
 
     # @return [String] a command for running imagemagick to produce the requested output
     def command
-      [external_command, crop, size, rotation, colorspace, quality, sampling, metadata, input, output].join
+      [
+        external_command,
+        crop,
+        size,
+        rotation,
+        colorspace,
+        quality,
+        sampling,
+        metadata,
+        alpha_channel,
+        input,
+        output
+      ].join
     end
 
     def reduction_factor
@@ -82,6 +94,10 @@ module Riiif
 
       def sampling
         " -sampling-factor #{sampling_factor}" if jpeg?
+      end
+
+      def alpha_channel
+        ' -alpha remove' if info.format =~ /pdf/i
       end
 
       def colorspace
