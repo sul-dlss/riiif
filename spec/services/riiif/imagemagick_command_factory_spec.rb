@@ -3,7 +3,9 @@ require 'spec_helper'
 RSpec.describe Riiif::ImagemagickCommandFactory do
   let(:tiff) { 'foo.tiff' }
   let(:pdf) { 'faa.pdf' }
-  let(:info) { double(height: 100, width: 100, format: source) }
+  let(:png) { 'laa.png' }
+  let(:channels) { 'rgb' }
+  let(:info) { double(height: 100, width: 100, format: source, channels: channels) }
 
   describe '.command' do
     let(:transformation) do
@@ -32,12 +34,39 @@ RSpec.describe Riiif::ImagemagickCommandFactory do
       it { is_expected.not_to match(/-quality/) }
     end
 
-    context "when when the source format is pdf" do
+    context "when the source format is pdf" do
       subject { described_class.new(pdf, info, transformation).command }
       let(:source) { 'pdf' }
       let(:target) { 'jpg' }
 
       it { is_expected.to match(/-alpha\ remove/) }
+    end
+
+    context "when the source and target format is png" do
+      subject { described_class.new(png, info, transformation).command }
+      let(:source) { 'png' }
+      let(:target) { 'png' }
+
+      it { is_expected.to match(/png:-/) }
+    end
+
+    context "when the source format is png, the png has an alpha channel and the target format is png" do
+      subject { described_class.new(png, info, transformation).command }
+      let(:source) { 'png' }
+      let(:target) { 'png' }
+      let(:channels) { 'rgba' }
+
+      it { is_expected.to match(/alpha on/) }
+    end
+
+    context "when the source format is png, the png has an alpha channel and the target format is jpg" do
+      subject { described_class.new(png, info, transformation).command }
+      let(:source) { 'png' }
+      let(:target) { 'jpg' }
+      let(:channels) { 'rgba' }
+
+      it { is_expected.to match(/alpha on/) }
+      it { is_expected.to match(/png:-/) }
     end
 
     describe '#external_command' do
