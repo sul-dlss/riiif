@@ -11,12 +11,13 @@ module Riiif
         @width = args.first[:width]
         @height = args.first[:height]
         @format = args.first[:format]
+        @channels = args.first[:channels]
       end
     end
-    attr_reader :format, :height, :width
+    attr_reader :format, :height, :width, :channels
 
     def to_h
-      { width: width, height: height, format: format }
+      { width: width, height: height, format: format, channels: channels }
     end
 
     # Image information is only valid if height and width are present.

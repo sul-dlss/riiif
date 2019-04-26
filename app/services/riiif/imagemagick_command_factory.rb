@@ -56,6 +56,10 @@ module Riiif
         transformation.format == 'jpg'.freeze
       end
 
+      def alpha_channel?
+        info.channels =~ /rgba/i
+      end
+
       def layer_spec
         '[0]' if info.format =~ /pdf/i
       end
@@ -64,9 +68,15 @@ module Riiif
         " #{path}#{layer_spec}"
       end
 
+      # In cases where the input file has an alpha_channel but the transformation
+      #   format is 'jpg', change to 'png' as jpeg does not support alpha channels
       # pipe the output to STDOUT
       def output
-        " #{transformation.format}:-"
+        if alpha_channel? && jpeg?
+          " png:-"
+        else
+          " #{transformation.format}:-"
+        end
       end
 
       def crop
@@ -93,11 +103,15 @@ module Riiif
       end
 
       def sampling
-        " -sampling-factor #{sampling_factor}" if jpeg?
+        " -sampling-factor #{sampling_factor}" if jpeg? && !alpha_channel?
       end
 
       def alpha_channel
-        ' -alpha remove' if info.format =~ /pdf/i
+        if info.format =~ /pdf/i
+          ' -alpha remove'
+        elsif alpha_channel?
+          ' -alpha on'
+        end
       end
 
       def colorspace

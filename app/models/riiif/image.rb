@@ -54,7 +54,8 @@ module Riiif
                   ImageInformation.new(
                     width: result[:width],
                     height: result[:height],
-                    format: result[:format]
+                    format: result[:format],
+                    channels: result[:channels]
                   )
                 end
     end
