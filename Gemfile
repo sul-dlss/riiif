@@ -28,9 +28,6 @@ else
     end
   end
 
-  case ENV['RAILS_VERSION']
-  when /^5\./
-    gem 'sass-rails', '~> 5.0'
-  end
+  gem 'sass-rails', '~> 5.0'
 end
 # END ENGINE_CART BLOCK
