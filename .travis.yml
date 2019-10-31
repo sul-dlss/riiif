@@ -13,3 +13,4 @@ env:
 
 sudo: false
 language: ruby
+dist: trusty
