@@ -48,7 +48,7 @@ When the Id passed in is "foo_image", then it will look for an image file using 
 ### Images retrieved over HTTP
 It's preferable to use files on the filesystem, because this avoids the overhead of downloading the file.  If this is unavoidable, Riiif can be configured to fetch files from the network.  To enable this behavior, configure Riiif to use an alternative resolver:
 ```
-      Riiif::Image.file_resolver = Riiif::HTTPFileResolver.new
+      Riiif::Image.file_resolver = Riiif::HttpFileResolver.new
 ```
 Then we configure the resolver with a mechanism for mapping the provided id to a url:
 ```
@@ -154,7 +154,7 @@ Create an initializer like this in `config/initializers/riiif_initializer.rb`
 
 ```ruby
 # Tell RIIIF to get files via HTTP (not from the local disk)
-Riiif::Image.file_resolver = Riiif::HTTPFileResolver.new
+Riiif::Image.file_resolver = Riiif::HttpFileResolver.new
 
 # This tells RIIIF how to resolve the identifier to a URI in Fedora
 Riiif::Image.file_resolver.id_to_uri = lambda do |id|

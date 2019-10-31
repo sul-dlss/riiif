@@ -39,9 +39,9 @@ RSpec.describe Riiif::Image do
     end
   end
 
-  context 'using HTTPFileResolver' do
+  context 'using HttpFileResolver' do
     before do
-      described_class.file_resolver = Riiif::HTTPFileResolver.new
+      described_class.file_resolver = Riiif::HttpFileResolver.new
       described_class.file_resolver.id_to_uri = lambda do |id|
         "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/#{id}.jpg/600px-#{id}.jpg"
       end
