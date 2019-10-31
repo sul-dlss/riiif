@@ -2,11 +2,11 @@ require 'open-uri'
 require 'active_support/core_ext/file/atomic'
 
 module Riiif
-  class HTTPFileResolver
+  class HttpFileResolver
     # Set a lambda that maps the first parameter (id) to a URL
     # Example:
     #
-    # resolver = Riiif::HTTPFileResolver.new
+    # resolver = Riiif::HttpFileResolver.new
     # resolver.id_to_uri = lambda do |id|
     #  "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/#{id}.jpg/600px-#{id}.jpg"
     # end

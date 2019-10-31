@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Riiif::HTTPFileResolver do
+describe Riiif::HttpFileResolver do
   subject { described_class.new }
 
   before do
