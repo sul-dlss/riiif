@@ -82,6 +82,33 @@ To use [GraphicsMagick](http://www.graphicsmagick.org/) instead of ImageMagick
 
 You will of course need to install GraphicsMagick on your system.
 
+### Images hosted at an external IIIF endpoint
+
+You can also configure RIIIF to point at an existing IIIF server, which sends users
+directly to that service for retrieving images while preserving API compatibility with
+RIIIF.
+
+```ruby
+# Configure the RIIIF routes to use the external provider
+Riiif::Engine.config.iiif_routes = { at: 'https://stacks.stanford.edu/image/iiif/' }
+
+# Configure an info service to request data from the external IIIF service, using the
+# HTTP client library of your choice (shown here using Faraday):
+Riiif::Image.info_service = lambda do |id, image|
+  Riiif::Image.cache.fetch(Riiif::Image.cache_key(id, info: true), compress: true, expires_in: Riiif::Image.expires_in) do
+    route_prefix = Riiif::Engine.config.iiif_routes[:at]
+    uri = URI.join(route_prefix, ::File.join(id, 'info.json')).to_s
+    JSON.parse(Faraday.get(uri).body).with_indifferent_access
+  end
+end
+
+# Stub out the file resolver, the output of which is unused in this configuration
+Riiif::Image.file_resolver = Class.new do
+  def initialize(*_args); end
+  def find(*_args); end
+end.new
+```
+
 ## Usage
 
 Add the routes to your application by inserting the following line into `config/routes.rb`
