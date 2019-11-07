@@ -111,7 +111,7 @@ module Riiif
                 "Riiif.#{err}_image is not configured; assign it to an image path in your RIIIF initializer"
         end
 
-        model.new(image_id, Riiif::File.new(image))
+        model.new(image_id, Riiif::File.new(path: image))
       end
 
       CONTEXT = '@context'.freeze

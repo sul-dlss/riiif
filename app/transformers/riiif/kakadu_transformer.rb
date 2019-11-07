@@ -1,6 +1,6 @@
 module Riiif
   # Transforms an image using Kakadu
-  class KakaduTransformer < AbstractTransformer
+  class KakaduTransformer < AbstractFsTransformer
     def command_factory
       KakaduCommandFactory
     end
@@ -27,7 +27,7 @@ module Riiif
                        else
                          without_crop
                        end
-      Riiif::File.new(intermediate_file).extract(transformation, image_info)
+      Riiif::File.new(path: intermediate_file).extract(transformation: transformation, image_info: image_info)
     end
 
     private

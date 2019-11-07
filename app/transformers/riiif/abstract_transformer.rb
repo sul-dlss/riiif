@@ -1,30 +1,25 @@
 module Riiif
-  # Transforms an image using a backend
+  # Transforms and returns an image
   class AbstractTransformer
-    # @param path [String] The path of the source image file
+    # @param path [String] The path of the source image file (required only for filesystem-based transformers)
     # @param image_info [ImageInformation] information about the source
-    # @param [Transformation] transformation
-    def self.transform(path, image_info, transformation)
-      new(path, image_info, transformation).transform
+    # @param [IIIF::Image::Transformation] transformation
+    # @param [String] the Riiif::Image ID
+    def self.transform(path: nil, image_info:, transformation:, id: nil)
+      new(path: path, image_info: image_info, transformation: transformation, id: id).transform
     end
 
-    def initialize(path, image_info, transformation)
+    def initialize(path:, image_info:, transformation:, id: nil)
       @path = path
       @image_info = image_info
       @transformation = transformation
+      @id = id
     end
 
-    attr_reader :path, :image_info, :transformation
+    attr_reader :path, :image_info, :transformation, :id
 
     def transform
-      execute(command_builder.command)
+      raise NotImplementedError, "Implement #transform in the concrete class"
     end
-
-    def command_builder
-      @command_builder ||= command_factory.new(path, image_info, transformation)
-    end
-
-    delegate :execute, to: Riiif::CommandRunner
-    private :execute
   end
 end

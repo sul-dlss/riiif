@@ -8,6 +8,6 @@ describe Riiif::AkubraSystemFileResolver do
 
   it 'gets the jpeg2000 file' do
     file = Dir.glob(subject.pathroot + '22/7e/9/info%3Afedora%2Fdemo%3A1%2Fjp2%2Fjp2.0').first
-    expect(subject.find('demo:1').path).to eq Riiif::File.new(file).path
+    expect(subject.find('demo:1').path).to eq Riiif::File.new(path: file).path
   end
 end

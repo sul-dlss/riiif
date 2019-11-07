@@ -8,7 +8,7 @@ module Riiif
     end
 
     def find(id)
-      Riiif::File.new(path(id))
+      Riiif::File.new(path: path(id))
     end
 
     # @param [String] id the id to resolve

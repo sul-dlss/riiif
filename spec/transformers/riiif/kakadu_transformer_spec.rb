@@ -3,7 +3,11 @@
 require 'spec_helper'
 
 RSpec.describe Riiif::KakaduTransformer do
-  subject(:instance) { described_class.new(path, image_info, transformation) }
+  subject(:instance) do
+    described_class.new(path: path,
+                        image_info: image_info,
+                        transformation: transformation)
+  end
 
   let(:image_info) { Riiif::ImageInformation.new(width: 6501, height: 4381) }
   let(:path) { 'baseball.jp2' }

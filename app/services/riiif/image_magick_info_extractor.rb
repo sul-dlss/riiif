@@ -5,8 +5,9 @@ module Riiif
     class_attribute :external_command
     self.external_command = 'identify'
 
-    def initialize(path)
+    def initialize(path:, id:)
       @path = path
+      @id = id
     end
 
     def extract

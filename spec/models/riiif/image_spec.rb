@@ -28,7 +28,7 @@ RSpec.describe Riiif::Image do
   end
 
   it 'is able to override the file used for the Image' do
-    img = described_class.new('some_id', Riiif::File.new(filename))
+    img = described_class.new('some_id', Riiif::File.new(path: filename))
     expect(img.id).to eq 'some_id'
     expect(img.info).to eq Riiif::ImageInformation.new(width: 800, height: 400)
   end

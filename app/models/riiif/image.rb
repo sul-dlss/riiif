@@ -5,7 +5,11 @@ module Riiif
     extend Deprecation
 
     class_attribute :file_resolver, :info_service, :authorization_service, :cache
-    self.file_resolver = FileSystemFileResolver.new(base_path: ::File.join(Rails.root, 'tmp'))
+    self.file_resolver = if ENV["IIIF_BASE_URL"].present?
+                           ExternalFileResolver.new
+                         else
+                           FileSystemFileResolver.new(base_path: ::File.join(Rails.root, 'tmp'))
+                         end
     self.authorization_service = NilAuthorizationService
     self.cache = Rails.cache
 
@@ -14,9 +18,16 @@ module Riiif
     # You can set your own lambda if you want different behavior
     # example:
     #   {:height=>390, :width=>600}
-    self.info_service = lambda do |id, image|
-      cache.fetch(cache_key(id, info: true), compress: true, expires_in: expires_in) do
-        image.info
+    #
+    # @param [String] id The identifier of the file to be looked up
+    # @param [Riiif::File] file
+    self.info_service = lambda do |id, file|
+      if ENV["IIIF_BASE_URL"].present?
+        file.info
+      else
+        cache.fetch(cache_key(id, info: true), compress: true, expires_in: expires_in) do
+          file.info
+        end
       end
     end
 
@@ -43,8 +54,12 @@ module Riiif
       cache_opts = args.select { |a| %w(region size quality rotation format).include? a.to_s }
       key = Image.cache_key(id, cache_opts)
 
-      cache.fetch(key, compress: true, expires_in: Image.expires_in) do
-        file.extract(IIIF::Image::OptionDecoder.decode(args), info)
+      if ENV["IIIF_BASE_URL"].present?
+        file.extract(transformation: IIIF::Image::OptionDecoder.decode(args))
+      else
+        cache.fetch(key, compress: true, expires_in: Image.expires_in) do
+          file.extract(transformation: IIIF::Image::OptionDecoder.decode(args), image_info: info)
+        end
       end
     end
 

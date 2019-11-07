@@ -1,22 +1,26 @@
 module Riiif
   class File
-    attr_reader :path
+    attr_reader :path, :id
 
     class_attribute :info_extractor_class
     # TODO: add alternative that uses kdu_jp2info
     self.info_extractor_class = ImageMagickInfoExtractor
 
-    # @param input_path [String] The location of an image file
-    def initialize(input_path, tempfile = nil)
-      @path = input_path
-      @tempfile = tempfile # ensures that the tempfile will stick around until this file is garbage collected.
+    # @param path [String] The location of an image file
+    # @param id [String] the ID of the image
+    def initialize(path: nil, id: nil)
+      @path = path
+      @id = id
     end
 
-    # @param [Transformation] transformation
+    # @param [IIIF::Image::Transformation] transformation
     # @param [ImageInformation] image_info
     # @return [String] the processed image data
-    def extract(transformation, image_info = info)
-      transformer.transform(path, image_info, transformation)
+    def extract(transformation:, image_info:)
+      transformer.transform(path: path,
+                            image_info: image_info,
+                            transformation: transformation,
+                            id: id)
     end
 
     def transformer
@@ -27,12 +31,13 @@ module Riiif
       end
     end
 
+    # @return [Hash]
     def info
       @info ||= info_extractor.extract
     end
 
     def info_extractor
-      @info_extractor ||= info_extractor_class.new(path)
+      @info_extractor ||= info_extractor_class.new(path: path, id: id)
     end
   end
 end

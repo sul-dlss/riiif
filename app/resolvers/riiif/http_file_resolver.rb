@@ -23,7 +23,7 @@ module Riiif
       remote = RemoteFile.new(uri(id),
                               cache_path: cache_path,
                               basic_auth_credentials: basic_auth_credentials)
-      Riiif::File.new(remote.fetch)
+      Riiif::File.new(path: remote.fetch)
     end
 
     class RemoteFile
