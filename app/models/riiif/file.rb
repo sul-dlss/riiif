@@ -12,28 +12,6 @@ module Riiif
       @tempfile = tempfile # ensures that the tempfile will stick around until this file is garbage collected.
     end
 
-    def self.read(stream, ext)
-      create(ext) do |f|
-        while chunk = stream.read(8192)
-          f.write(chunk)
-        end
-      end
-    end
-    deprecation_deprecate read: 'Riiif::File.read is deprecated and will be removed in version 2.0'
-
-    # Yields a tempfile to the provided block
-    # @return [Riiif::File] a file backed by the Tempfile
-    def self.create(ext = nil, _validate = true, &block)
-      tempfile = Tempfile.new(['mini_magick', ext.to_s.downcase])
-      tempfile.binmode
-      block.call(tempfile)
-      tempfile.close
-      image = new(tempfile.path, tempfile)
-    ensure
-      tempfile.close if tempfile
-    end
-    deprecation_deprecate create: 'Riiif::File.create is deprecated and will be removed in version 2.0'
-
     # @param [Transformation] transformation
     # @param [ImageInformation] image_info
     # @return [String] the processed image data
