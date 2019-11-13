@@ -16,7 +16,7 @@ module Riiif
     # @param [IIIF::Image::Transformation] transformation
     # @param [ImageInformation] image_info
     # @return [String] the processed image data
-    def extract(transformation:, image_info:)
+    def extract(transformation:, image_info: nil)
       transformer.transform(path: path,
                             image_info: image_info,
                             transformation: transformation,
