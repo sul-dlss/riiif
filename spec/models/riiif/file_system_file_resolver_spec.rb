@@ -78,5 +78,12 @@ describe Riiif::FileSystemFileResolver do
         expect(subject).to be_nil
       end
     end
+
+    context 'as an integer' do
+      let(:id) { 1 }
+      it 'converts it to a string before parsing' do
+        expect { subject }.not_to raise_error
+      end
+    end
   end
 end
