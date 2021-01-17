@@ -65,7 +65,7 @@ module Riiif
       end
 
       def input
-        " #{path}#{layer_spec}"
+        " '#{path}#{layer_spec}'"
       end
 
       # In cases where the input file has an alpha_channel but the transformation
