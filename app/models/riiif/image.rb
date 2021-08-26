@@ -5,9 +5,9 @@ module Riiif
     extend Deprecation
 
     class_attribute :file_resolver, :info_service, :authorization_service, :cache
-    self.file_resolver = FileSystemFileResolver.new(base_path: ::File.join(Rails.root, 'tmp'))
-    self.authorization_service = NilAuthorizationService
-    self.cache = Rails.cache
+    self.file_resolver ||= FileSystemFileResolver.new(base_path: ::File.join(Rails.root, 'tmp'))
+    self.authorization_service ||= NilAuthorizationService
+    self.cache ||= Rails.cache
 
     # this is the default info service
     # returns a hash with the original image dimensions.
