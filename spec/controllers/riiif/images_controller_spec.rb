@@ -24,9 +24,9 @@ RSpec.describe Riiif::ImagesController do
     it 'sends images to the service' do
       image = double
       expect(Riiif::Image).to receive(:new).with('abcd1234').and_return(image)
-      expect(image).to receive(:render).with('region' => 'full', 'size' => 'full',
+      expect(image).to receive(:render).with({ 'region' => 'full', 'size' => 'full',
                                              'rotation' => '0', 'quality' => 'default',
-                                             'format' => 'jpg').and_return('IMAGEDATA')
+                                             'format' => 'jpg' }).and_return('IMAGEDATA')
       get :show, params: { id: 'abcd1234', action: 'show', region: 'full', size: 'full',
                            rotation: '0', quality: 'default', format: 'jpg' }
       expect(response).to be_successful
@@ -102,9 +102,9 @@ RSpec.describe Riiif::ImagesController do
             raise Riiif::ImageNotFoundError unless file.present?
             not_found_image
           end.twice
-          expect(not_found_image).to receive(:render).with('region' => 'full', 'size' => 'full',
+          expect(not_found_image).to receive(:render).with({ 'region' => 'full', 'size' => 'full',
                                                            'rotation' => '0', 'quality' => 'default',
-                                                           'format' => 'jpg').and_return('default-image-data')
+                                                           'format' => 'jpg' }).and_return('default-image-data')
 
           get :show, params: { id: 'bad_id', action: 'show', region: 'full', size: 'full',
                                rotation: '0', quality: 'default', format: 'jpg' }
@@ -118,9 +118,9 @@ RSpec.describe Riiif::ImagesController do
             raise Riiif::ImageNotFoundError unless file.present?
             not_found_image
           end.twice
-          expect(not_found_image).to receive(:render).with('region' => 'full', 'size' => 'full',
+          expect(not_found_image).to receive(:render).with({ 'region' => 'full', 'size' => 'full',
                                                            'rotation' => '0', 'quality' => 'default',
-                                                           'format' => 'jpg').and_return('default-image-data')
+                                                           'format' => 'jpg' }).and_return('default-image-data')
 
           get :show, params: { id: 'bad_id', action: 'show', region: 'full', size: 'full',
                                rotation: '0', quality: 'default', format: 'jpg' }
