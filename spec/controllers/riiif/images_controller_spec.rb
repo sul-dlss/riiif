@@ -155,7 +155,7 @@ RSpec.describe Riiif::ImagesController do
         get :info, params: { id: 'abcd1234', format: 'json' }
         expect(response).to be_successful
         expect(json).to eq '@context' => 'http://iiif.io/api/image/2/context.json',
-                           '@id' => 'http://test.host/abcd1234',
+                           '@id' => Rails.version > '6.1' ? 'http://test.host/images/abcd1234' : 'http://test.host/abcd1234',
                            'width' => 6000,
                            'height' => 4000,
                            'format' => 'JPEG',
