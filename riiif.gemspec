@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'railties', '>= 4.2', '<7'
+  spec.add_dependency 'railties', '>= 4.2', '<8'
   spec.add_dependency 'deprecation', '>= 1.0.0'
   spec.add_dependency 'iiif-image-api', '>= 0.1.0'
 
@@ -27,6 +27,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'engine_cart', '~> 2.0'
   spec.add_development_dependency 'rspec-rails'
   spec.add_development_dependency 'sqlite3'
-  spec.add_development_dependency 'bixby', '~> 1.0.0'
+  spec.add_development_dependency 'bixby', '~> 3.0'
   spec.add_development_dependency 'coveralls'
 end

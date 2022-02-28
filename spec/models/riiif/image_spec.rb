@@ -28,6 +28,9 @@ RSpec.describe Riiif::Image do
   end
 
   it 'is able to override the file used for the Image' do
+    allow(Riiif::CommandRunner).to receive(:execute)
+      .with("identify -format '%h %w %m %[channels]' #{filename}[0]").and_return('400 800')
+
     img = described_class.new('some_id', Riiif::File.new(filename))
     expect(img.id).to eq 'some_id'
     expect(img.info).to eq Riiif::ImageInformation.new(width: 800, height: 400)
@@ -35,6 +38,9 @@ RSpec.describe Riiif::Image do
 
   describe 'info' do
     it 'returns the data' do
+      allow(Riiif::CommandRunner).to receive(:execute)
+        .with("identify -format '%h %w %m %[channels]' #{filename}[0]").and_return('400 800')
+
       expect(subject.info).to eq Riiif::ImageInformation.new(width: 800, height: 400)
     end
   end

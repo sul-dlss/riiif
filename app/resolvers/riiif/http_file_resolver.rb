@@ -63,7 +63,7 @@ module Riiif
           benchmark("Riiif downloaded #{url}") do
             ::File.atomic_write(file_name, cache_path) do |local|
               begin
-                Kernel.open(url, download_opts) do |remote|
+                handler.open(url, **download_opts) do |remote|
                   while chunk = remote.read(8192)
                     local.write(chunk)
                   end
@@ -84,6 +84,14 @@ module Riiif
         # Make sure a file path's directories exist.
         def ensure_cache_path(path)
           FileUtils.makedirs(path) unless ::File.exist?(path)
+        end
+
+        def handler
+          if url.match?(URI.regexp)
+            URI
+          else
+            Kernel
+          end
         end
     end
 
