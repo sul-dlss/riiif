@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/curationexperts/riiif/badge.svg?branch=master)](https://coveralls.io/github/curationexperts/riiif?branch=master)
 
 
-A Ruby IIIF image server as a rails engine. Note that RIIIF is meant for development convenience and will not scale to the needs of most production-level applications.
+A Ruby IIIF image server as a rails engine. 
 
 ## Installation
 
