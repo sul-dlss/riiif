@@ -3,7 +3,7 @@ module Riiif
     before_action :link_header, only: [:show, :info]
 
     rescue_from IIIF::Image::InvalidAttributeError do
-      head 400
+      head :bad_request
     end
 
     def show

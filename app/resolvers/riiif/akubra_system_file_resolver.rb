@@ -5,6 +5,7 @@ module Riiif
     attr_accessor :pathroot, :imagetype, :akubraconfig
 
     def initialize(pr = '/yourfedora/data/datastreamStore/', ir = 'jp2', ac = [[0, 2], [2, 2], [4, 1]])
+      super()
       @pathroot = pr
       @imagetype = ir
       @akubraconfig = ac
