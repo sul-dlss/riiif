@@ -28,5 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec-rails'
   spec.add_development_dependency 'sqlite3'
   spec.add_development_dependency 'bixby', '~> 5.0'
-  spec.add_development_dependency 'coveralls'
+  spec.add_development_dependency 'simplecov'
 end
