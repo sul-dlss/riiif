@@ -7,10 +7,10 @@ Gem::Specification.new do |spec|
   spec.name          = 'riiif'
   spec.version       = Riiif::VERSION
   spec.authors       = ['Justin Coyne']
-  spec.email         = ['administrator@curationexperts.com']
+  spec.email         = ['jcoyne85@stanford.edu']
   spec.description   = 'A IIIF image server'
-  spec.summary       = 'A rails engine that support IIIF requests'
-  spec.homepage      = 'https://github.com/curationexperts/riiif'
+  spec.summary       = 'A Rails engine that support IIIF requests'
+  spec.homepage      = 'https://github.com/sul-dlss/riiif'
   spec.license       = 'APACHE2'
 
   spec.files         = `git ls-files|grep -v spec/samples`.split($INPUT_RECORD_SEPARATOR)
