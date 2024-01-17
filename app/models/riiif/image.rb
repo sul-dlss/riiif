@@ -33,9 +33,6 @@ module Riiif
       @file ||= file_resolver.find(id)
     end
 
-    alias image file
-    deprecation_deprecate image: 'Use Image#file instead. This will be removed in riiif 2.0'
-
     ##
     # @param [ActiveSupport::HashWithIndifferentAccess] args
     # @return [String] the image data
