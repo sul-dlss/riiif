@@ -11,7 +11,7 @@ module Riiif
 
     def extract
       height, width, format, channels = Riiif::CommandRunner.execute(
-        "#{external_command} -format '%h %w %m %[channels]' #{@path}[0]"
+        "#{external_command} -format '%h %w %m %[channels]' '#{@path}[0]'"
       ).split(' ')
 
       {
