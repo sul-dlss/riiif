@@ -12,7 +12,11 @@ module Riiif
   # This error is raised when Riiif can't convert an image
   class ConversionError < Error; end
 
-  HTTPFileResolver = ActiveSupport::Deprecation::DeprecatedConstantProxy.new('Riiif::HTTPFileResolver', 'Riiif::HttpFileResolver')
+  HTTPFileResolver = ActiveSupport::Deprecation::DeprecatedConstantProxy.new(
+    'Riiif::HTTPFileResolver',
+    'Riiif::HttpFileResolver',
+    ActiveSupport::Deprecation.instance
+  )
 
   mattr_accessor :not_found_image # the image to use when a lookup fails
   mattr_accessor :unauthorized_image # the image to use when a user doesn't have access
