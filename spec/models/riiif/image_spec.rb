@@ -20,7 +20,7 @@ RSpec.describe Riiif::Image do
 
     it 'renders' do
       expect(Riiif::CommandRunner).to receive(:execute)
-        .with("convert -quality 85 -sampling-factor 4:2:0 -strip #{filename} jpg:-")
+        .with("convert -quality 85 -sampling-factor 4:2:0 -strip \'#{filename}\' jpg:-")
         .and_return('imagedata')
 
       expect(subject.render('size' => 'full', format: 'jpg')).to eq 'imagedata'
@@ -29,7 +29,7 @@ RSpec.describe Riiif::Image do
 
   it 'is able to override the file used for the Image' do
     allow(Riiif::CommandRunner).to receive(:execute)
-      .with("identify -format '%h %w %m %[channels]' #{filename}[0]").and_return('400 800')
+      .with("identify -format '%h %w %m %[channels]' \'#{filename}[0]\'").and_return('400 800')
 
     img = described_class.new('some_id', Riiif::File.new(filename))
     expect(img.id).to eq 'some_id'
@@ -39,7 +39,7 @@ RSpec.describe Riiif::Image do
   describe 'info' do
     it 'returns the data' do
       allow(Riiif::CommandRunner).to receive(:execute)
-        .with("identify -format '%h %w %m %[channels]' #{filename}[0]").and_return('400 800')
+        .with("identify -format '%h %w %m %[channels]' \'#{filename}[0]\'").and_return('400 800')
 
       expect(subject.info).to eq Riiif::ImageInformation.new(width: 800, height: 400)
     end
@@ -77,7 +77,7 @@ RSpec.describe Riiif::Image do
   describe '#render' do
     before do
       allow(Riiif::CommandRunner).to receive(:execute)
-        .with("identify -format '%h %w %m %[channels]' #{filename}[0]").and_return('131 175 JPEG')
+        .with("identify -format '%h %w %m %[channels]' \'#{filename}[0]\'").and_return('131 175 JPEG')
     end
 
     describe 'region' do
@@ -88,7 +88,7 @@ RSpec.describe Riiif::Image do
 
         it 'returns the original' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -strip #{filename} png:-")
+            .with("convert -strip \'#{filename}\' png:-")
           render
         end
       end
@@ -98,7 +98,7 @@ RSpec.describe Riiif::Image do
 
         it 'runs the correct imagemagick command' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -crop 60x75+80+15 -strip #{filename} png:-")
+            .with("convert -crop 60x75+80+15 -strip \'#{filename}\' png:-")
           render
         end
       end
@@ -108,7 +108,7 @@ RSpec.describe Riiif::Image do
 
         it 'runs the correct imagemagick command' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -crop 80.0%x70.0+18+13 -strip #{filename} png:-")
+            .with("convert -crop 80.0%x70.0+18+13 -strip \'#{filename}\' png:-")
           render
         end
       end
@@ -118,7 +118,7 @@ RSpec.describe Riiif::Image do
 
         it 'runs the correct imagemagick command' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -crop 131x131+22+0 -strip #{filename} png:-")
+            .with("convert -crop 131x131+22+0 -strip \'#{filename}\' png:-")
           render
         end
       end
@@ -140,7 +140,7 @@ RSpec.describe Riiif::Image do
 
         it 'returns the original' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -strip #{filename} png:-")
+            .with("convert -strip \'#{filename}\' png:-")
           render
         end
       end
@@ -150,7 +150,7 @@ RSpec.describe Riiif::Image do
 
         it 'runs the correct imagemagick command' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -resize 50.0% -strip #{filename} png:-")
+            .with("convert -resize 50.0% -strip \'#{filename}\' png:-")
           render
         end
       end
@@ -160,7 +160,7 @@ RSpec.describe Riiif::Image do
 
         it 'runs the correct imagemagick command' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -resize 12.5% -strip #{filename} png:-")
+            .with("convert -resize 12.5% -strip \'#{filename}\' png:-")
           render
         end
       end
@@ -170,7 +170,7 @@ RSpec.describe Riiif::Image do
 
         it 'runs the correct imagemagick command' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -resize 50 -strip #{filename} png:-")
+            .with("convert -resize 50 -strip \'#{filename}\' png:-")
           render
         end
       end
@@ -180,7 +180,7 @@ RSpec.describe Riiif::Image do
 
         it 'runs the correct imagemagick command' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -resize x50 -strip #{filename} png:-")
+            .with("convert -resize x50 -strip \'#{filename}\' png:-")
           render
         end
       end
@@ -190,7 +190,7 @@ RSpec.describe Riiif::Image do
 
         it 'runs the correct imagemagick command' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -resize 150x75! -strip #{filename} png:-")
+            .with("convert -resize 150x75! -strip \'#{filename}\' png:-")
           render
         end
       end
@@ -199,7 +199,7 @@ RSpec.describe Riiif::Image do
 
         it 'runs the correct imagemagick command' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -resize 150x75 -strip #{filename} png:-")
+            .with("convert -resize 150x75 -strip \'#{filename}\' png:-")
           render
         end
       end
@@ -221,7 +221,7 @@ RSpec.describe Riiif::Image do
 
         it 'returns the original' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -strip #{filename} png:-")
+            .with("convert -strip \'#{filename}\' png:-")
           render
         end
       end
@@ -231,7 +231,7 @@ RSpec.describe Riiif::Image do
 
         it 'handles floats' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -virtual-pixel white +distort srt 22.5 -strip #{filename} png:-")
+            .with("convert -virtual-pixel white +distort srt 22.5 -strip \'#{filename}\' png:-")
           render
         end
       end
@@ -253,7 +253,7 @@ RSpec.describe Riiif::Image do
 
         it 'returns the original when specifing default' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -strip #{filename} png:-")
+            .with("convert -strip \'#{filename}\' png:-")
           render
         end
       end
@@ -263,7 +263,7 @@ RSpec.describe Riiif::Image do
 
         it 'returns the original when specifing color' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -strip #{filename} png:-")
+            .with("convert -strip \'#{filename}\' png:-")
           render
         end
       end
@@ -273,7 +273,7 @@ RSpec.describe Riiif::Image do
 
         it 'converts to grayscale' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -colorspace Gray -strip #{filename} png:-")
+            .with("convert -colorspace Gray -strip \'#{filename}\' png:-")
           render
         end
       end
@@ -283,7 +283,7 @@ RSpec.describe Riiif::Image do
 
         it 'converts to bitonal' do
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with("convert -colorspace Gray -type Bilevel -strip #{filename} png:-")
+            .with("convert -colorspace Gray -type Bilevel -strip \'#{filename}\' png:-")
           render
         end
       end
