@@ -42,7 +42,7 @@ RSpec.describe Riiif::KakaduTransformer do
           .with('kdu_expand -quiet -i baseball.jp2 -num_threads 4 ' \
                 '-region "{0.1,0.2},{0.1,0.1}" -reduce 4 -o /tmp/foo.bmp')
         expect(Riiif::CommandRunner).to receive(:execute)
-          .with('convert -resize 38x38! -quality 85 -sampling-factor 4:2:0 -strip /tmp/foo.bmp jpg:-')
+          .with('convert -resize 38x38! -quality 85 -sampling-factor 4:2:0 -strip \'/tmp/foo.bmp\' jpg:-')
         transform
       end
     end
@@ -54,7 +54,7 @@ RSpec.describe Riiif::KakaduTransformer do
           expect(Riiif::CommandRunner).to receive(:execute)
             .with('kdu_expand -quiet -i baseball.jp2 -num_threads 4 -o /tmp/foo.bmp')
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with('convert -quality 85 -sampling-factor 4:2:0 -strip /tmp/foo.bmp jpg:-')
+            .with('convert -quality 85 -sampling-factor 4:2:0 -strip \'/tmp/foo.bmp\' jpg:-')
           transform
         end
       end
@@ -67,7 +67,7 @@ RSpec.describe Riiif::KakaduTransformer do
           expect(Riiif::CommandRunner).to receive(:execute)
             .with('kdu_expand -quiet -i baseball.jp2 -num_threads 4 -o /tmp/foo.bmp')
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with('convert -resize 651 -quality 85 -sampling-factor 4:2:0 -strip /tmp/foo.bmp jpg:-')
+            .with('convert -resize 651 -quality 85 -sampling-factor 4:2:0 -strip \'/tmp/foo.bmp\' jpg:-')
           transform
         end
       end
@@ -80,7 +80,7 @@ RSpec.describe Riiif::KakaduTransformer do
           expect(Riiif::CommandRunner).to receive(:execute)
             .with('kdu_expand -quiet -i baseball.jp2 -num_threads 4 -o /tmp/foo.bmp')
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with('convert -resize x581 -quality 85 -sampling-factor 4:2:0 -strip /tmp/foo.bmp jpg:-')
+            .with('convert -resize x581 -quality 85 -sampling-factor 4:2:0 -strip \'/tmp/foo.bmp\' jpg:-')
           transform
         end
       end
@@ -96,7 +96,7 @@ RSpec.describe Riiif::KakaduTransformer do
           expect(Riiif::CommandRunner).to receive(:execute)
             .with('kdu_expand -quiet -i baseball.jp2 -num_threads 4 -reduce 1 -o /tmp/foo.bmp')
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with('convert -resize 60.0% -quality 85 -sampling-factor 4:2:0 -strip /tmp/foo.bmp jpg:-')
+            .with('convert -resize 60.0% -quality 85 -sampling-factor 4:2:0 -strip \'/tmp/foo.bmp\' jpg:-')
           transform
         end
       end
@@ -109,7 +109,7 @@ RSpec.describe Riiif::KakaduTransformer do
           expect(Riiif::CommandRunner).to receive(:execute)
             .with('kdu_expand -quiet -i baseball.jp2 -num_threads 4 -reduce 1 -o /tmp/foo.bmp')
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with('convert -resize 408 -quality 85 -sampling-factor 4:2:0 -strip /tmp/foo.bmp jpg:-')
+            .with('convert -resize 408 -quality 85 -sampling-factor 4:2:0 -strip \'/tmp/foo.bmp\' jpg:-')
           transform
         end
       end
@@ -122,7 +122,7 @@ RSpec.describe Riiif::KakaduTransformer do
           expect(Riiif::CommandRunner).to receive(:execute)
             .with('kdu_expand -quiet -i baseball.jp2 -num_threads 4 -reduce 1 -o /tmp/foo.bmp')
           expect(Riiif::CommandRunner).to receive(:execute)
-            .with('convert -resize x481 -quality 85 -sampling-factor 4:2:0 -strip /tmp/foo.bmp jpg:-')
+            .with('convert -resize x481 -quality 85 -sampling-factor 4:2:0 -strip \'/tmp/foo.bmp\' jpg:-')
           transform
         end
       end
@@ -135,7 +135,7 @@ RSpec.describe Riiif::KakaduTransformer do
         expect(Riiif::CommandRunner).to receive(:execute)
           .with('kdu_expand -quiet -i baseball.jp2 -num_threads 4 -reduce 2 -o /tmp/foo.bmp')
         expect(Riiif::CommandRunner).to receive(:execute)
-          .with('convert -resize 80.0% -quality 85 -sampling-factor 4:2:0 -strip /tmp/foo.bmp jpg:-')
+          .with('convert -resize 80.0% -quality 85 -sampling-factor 4:2:0 -strip \'/tmp/foo.bmp\' jpg:-')
         transform
       end
     end
