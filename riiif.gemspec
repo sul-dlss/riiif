@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'railties', '>= 4.2', '<8'
+  spec.add_dependency 'railties', '>= 4.2', '< 9'
   spec.add_dependency 'deprecation', '>= 1.0.0'
   spec.add_dependency 'iiif-image-api', '>= 0.1.0'
 
