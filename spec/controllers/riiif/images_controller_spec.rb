@@ -160,7 +160,7 @@ RSpec.describe Riiif::ImagesController do
                            'height' => 4000,
                            'format' => 'JPEG',
                            'channels' => 'rgb',
-                           'profile' => ['http://iiif.io/api/image/2/level1.json', 'formats' => %w(jpg png)],
+                           'profile' => ['http://iiif.io/api/image/2/level1.json', 'formats' => %w(webp jpg png)],
                            'protocol' => 'http://iiif.io/api/image'
         expect(response.headers['Link']).to eq '<http://iiif.io/api/image/2/level1.json>;rel="profile"'
         expect(response.headers['Content-Type']).to eq 'application/ld+json; charset=utf-8'
