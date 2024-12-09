@@ -18,20 +18,22 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby: ['3.2', '3.3']
-        rails: ['7.2.1', '7.1.4']
+        ruby: ["3.2", "3.3"]
+        rails: ["7.2.1", "7.1.4"]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby }}
-    - name: Install dependencies
-      run: bundle install
-      env:
-        RAILS_VERSION: ${{ matrix.rails }}
-    - name: Run tests
-      run: bundle exec rake
-      env:
-        RAILS_VERSION: ${{ matrix.rails }}
-        ENGINE_CART_RAILS_OPTIONS: '--skip-git --skip-listen --skip-spring --skip-keeps --skip-action-cable --skip-coffee --skip-test'
+      - name: Install ImageMagick
+        run: sudo apt install imagemagick
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - name: Install dependencies
+        run: bundle install
+        env:
+          RAILS_VERSION: ${{ matrix.rails }}
+      - name: Run tests
+        run: bundle exec rake
+        env:
+          RAILS_VERSION: ${{ matrix.rails }}
+          ENGINE_CART_RAILS_OPTIONS: "--skip-git --skip-listen --skip-spring --skip-keeps --skip-action-cable --skip-coffee --skip-test"
