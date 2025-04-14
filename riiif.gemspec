@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'railties', '>= 4.2', '< 9'
   spec.add_dependency 'deprecation', '>= 1.0.0'
   spec.add_dependency 'iiif-image-api', '>= 0.1.0'
+  spec.add_dependency 'ruby-vips'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'
