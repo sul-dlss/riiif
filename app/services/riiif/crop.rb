@@ -45,7 +45,34 @@ module Riiif
       end
     end
 
+    def to_vips
+      case region
+      when IIIF::Image::Region::Full
+        nil
+      when IIIF::Image::Region::Absolute
+        [region.offset_x, region.offset_y, region.width, region.height]
+      when IIIF::Image::Region::Square
+        vips_square
+      when IIIF::Image::Region::Percent
+        vips_percent
+      end
+    end
+
     private
+
+      def vips_percent
+        # Calculate x values
+        offset_x, width = [region.x_pct, region.width_pct].map do |percent|
+          (image_info.width * percentage_to_fraction(percent)).round
+        end
+
+        # Calculate y values
+        offset_y, height = [region.y_pct, region.height_pct].map do |percent|
+          (image_info.height * percentage_to_fraction(percent)).round
+        end
+
+        [offset_x, offset_y, width, height]
+      end
 
       def imagemagick_percent
         offset_x = (image_info.width * percentage_to_fraction(region.x_pct)).round
@@ -58,6 +85,19 @@ module Riiif
         offset_y = (image_info.height * percentage_to_fraction(region.y_pct)).round
         "\{#{decimal_offset_y(offset_y)},#{decimal_offset_x(offset_x)}\}," \
         "\{#{percentage_to_fraction(region.height_pct)},#{percentage_to_fraction(region.width_pct)}\}"
+      end
+
+      def vips_square
+        min, max = [image_info.width, image_info.height].minmax
+        offset = (max - min) / 2
+
+        if image_info.height >= image_info.width
+          # Portrait: left, offset, width, height
+          [0, offset, min, min]
+        else
+          # Landscape: left, offset, width, height
+          [offset, 0, min, min]
+        end
       end
 
       def kakadu_square
