@@ -1,4 +1,9 @@
+# Use ruby-vips to execute image transformations (via ffi gem) instead of
+# using the vips CLI. Since vips CLI commands can't be chained without creating
+# temp files after each operation, using the CLI would decrease performance.
+# See 'Chaining operations': https://www.libvips.org/API/current/using-cli.html
 require 'ruby-vips'
+
 module Riiif
   class VipsTransformer < AbstractTransformer
     include ActiveSupport::Benchmarkable
@@ -17,10 +22,7 @@ module Riiif
 
     attr_reader :image, :path, :compression, :subsample, :strip_metadata
 
-    # Use ruby-vips to execute image transformations (via ffi gem) instead of
-    # using the vips CLI. Since vips CLI commands can't be chained without creating
-    # temp files after each operation, using the CLI would decrease performance.
-    # See 'Chaining operations': https://www.libvips.org/API/current/using-cli.html
+    # @return [String] all the image data
     def transform
       benchmark("Riiif transformed image using vips") do
         transform_image.write_to_buffer(".#{format}#{format_options}")
@@ -49,7 +51,7 @@ module Riiif
           image.send(method, options)
         end
       end
-      # If image is bitonal, set a value threshold
+      # If result should be bitonal, set a value threshold
       # https://github.com/libvips/libvips/issues/1840
       transformation.quality == 'bitonal' ? (result > 200) : result
     end
@@ -73,7 +75,7 @@ module Riiif
       case transformation.size
       when IIIF::Image::Size::Percent, IIIF::Image::Size::Width, IIIF::Image::Size::Height
         [:resize, Resize.new(transformation.size, image_info).to_vips]
-      else # IIIF::Image::Size::Absolute
+      else # IIIF::Image::Size::Absolute, IIIF::Image::Size::BestFit
         [:thumbnail_image, Resize.new(transformation.size, image_info).to_vips]
       end
     end
