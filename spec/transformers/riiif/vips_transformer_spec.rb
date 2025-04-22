@@ -6,10 +6,12 @@ RSpec.describe Riiif::VipsTransformer do
 
   let(:path) { Rails.root.join("spec", "fixtures", "test.tif").to_s }
 
-  let(:image_info) { double({ height: Vips::Image.new_from_file(path).height,
-                              width: Vips::Image.new_from_file(path).width,
-                              format: 'jpg',
-                              channels: channels }) }
+  let(:image_info) {
+    double({ height: Vips::Image.new_from_file(path).height,
+             width: Vips::Image.new_from_file(path).width,
+             format: 'jpg',
+             channels: channels })
+  }
 
   let(:target) { 'jpg' }
 
@@ -82,7 +84,6 @@ RSpec.describe Riiif::VipsTransformer do
 
     describe 'resize' do
       context 'when specifing full size' do
-
         it 'does not resize' do
           expect_any_instance_of(Vips::Image).not_to receive(:resize)
           expect_any_instance_of(Vips::Image).not_to receive(:thumbnail_image)
@@ -111,7 +112,6 @@ RSpec.describe Riiif::VipsTransformer do
       end
 
       context 'when specifying width and/or height' do
-
         context 'when specifing w, size' do
           let(:size) { IIIF::Image::Size::Width.new(300) }
 
@@ -148,7 +148,6 @@ RSpec.describe Riiif::VipsTransformer do
           end
         end
       end
-
     end
 
     describe 'crop' do
@@ -204,7 +203,6 @@ RSpec.describe Riiif::VipsTransformer do
           expect_any_instance_of(Vips::Image).to receive(:rotate).with(45)
         end
       end
-
     end
 
     describe 'colourspace' do
@@ -234,7 +232,6 @@ RSpec.describe Riiif::VipsTransformer do
           expect_any_instance_of(Vips::Image).to receive(:>).with(200)
         end
       end
-
     end
   end
 end
