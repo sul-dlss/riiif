@@ -42,7 +42,7 @@ RSpec.describe Riiif::VipsTransformer do
       let(:target) { 'png' }
 
       it 'writes to png format' do
-        expect_any_instance_of(Vips::Image).to receive(:write_to_buffer).with(".png[Q=85,optimize-coding,strip]")
+        expect_any_instance_of(Vips::Image).to receive(:write_to_buffer).with(".png[Q=85,strip]")
       end
     end
 
