@@ -32,5 +32,4 @@ module Riiif
   def self.use_vips?
     Engine.config.use_vips
   end
-
 end

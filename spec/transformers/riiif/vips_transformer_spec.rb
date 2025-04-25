@@ -6,12 +6,12 @@ RSpec.describe Riiif::VipsTransformer do
 
   let(:path) { Rails.root.join("spec", "fixtures", "test.tif").to_s }
 
-  let(:image_info) {
+  let(:image_info) do
     double({ height: Vips::Image.new_from_file(path).height,
              width: Vips::Image.new_from_file(path).width,
              format: 'jpg',
              channels: channels })
-  }
+  end
 
   let(:target) { 'jpg' }
 
