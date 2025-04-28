@@ -2,6 +2,7 @@
 # using the vips CLI. Since vips CLI commands can't be chained without creating
 # temp files after each operation, using the CLI would decrease performance.
 # See 'Chaining operations': https://www.libvips.org/API/current/using-cli.html
+require 'ruby-vips' if Riiif::Engine.config.use_vips
 
 module Riiif
   class VipsTransformer < AbstractTransformer
