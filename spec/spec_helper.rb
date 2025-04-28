@@ -18,4 +18,14 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = 'random'
+
+  module Vips
+    class Image
+      # Left intentionally blank.
+      #
+      # This is here to prevent uninitialized constant errors when vips is not
+      # installed. Adding "require 'ruby-vips'" to specs will throw errors if
+      # vips is not installed.
+    end
+  end
 end

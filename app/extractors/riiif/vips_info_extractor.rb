@@ -1,5 +1,3 @@
-require 'ruby-vips'
-
 module Riiif
   # Get information using (lib)vips to interrogate the file
   class VipsInfoExtractor < AbstractInfoExtractor
@@ -8,7 +6,7 @@ module Riiif
     def extract
       attributes = Riiif::CommandRunner.execute("#{external_command} '#{@path}' -a")
                                        .split(/\n/)
-                                       .map { |str| str.split(': ') }.to_h
+                                       .map { |str| str.strip.split(': ') }.to_h
       width, height = attributes.values_at("width", "height")
 
       {

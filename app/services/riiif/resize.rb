@@ -56,10 +56,11 @@ module Riiif
     def resize_ratio(side, image_info, size)
       length = image_info.send(side)
       target_length = size.send(side)
+
       if target_length < length
-        target_length.to_f / length.to_f # Size down
+        target_length / length.to_f # Size down
       else
-        length.to_f / target_length.to_f # Size up
+        length / target_length.to_f # Size up
       end
     end
 

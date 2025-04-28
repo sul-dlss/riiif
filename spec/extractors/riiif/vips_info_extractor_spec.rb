@@ -1,26 +1,46 @@
 require 'spec_helper'
-require 'ruby-vips'
 
 RSpec.describe Riiif::VipsInfoExtractor do
+  before do
+    allow(Riiif::CommandRunner).to receive(:execute).and_return(fake_info)
+    allow(Vips::Image).to receive(:new_from_file).and_return(image)
+  end
+
+  let(:image) { double(has_alpha?: false) }
+
+  let(:fake_info) do
+    "width: 500
+    height: 376
+    interpretation: srgb
+    filename: spec/fixtures/test.tif
+    vips-loader: tiffload"
+  end
+
   it 'uses vipsheader as its external command' do
     expect(described_class.external_command).to eq "vipsheader"
   end
 
   context 'on a file without transparency' do
-    let(:image) { Rails.root.join("spec", "fixtures", "test.tif") }
-
     it 'returns the extracted attributes' do
-      expect(described_class.new(image).extract).to eq({
-                                                         height: 376,
-                                                         width: 500,
-                                                         format: "JPEG",
-                                                         channels: "srgb"
-                                                       })
+      expect(described_class.new("path/to/image.jpg").extract).to eq({
+                                                                       height: 376,
+                                                                       width: 500,
+                                                                       format: "JPEG",
+                                                                       channels: "srgb"
+                                                                     })
     end
   end
 
   context 'on a file with transparency' do
-    let(:image) { Rails.root.join("spec", "fixtures", "test.png") }
+    let(:image) { double(has_alpha?: true) }
+
+    let(:fake_info) do
+      "width: 50
+    height: 50
+    interpretation: srgb
+    filename: spec/fixtures/test.tif
+    vips-loader: pngload"
+    end
 
     it 'returns the extracted attributes' do
       expect(described_class.new(image).extract).to eq({
