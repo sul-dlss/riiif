@@ -1,3 +1,5 @@
+require 'ruby-vips' if Riiif::Engine.config.use_vips
+
 module Riiif
   # Get information using (lib)vips to interrogate the file
   class VipsInfoExtractor < AbstractInfoExtractor
