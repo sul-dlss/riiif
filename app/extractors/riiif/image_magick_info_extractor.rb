@@ -1,13 +1,8 @@
 module Riiif
   # Get information using imagemagick to interrogate the file
-  class ImageMagickInfoExtractor
+  class ImageMagickInfoExtractor < AbstractInfoExtractor
     # perhaps you want to use GraphicsMagick instead, set to "gm identify"
-    class_attribute :external_command
     self.external_command = 'identify'
-
-    def initialize(path)
-      @path = path
-    end
 
     def extract
       height, width, format, channels = Riiif::CommandRunner.execute(

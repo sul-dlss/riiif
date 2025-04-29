@@ -28,4 +28,8 @@ module Riiif
   def self.kakadu_enabled?
     Engine.config.kakadu_enabled
   end
+
+  def self.use_vips?
+    Engine.config.use_vips
+  end
 end

@@ -11,6 +11,10 @@ module Riiif
     # Set to true to use kdu for jp2000 source images
     config.kakadu_enabled = false
 
+    # Set to true to use libvips to transform images
+    # https://www.libvips.org/
+    config.use_vips = false
+
     config.before_configuration do
       # see https://github.com/fxn/zeitwerk#for_gem
       # We put a generator into LOCAL APP lib/generators, so tell

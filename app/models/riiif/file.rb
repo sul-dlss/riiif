@@ -4,7 +4,14 @@ module Riiif
 
     class_attribute :info_extractor_class
     # TODO: add alternative that uses kdu_jp2info
-    self.info_extractor_class = ImageMagickInfoExtractor
+
+    def self.info_extractor_class
+      if Riiif.use_vips?
+        VipsInfoExtractor
+      else
+        ImageMagickInfoExtractor
+      end
+    end
 
     # @param input_path [String] The location of an image file
     def initialize(input_path, tempfile = nil)
@@ -20,7 +27,9 @@ module Riiif
     end
 
     def transformer
-      if Riiif.kakadu_enabled? && path.ends_with?('.jp2')
+      if Riiif.use_vips?
+        VipsTransformer
+      elsif Riiif.kakadu_enabled? && path.ends_with?('.jp2')
         KakaduTransformer
       else
         ImagemagickTransformer

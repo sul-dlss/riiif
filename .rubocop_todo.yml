@@ -69,7 +69,13 @@ Lint/SuppressedException:
 Metrics/BlockLength:
   Max: 237
 
-# Offense count: 1
+# Offense count: 2
+Metrics/ClassLength:
+  Exclude:
+    - 'app/services/riiif/crop.rb'
+    - 'app/services/riiif/resize.rb'
+
+      # Offense count: 1
 # Configuration parameters: IgnoredMethods.
 Metrics/CyclomaticComplexity:
   Max: 7
