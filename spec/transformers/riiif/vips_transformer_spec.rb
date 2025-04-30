@@ -55,7 +55,7 @@ RSpec.describe Riiif::VipsTransformer do
       let(:image) { double('Vips Image', has_alpha?: true) }
 
       it 'writes to png anyway to preserve transparency' do
-        expect(image).to receive(:write_to_buffer).with(".png[Q=85,optimize-coding,strip]")
+        expect(image).to receive(:write_to_buffer).with(".png[Q=85,strip]")
       end
     end
 

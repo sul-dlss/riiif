@@ -64,7 +64,7 @@ module Riiif
 
     def format_options
       format_string = [compression,
-                       ("optimize-coding" if transformation.format == 'jpg'),
+                       ("optimize-coding" if format == 'jpg'),
                        ("strip" if strip_metadata),
                        ("no-subsample" unless subsample)].select(&:present?).join(',')
 
