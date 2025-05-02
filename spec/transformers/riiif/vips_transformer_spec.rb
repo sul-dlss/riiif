@@ -32,6 +32,15 @@ RSpec.describe Riiif::VipsTransformer do
     allow(Vips::Image).to receive(:new_from_file).and_return(image)
   end
 
+  describe '#initialize' do
+    let(:path) { Pathname.new("path/to/image.tif") }
+
+    it 'normalizes pathnames to strings' do
+      expect(Vips::Image).to receive(:new_from_file).with("path/to/image.tif")
+      described_class.new(path, image_info, transformation)
+    end
+  end
+
   describe '#transform' do
     subject { described_class.new(path, image_info, transformation).transform }
     before { allow(image).to receive(:write_to_buffer) }
