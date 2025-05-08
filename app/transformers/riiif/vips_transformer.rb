@@ -40,6 +40,8 @@ module Riiif
         next image if options.blank?
 
         case method
+        when :resize
+          image.send(method, VipsResize.new(transformation.size, image).to_vips)
         when :thumbnail_image
           # .thumbnail_image needs a positional argument (width) and keyword args (options)
           # https://www.rubydoc.info/gems/ruby-vips/Vips/Image#thumbnail_image-instance_method
@@ -47,7 +49,7 @@ module Riiif
         when :crop
           # .crop needs positional arguments
           image.send(method, *options)
-        else
+        else # :rotate or :colourspace
           image.send(method, options)
         end
       end
@@ -74,9 +76,9 @@ module Riiif
     def resize
       case transformation.size
       when IIIF::Image::Size::Percent, IIIF::Image::Size::Width, IIIF::Image::Size::Height
-        [:resize, Resize.new(transformation.size, image_info).to_vips]
+        [:resize, transformation.size]
       else # IIIF::Image::Size::Absolute, IIIF::Image::Size::BestFit
-        [:thumbnail_image, Resize.new(transformation.size, image_info).to_vips]
+        [:thumbnail_image, VipsResize.new(transformation.size, image).to_vips]
       end
     end
 

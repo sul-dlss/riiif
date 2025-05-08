@@ -133,17 +133,21 @@ RSpec.describe Riiif::VipsTransformer do
         context 'when specifing w, size' do
           let(:size) { IIIF::Image::Size::Width.new(300) }
 
+          before { allow(image).to receive(:width).and_return(600) }
+
           it 'resizes the image to 300px wide, maintaining aspect ratio' do
-            expect(image).to receive(:resize).with(0.6)
+            expect(image).to receive(:resize).with(0.5)
             subject
           end
         end
 
         context 'when specifing ,h size' do
-          let(:size) { IIIF::Image::Size::Height.new(752) }
+          let(:size) { IIIF::Image::Size::Height.new(200) }
+
+          before { allow(image).to receive(:height).and_return(500) }
 
           it 'resizes the image to 300px high, maintaining aspect ratio' do
-            expect(image).to receive(:resize).with(0.5)
+            expect(image).to receive(:resize).with(0.4)
             subject
           end
         end
