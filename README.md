@@ -94,7 +94,7 @@ Riiif::ImageMagickInfoExtractor.external_command  = "gm identify"
 
 You will of course need to install GraphicsMagick on your system.
 
-## Libvips (aka Vips)
+### Libvips (aka Vips)
 
 To use [libvips](https://www.libvips.org/) instead of ImageMagick
 
