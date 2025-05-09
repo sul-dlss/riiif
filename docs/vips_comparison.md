@@ -10,9 +10,9 @@ For a 4264 x 3282 jpeg image (26.8 MB)
 
 | Software Used  | Median processing time (ms) | Mean processing time (ms) |
 | ---------------|-----------------------------|---------------------------|
-| Imagemagick    |                         753 | 753                       |
-| Graphicsmagick |                         662 | 660                       |
-| Vips           |                          64 | 74                        |
+| Imagemagick    | 753                         | 753                       |
+| Graphicsmagick | 662                         | 660                       |
+| Vips           | 79                          | 78                        |
 
 ## Testing with a TIFF
 
@@ -22,7 +22,7 @@ For a 7800 x 5865 tif image (7.11 MB)
 | ---------------|-----------------------------|---------------------------|
 | Imagemagick    | 1091                        | 1089                      |
 | Graphicsmagick | 800                         | 796                       |
-| Vips           | 125                         | 129                       |
+| Vips           | 130                         | 139                       |
 
 ## More Resources & Discussion
 
@@ -115,33 +115,33 @@ Document Path:          /images/irises/full/!500,500/0/default.jpg
 Document Length:        77647 bytes
 
 Concurrency Level:      1
-Time taken for tests:   3.713 seconds
+Time taken for tests:   3.920 seconds
 Complete requests:      50
 Failed requests:        0
-Total transferred:      3926850 bytes
+Total transferred:      3926860 bytes
 HTML transferred:       3882350 bytes
-Requests per second:    13.46 [#/sec] (mean)
-Time per request:       74.268 [ms] (mean)
-Time per request:       74.268 [ms] (mean, across all concurrent requests)
-Transfer rate:          1032.70 [Kbytes/sec] received
+Requests per second:    12.75 [#/sec] (mean)
+Time per request:       78.409 [ms] (mean)
+Time per request:       78.409 [ms] (mean, across all concurrent requests)
+Transfer rate:          978.16 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
 Connect:        0    0   0.0      0       0
-Processing:    64   74   7.5     75      93
-Waiting:       64   74   7.5     75      93
-Total:         64   74   7.5     75      93
+Processing:    67   78   5.5     79      90
+Waiting:       67   78   5.5     79      90
+Total:         67   78   5.5     79      90
 
 Percentage of the requests served within a certain time (ms)
-  50%     75
-  66%     77
-  75%     80
+  50%     79
+  66%     81
+  75%     81
   80%     82
   90%     86
   95%     88
-  98%     93
-  99%     93
- 100%     93 (longest request)
+  98%     90
+  99%     90
+ 100%     90 (longest request)
 ```
 
 ## Command and Detailed Results for TIFFs
@@ -227,31 +227,31 @@ Document Path:          /images/big/full/!500,500/0/default.jpg
 Document Length:        81878 bytes
 
 Concurrency Level:      1
-Time taken for tests:   6.459 seconds
+Time taken for tests:   6.661 seconds
 Complete requests:      50
 Failed requests:        0
-Total transferred:      4138454 bytes
+Total transferred:      4138502 bytes
 HTML transferred:       4093900 bytes
-Requests per second:    7.74 [#/sec] (mean)
-Time per request:       129.173 [ms] (mean)
-Time per request:       129.173 [ms] (mean, across all concurrent requests)
-Transfer rate:          625.74 [Kbytes/sec] received
+Requests per second:    7.51 [#/sec] (mean)
+Time per request:       133.222 [ms] (mean)
+Time per request:       133.222 [ms] (mean, across all concurrent requests)
+Transfer rate:          606.73 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
 Connect:        0    0   0.0      0       0
-Processing:   106  129  14.7    125     177
-Waiting:      106  129  14.7    125     177
-Total:        106  129  14.7    125     177
+Processing:   115  133  12.0    130     160
+Waiting:      115  133  12.0    130     160
+Total:        115  133  12.0    130     160
 
 Percentage of the requests served within a certain time (ms)
-  50%    125
-  66%    134
-  75%    140
-  80%    141
-  90%    149
-  95%    157
-  98%    177
-  99%    177
- 100%    177 (longest request)
+  50%    130
+  66%    141
+  75%    143
+  80%    146
+  90%    150
+  95%    154
+  98%    160
+  99%    160
+ 100%    160 (longest request)
 ```
