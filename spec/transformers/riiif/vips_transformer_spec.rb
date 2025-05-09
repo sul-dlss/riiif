@@ -1,18 +1,17 @@
 require 'spec_helper'
 
-  begin
-    require 'ruby-vips'
-  rescue LoadError
-    module Vips
-      class Image
-        # Intentionally blank.
-        #
-        # This prevents uninitialized constant errors if vips
-        # is not installed.
-      end
+begin
+  require 'ruby-vips'
+rescue LoadError
+  module Vips
+    class Image
+      # Intentionally blank.
+      #
+      # This prevents uninitialized constant errors if vips
+      # is not installed.
     end
   end
-
+end
 
 RSpec.describe Riiif::VipsTransformer do
   let(:channels) { 'rgb' }
