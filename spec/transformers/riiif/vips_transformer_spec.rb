@@ -1,5 +1,18 @@
 require 'spec_helper'
 
+begin
+  require 'ruby-vips'
+rescue LoadError
+  module Vips
+    class Image
+      # Intentionally blank.
+      #
+      # This prevents uninitialized constant errors if vips
+      # is not installed.
+    end
+  end
+end
+
 RSpec.describe Riiif::VipsTransformer do
   let(:channels) { 'rgb' }
 
@@ -32,6 +45,15 @@ RSpec.describe Riiif::VipsTransformer do
     allow(Vips::Image).to receive(:new_from_file).and_return(image)
   end
 
+  describe '#initialize' do
+    let(:path) { Pathname.new("path/to/image.tif") }
+
+    it 'normalizes pathnames to strings' do
+      expect(Vips::Image).to receive(:new_from_file).with("path/to/image.tif")
+      described_class.new(path, image_info, transformation)
+    end
+  end
+
   describe '#transform' do
     subject { described_class.new(path, image_info, transformation).transform }
     before { allow(image).to receive(:write_to_buffer) }
@@ -55,7 +77,7 @@ RSpec.describe Riiif::VipsTransformer do
       let(:image) { double('Vips Image', has_alpha?: true) }
 
       it 'writes to png anyway to preserve transparency' do
-        expect(image).to receive(:write_to_buffer).with(".png[Q=85,optimize-coding,strip]")
+        expect(image).to receive(:write_to_buffer).with(".png[Q=85,strip]")
       end
     end
 
@@ -124,17 +146,21 @@ RSpec.describe Riiif::VipsTransformer do
         context 'when specifing w, size' do
           let(:size) { IIIF::Image::Size::Width.new(300) }
 
+          before { allow(image).to receive(:width).and_return(600) }
+
           it 'resizes the image to 300px wide, maintaining aspect ratio' do
-            expect(image).to receive(:resize).with(0.6)
+            expect(image).to receive(:resize).with(0.5)
             subject
           end
         end
 
         context 'when specifing ,h size' do
-          let(:size) { IIIF::Image::Size::Height.new(752) }
+          let(:size) { IIIF::Image::Size::Height.new(200) }
+
+          before { allow(image).to receive(:height).and_return(500) }
 
           it 'resizes the image to 300px high, maintaining aspect ratio' do
-            expect(image).to receive(:resize).with(0.5)
+            expect(image).to receive(:resize).with(0.4)
             subject
           end
         end
