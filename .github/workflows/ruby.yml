@@ -18,8 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby: ["3.2", "3.3"]
-        rails: ["8.0.0", "7.2.2", "7.1.5"]
+        ruby: ["3.2", "3.3", "3.4"]
+        rails: ["8.1.1", "8.0.4", "7.2.3"]
     steps:
       - name: Install ImageMagick
         run: sudo apt install imagemagick
