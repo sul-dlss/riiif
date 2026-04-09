@@ -8,7 +8,7 @@ module Riiif
     def extract
       attributes = Riiif::CommandRunner.execute("#{external_command} '#{@path}' -a")
                                        .split(/\n/)
-                                       .map { |str| str.strip.split(': ') }.to_h
+                                       .map { |str| str.strip.split(': ', 2) }.to_h
       width, height = attributes.values_at("width", "height")
 
       {
