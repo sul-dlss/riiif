@@ -6,15 +6,14 @@ module Riiif
     self.external_command = 'vipsheader'
 
     def extract
-      attributes = Riiif::CommandRunner.execute("#{external_command} '#{@path}' -a")
-                                       .split(/\n/)
-                                       .map { |str| str.strip.split(': ', 2) }.to_h
-      width, height = attributes.values_at("width", "height")
+      width, height, vipsloader = Riiif::CommandRunner.execute(
+        "#{external_command} -f width -f height -f vips-loader '#{@path}'"
+      ).split(/\n/)
 
       {
         height: Integer(height),
         width: Integer(width),
-        format: attributes["vips-loader"].match?("pngload") ? "PNG" : "JPEG",
+        format: vipsloader.match?("pngload") ? "PNG" : "JPEG",
         channels: ::Vips::Image.new_from_file(@path.to_s).has_alpha? ? "srgba" : "srgb"
       }
     end

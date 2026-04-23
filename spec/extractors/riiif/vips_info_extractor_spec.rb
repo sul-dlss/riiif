@@ -9,11 +9,9 @@ RSpec.describe Riiif::VipsInfoExtractor do
   let(:image) { double(has_alpha?: false) }
 
   let(:fake_info) do
-    "width: 500
-    height: 376
-    interpretation: srgb
-    filename: spec/fixtures/test.tif
-    vips-loader: tiffload"
+    "500
+    376
+    tiffload"
   end
 
   it 'uses vipsheader as its external command' do
@@ -35,11 +33,9 @@ RSpec.describe Riiif::VipsInfoExtractor do
     let(:image) { double(has_alpha?: true) }
 
     let(:fake_info) do
-      "width: 50
-      height: 50
-      interpretation: srgb
-      filename: spec/fixtures/test.tif
-      vips-loader: pngload"
+      "50
+      50
+      pngload"
     end
 
     it 'returns the extracted attributes' do
@@ -48,28 +44,6 @@ RSpec.describe Riiif::VipsInfoExtractor do
                                                          width: 50,
                                                          format: "PNG",
                                                          channels: "srgba"
-                                                       })
-    end
-  end
-
-  context 'on a JPEG file with extra EXIF metadata' do
-    let(:image) { double(has_alpha?: false) }
-
-    let(:fake_info) do
-      "width: 150
-      height: 150
-      interpretation: srgb
-      filename: spec/fixtures/test.jpeg
-      vips-loader: jpegload
-      exif-ifd0-Artist: University Library (Digital Object: Digital Media Group)"
-    end
-
-    it 'returns the extracted attributes' do
-      expect(described_class.new(image).extract).to eq({
-                                                         height: 150,
-                                                         width: 150,
-                                                         format: "JPEG",
-                                                         channels: "srgb"
                                                        })
     end
   end
