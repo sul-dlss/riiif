@@ -7,6 +7,8 @@ ENV['RAILS_ENV'] ||= 'test'
 
 EngineCart.load_application!
 require 'rspec/rails'
+require 'webmock/rspec'
+WebMock.disable_net_connect!
 
 RSpec.configure do |config|
   config.run_all_when_everything_filtered = true
