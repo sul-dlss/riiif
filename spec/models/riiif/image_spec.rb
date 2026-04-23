@@ -58,8 +58,21 @@ RSpec.describe Riiif::Image do
 
     describe 'get info' do
       subject { described_class.new('Cave_26,_Ajanta') }
-      it 'is easy' do
-        expect(subject.info).to eq Riiif::ImageInformation.new(width: 600, height: 390)
+
+      before do
+        stub_request(:get, "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Cave_26,_Ajanta.jpg/600px-Cave_26,_Ajanta.jpg")
+          .with(
+                   headers: {
+                     'Accept' => '*/*',
+                     'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+                     'User-Agent' => 'Ruby'
+                   }
+                 )
+          .to_return(status: 200, body: File.binread('spec/fixtures/test.jpg'), headers: {})
+      end
+
+      it 'gets the info' do
+        expect(subject.info).to eq Riiif::ImageInformation.new(width: 300, height: 397)
       end
     end
 
