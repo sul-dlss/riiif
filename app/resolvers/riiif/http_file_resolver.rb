@@ -1,5 +1,5 @@
-require 'open-uri'
-require 'active_support/core_ext/file/atomic'
+require "open-uri"
+require "active_support/core_ext/file/atomic"
 
 module Riiif
   class HttpFileResolver
@@ -15,19 +15,20 @@ module Riiif
     attr_accessor :basic_auth_credentials
     attr_accessor :cache_path
 
-    def initialize(cache_path: 'tmp/network_files')
+    def initialize(cache_path: "tmp/network_files")
       @cache_path = cache_path
     end
 
     def find(id)
       remote = RemoteFile.new(uri(id),
-                              cache_path: cache_path,
-                              basic_auth_credentials: basic_auth_credentials)
+        cache_path: cache_path,
+        basic_auth_credentials: basic_auth_credentials)
       Riiif::File.new(remote.fetch)
     end
 
     class RemoteFile
       include ActiveSupport::Benchmarkable
+
       delegate :logger, to: :Rails
       attr_reader :url, :cache_path
       def initialize(url, options = {})
@@ -50,56 +51,54 @@ module Riiif
 
       private
 
-        def ext
-          @ext ||= ::File.extname(URI.parse(url).path)
-        end
+      def ext
+        @ext ||= ::File.extname(URI.parse(url).path)
+      end
 
-        def file_name
-          @cache_file_name ||= ::File.join(cache_path, Digest::MD5.hexdigest(url) + ext.to_s)
-        end
+      def file_name
+        @cache_file_name ||= ::File.join(cache_path, Digest::MD5.hexdigest(url) + ext.to_s)
+      end
 
-        def download_file
-          ensure_cache_path(::File.dirname(file_name))
-          benchmark("Riiif downloaded #{url}") do
-            ::File.atomic_write(file_name, cache_path) do |local|
-              begin
-                handler.open(url, **download_opts) do |remote|
-                  while chunk = remote.read(8192)
-                    local.write(chunk)
-                  end
-                end
-              rescue OpenURI::HTTPError => e
-                raise ImageNotFoundError, e.message
+      def download_file
+        ensure_cache_path(::File.dirname(file_name))
+        benchmark("Riiif downloaded #{url}") do
+          ::File.atomic_write(file_name, cache_path) do |local|
+            handler.open(url, **download_opts) do |remote|
+              while chunk = remote.read(8192)
+                local.write(chunk)
               end
             end
+          rescue OpenURI::HTTPError => e
+            raise ImageNotFoundError, e.message
           end
         end
+      end
 
-        # Get a hash of options for passing to Kernel::open
-        # This is the primary pathway for passing basic auth credentials
-        def download_opts
-          basic_auth_credentials ? { http_basic_authentication: basic_auth_credentials } : {}
-        end
+      # Get a hash of options for passing to Kernel::open
+      # This is the primary pathway for passing basic auth credentials
+      def download_opts
+        basic_auth_credentials ? {http_basic_authentication: basic_auth_credentials} : {}
+      end
 
-        # Make sure a file path's directories exist.
-        def ensure_cache_path(path)
-          FileUtils.makedirs(path) unless ::File.exist?(path)
-        end
+      # Make sure a file path's directories exist.
+      def ensure_cache_path(path)
+        FileUtils.makedirs(path) unless ::File.exist?(path)
+      end
 
-        def handler
-          if url.match?(URI.regexp)
-            URI
-          else
-            Kernel
-          end
+      def handler
+        if url.match?(URI::RFC2396_PARSER.make_regexp)
+          URI
+        else
+          Kernel
         end
+      end
     end
 
     protected
 
-      def uri(id)
-        raise 'Must set the id_to_uri lambda' if id_to_uri.nil?
-        id_to_uri.call(id)
-      end
+    def uri(id)
+      raise "Must set the id_to_uri lambda" if id_to_uri.nil?
+      id_to_uri.call(id)
+    end
   end
 end

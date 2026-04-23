@@ -22,9 +22,9 @@ module Riiif
       when IIIF::Image::Size::Height
         resize_ratio(:height, image)
       when IIIF::Image::Size::Absolute
-        [size.width, { height: size.height, size: :force }]
+        [size.width, {height: size.height, size: :force}]
       when IIIF::Image::Size::BestFit
-        [size.width, { height: size.height }]
+        [size.width, {height: size.height}]
       when IIIF::Image::Size::Max, IIIF::Image::Size::Full
         nil
       else

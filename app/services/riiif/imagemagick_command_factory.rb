@@ -5,7 +5,7 @@ module Riiif
   class ImagemagickCommandFactory
     # perhaps you want to use GraphicsMagick instead, set to "gm convert"
     class_attribute :external_command
-    self.external_command = 'convert'
+    self.external_command = "convert"
 
     # A helper method to instantiate and invoke build
     # @param [String] path the location of the file
@@ -14,7 +14,7 @@ module Riiif
     # @param [Integer] compression (85) the compression level to use (set 0 for no compression)
     # @param [String] sampling_factor ("4:2:0") the chroma sample factor (set 0 for no compression)
     # @param [Boolean] strip_metadata (true) do we want to strip EXIF tags?
-    def initialize(path, info, transformation, compression: 85, sampling_factor: '4:2:0', strip_metadata: true)
+    def initialize(path, info, transformation, compression: 85, sampling_factor: "4:2:0", strip_metadata: true)
       @path = path
       @info = info
       @transformation = transformation
@@ -48,79 +48,79 @@ module Riiif
 
     private
 
-      def use_compression?
-        compression > 0 && jpeg?
-      end
+    def use_compression?
+      compression > 0 && jpeg?
+    end
 
-      def jpeg?
-        transformation.format == 'jpg'.freeze
-      end
+    def jpeg?
+      transformation.format == "jpg"
+    end
 
-      def alpha_channel?
-        info.channels =~ /rgba/i
-      end
+    def alpha_channel?
+      info.channels =~ /rgba/i
+    end
 
-      def layer_spec
-        '[0]' if info.format =~ /pdf/i
-      end
+    def layer_spec
+      "[0]" if /pdf/i.match?(info.format)
+    end
 
-      def input
-        " '#{path}#{layer_spec}'"
-      end
+    def input
+      " '#{path}#{layer_spec}'"
+    end
 
-      # In cases where the input file has an alpha_channel but the transformation
-      #   format is 'jpg', change to 'png' as jpeg does not support alpha channels
-      # pipe the output to STDOUT
-      def output
-        if alpha_channel? && jpeg?
-          " png:-"
-        else
-          " #{transformation.format}:-"
-        end
+    # In cases where the input file has an alpha_channel but the transformation
+    #   format is 'jpg', change to 'png' as jpeg does not support alpha channels
+    # pipe the output to STDOUT
+    def output
+      if alpha_channel? && jpeg?
+        " png:-"
+      else
+        " #{transformation.format}:-"
       end
+    end
 
-      def crop
-        directive = Crop.new(transformation.region, info).to_imagemagick
-        " -crop #{directive}" if directive
-      end
+    def crop
+      directive = Crop.new(transformation.region, info).to_imagemagick
+      " -crop #{directive}" if directive
+    end
 
-      def size
-        directive = Resize.new(transformation.size, info).to_imagemagick
-        " -resize #{directive}" if directive
-      end
+    def size
+      directive = Resize.new(transformation.size, info).to_imagemagick
+      " -resize #{directive}" if directive
+    end
 
-      def rotation
-        return if transformation.rotation.zero?
-        " -virtual-pixel white +distort srt #{transformation.rotation}"
-      end
+    def rotation
+      return if transformation.rotation.zero?
+      " -virtual-pixel white +distort srt #{transformation.rotation}"
+    end
 
-      def quality
-        " -quality #{compression}" if use_compression?
-      end
+    def quality
+      " -quality #{compression}" if use_compression?
+    end
 
-      def metadata
-        ' -strip' if strip_metadata
-      end
+    def metadata
+      " -strip" if strip_metadata
+    end
 
-      def sampling
-        " -sampling-factor #{sampling_factor}" if jpeg? && !alpha_channel?
-      end
+    def sampling
+      " -sampling-factor #{sampling_factor}" if jpeg? && !alpha_channel?
+    end
 
-      def alpha_channel
-        if info.format =~ /pdf/i
-          ' -alpha remove'
-        elsif alpha_channel?
-          ' -alpha on'
-        end
+    def alpha_channel
+      if /pdf/i.match?(info.format)
+        " -alpha remove"
+      elsif alpha_channel?
+        " -alpha on"
       end
+    end
 
-      def colorspace
-        case transformation.quality
-        when 'grey'
-          ' -colorspace Gray'
-        when 'bitonal'
-          ' -colorspace Gray -type Bilevel'
-        end
+    def colorspace
+      case transformation.quality
+      when "grey"
+        " -colorspace Gray"
+      when "bitonal"
+        " -colorspace Gray -type Bilevel"
       end
+    end
   end
 end
