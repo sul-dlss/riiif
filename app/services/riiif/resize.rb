@@ -90,7 +90,7 @@ module Riiif
     def reduction_factor(max_factor = 5)
       return nil unless reduce?
       scale = [width.to_f / image_info.width,
-               height.to_f / image_info.height].min
+        height.to_f / image_info.height].min
       factor = 0
       raise "I don't know how to scale to #{scale}" if scale > 1
       next_pct = 0.5
@@ -103,8 +103,8 @@ module Riiif
 
     private
 
-      def in_delta?(x1, x2, delta)
-        (x1 - x2).abs <= delta
-      end
+    def in_delta?(x1, x2, delta)
+      (x1 - x2).abs <= delta
+    end
   end
 end

@@ -7,25 +7,25 @@ module Riiif
     #   or nil when the id is not valid
     def pattern(id)
       return unless validate_identifier(id: id)
-      ::File.join(base_path, "#{id}.{#{input_types.join(',')}}")
+      ::File.join(base_path, "#{id}.{#{input_types.join(",")}}")
     end
 
     private
 
-      # @return [Boolean] true if the id matches the regex
-      def validate_identifier(id:, regex: identifier_regex)
-        return true if id.to_s =~ regex
-        Rails.logger.warn "Invalid characters in id `#{id}`"
-        false
-      end
+    # @return [Boolean] true if the id matches the regex
+    def validate_identifier(id:, regex: identifier_regex)
+      return true if id.to_s&.match?(regex)
+      Rails.logger.warn "Invalid characters in id `#{id}`"
+      false
+    end
 
-      # Matches on word characters dashes and colons
-      def identifier_regex
-        /^[\w\-:]+$/
-      end
+    # Matches on word characters dashes and colons
+    def identifier_regex
+      /^[\w\-:]+$/
+    end
 
-      def input_types
-        @input_types ||= %w(png jpg tif tiff jp2)
-      end
+    def input_types
+      @input_types ||= %w[png jpg tif tiff jp2]
+    end
   end
 end

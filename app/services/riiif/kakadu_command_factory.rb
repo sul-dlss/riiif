@@ -4,7 +4,7 @@ module Riiif
   # Builds a command to run a transformation using Kakadu
   class KakaduCommandFactory
     class_attribute :external_command
-    self.external_command = 'kdu_expand'
+    self.external_command = "kdu_expand"
 
     # A helper method to instantiate and invoke build
     # @param [String] path the location of the file
@@ -30,34 +30,34 @@ module Riiif
 
     private
 
-      def input
-        " -i #{path}"
-      end
+    def input
+      " -i #{path}"
+    end
 
-      def output(output_filename)
-        " -o #{output_filename}"
-      end
+    def output(output_filename)
+      " -o #{output_filename}"
+    end
 
-      def threads
-        ' -num_threads 4'
-      end
+    def threads
+      " -num_threads 4"
+    end
 
-      def quiet
-        ' -quiet'
-      end
+    def quiet
+      " -quiet"
+    end
 
-      def region
-        region_arg = Crop.new(transformation.region, info).to_kakadu
-        " -region \"#{region_arg}\"" if region_arg
-      end
+    def region
+      region_arg = Crop.new(transformation.region, info).to_kakadu
+      " -region \"#{region_arg}\"" if region_arg
+    end
 
-      # kdu_expand is not capable of arbitrary scaling, but it does
-      # offer a -reduce argument which is capable of downscaling by
-      # factors of 2, significantly speeding decompression. We can
-      # use it if either the percent is <=50, or the height/width
-      # are <=50% of full size.
-      def reduce
-        " -reduce #{reduction_factor}" if reduction_factor && reduction_factor != 0
-      end
+    # kdu_expand is not capable of arbitrary scaling, but it does
+    # offer a -reduce argument which is capable of downscaling by
+    # factors of 2, significantly speeding decompression. We can
+    # use it if either the percent is <=50, or the height/width
+    # are <=50% of full size.
+    def reduce
+      " -reduce #{reduction_factor}" if reduction_factor && reduction_factor != 0
+    end
   end
 end

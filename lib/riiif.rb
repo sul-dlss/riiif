@@ -1,8 +1,9 @@
-require 'riiif/version'
-require 'deprecation'
-require 'riiif/engine'
+require "riiif/version"
+require "deprecation"
+require "riiif/engine"
 module Riiif
   extend ActiveSupport::Autoload
+
   autoload :Routes
 
   class Error < RuntimeError; end
@@ -13,12 +14,12 @@ module Riiif
   class ConversionError < Error; end
 
   def self.deprecation
-    @deprecation ||= ActiveSupport::Deprecation.new('3.0', 'Riiif')
+    @deprecation ||= ActiveSupport::Deprecation.new("3.0", "Riiif")
   end
 
   HTTPFileResolver = ActiveSupport::Deprecation::DeprecatedConstantProxy.new(
-    'Riiif::HTTPFileResolver',
-    'Riiif::HttpFileResolver',
+    "Riiif::HTTPFileResolver",
+    "Riiif::HttpFileResolver",
     Riiif.deprecation
   )
 

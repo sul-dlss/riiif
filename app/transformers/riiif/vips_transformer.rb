@@ -2,11 +2,12 @@
 # using the vips CLI. Since vips CLI commands can't be chained without creating
 # temp files after each operation, using the CLI would decrease performance.
 # See 'Chaining operations': https://www.libvips.org/API/current/using-cli.html
-require 'ruby-vips' if Riiif::Engine.config.use_vips
+require "ruby-vips" if Riiif::Engine.config.use_vips
 
 module Riiif
   class VipsTransformer < AbstractTransformer
     include ActiveSupport::Benchmarkable
+
     delegate :logger, to: :Rails
 
     # @param path [String] The path of the source image file
@@ -55,20 +56,20 @@ module Riiif
       end
       # If result should be bitonal, set a value threshold
       # https://github.com/libvips/libvips/issues/1840
-      transformation.quality == 'bitonal' ? (result > 200) : result
+      (transformation.quality == "bitonal") ? (result > 200) : result
     end
 
     def format
       # In cases where the input file has an alpha_channel but the transformation
       # format is 'jpg', change to 'png' as jpeg does not support alpha channels
-      image.has_alpha? && transformation.format == 'jpg' ? 'png' : transformation.format
+      (image.has_alpha? && transformation.format == "jpg") ? "png" : transformation.format
     end
 
     def format_options
       format_string = [compression,
-                       ("optimize-coding" if format == 'jpg'),
-                       ("strip" if strip_metadata),
-                       ("no-subsample" unless subsample)].select(&:present?).join(',')
+        ("optimize-coding" if format == "jpg"),
+        ("strip" if strip_metadata),
+        ("no-subsample" unless subsample)].select(&:present?).join(",")
 
       "[Q=#{format_string}]"
     end
@@ -93,7 +94,7 @@ module Riiif
 
     def colourspace
       case transformation.quality
-      when 'gray', 'bitonal'
+      when "gray", "bitonal"
         [:colourspace, :b_w]
       else
         [:colourspace, nil]

@@ -1,4 +1,4 @@
-require 'rails/generators'
+require "rails/generators"
 
 class TestAppGenerator < Rails::Generators::Base
   # source_root 'spec/test_app_templates'
@@ -9,6 +9,6 @@ class TestAppGenerator < Rails::Generators::Base
   end
 
   def copy_fixtures
-    directory 'fixtures', 'spec/fixtures'
+    directory "fixtures", "spec/fixtures"
   end
 end
