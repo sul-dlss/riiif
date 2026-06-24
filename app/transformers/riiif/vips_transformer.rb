@@ -31,21 +31,26 @@ module Riiif
 
     private
 
-    # Chain every method in the array together and apply it to the image
+    # Apply each operation to the image
     # @return [Vips::Image] - the image after all transformations
     def transform_image
-      result = [crop, resize, rotate, colourspace].reduce(image) do |image, array|
-        method, options = array
-        # Options are blank when transformation is not required (e.g. when requesting full size)
-        next image if options.blank?
-
+      result = operations.each_with_index.reduce(image) do |image, ((method, options), index)|
         case method
         when :resize
           image.send(method, VipsResize.new(transformation.size, image).to_vips)
         when :thumbnail_image
-          # .thumbnail_image needs a positional argument (width) and keyword args (options)
-          # https://www.rubydoc.info/gems/ruby-vips/Vips/Image#thumbnail_image-instance_method
-          image.send(method, options.first, **options.last)
+          if index.zero?
+            # When this is the first operation we use the class method to make use of
+            # shrink-on-load which is far more performant for formats like jp2
+            # https://www.libvips.org/API/current/ctor.Image.thumbnail.html
+            # .thumbnail needs a positional argument (width) and keyword args (options)
+            # https://www.rubydoc.info/gems/ruby-vips/Vips/Image#thumbnail-class_method
+            ::Vips::Image.thumbnail(path.to_s, options.first, **options.last)
+          else
+            # .thumbnail_image needs a positional argument (width) and keyword args (options)
+            # https://www.rubydoc.info/gems/ruby-vips/Vips/Image#thumbnail_image-instance_method
+            image.send(method, options.first, **options.last)
+          end
         when :crop
           # .crop needs positional arguments
           image.send(method, *options)
@@ -71,6 +76,11 @@ module Riiif
                        ("no-subsample" unless subsample)].select(&:present?).join(',')
 
       "[Q=#{format_string}]"
+    end
+
+    def operations
+      # Options are blank when transformation is not required (e.g. when requesting full size)
+      [crop, resize, rotate, colourspace].reject { |_, options| options.blank? }
     end
 
     def resize

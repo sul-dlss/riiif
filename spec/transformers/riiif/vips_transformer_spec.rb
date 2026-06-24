@@ -111,6 +111,7 @@ RSpec.describe Riiif::VipsTransformer do
 
     before do
       allow(image).to receive_messages(crop: image, resize: image, rotate: image, thumbnail_image: image, colourspace: image)
+      allow(Vips::Image).to receive(:thumbnail).and_return(image)
     end
 
     describe 'resize' do
@@ -168,18 +169,42 @@ RSpec.describe Riiif::VipsTransformer do
         context 'when specifing absolute w,h size' do
           let(:size) { IIIF::Image::Size::Absolute.new(200, 300) }
 
-          it 'resizes the image, ignoring aspect ratio' do
-            expect(image).to receive(:thumbnail_image).with(200, height: 300, size: :force)
-            subject
+          context 'when thumbnail_image is the first transformation' do
+            it 'uses vips shrink-on-load to resize the image, ignoring aspect ratio' do
+              expect(Vips::Image).to receive(:thumbnail).with(path.to_s, 200, height: 300, size: :force)
+              subject
+            end
+          end
+
+          context 'when thumbnail_image is not the first transformation' do
+            let(:region) { IIIF::Image::Region::Absolute.new(80, 15, 60, 75) }
+
+            it 'resizes the image, ignoring aspect ratio' do
+              expect(image).to receive(:thumbnail_image).with(200, height: 300, size: :force)
+              expect(Vips::Image).not_to receive(:thumbnail)
+              subject
+            end
           end
         end
 
         context 'when specifing bestfit (!w,h) size' do
           let(:size) { IIIF::Image::Size::BestFit.new(200, 300) }
 
-          it 'resizes the image so that the width and height are equal or less than the requested value' do
-            expect(image).to receive(:thumbnail_image).with(200, height: 300)
-            subject
+          context 'when thumbnail_image is the first transformation' do
+            it 'uses vips shrink-on-load to resize the image so that the width and height are equal or less than the requested value' do
+              expect(Vips::Image).to receive(:thumbnail).with(path.to_s, 200, height: 300)
+              subject
+            end
+          end
+
+          context 'when thumbnail_image is not the first transformation' do
+            let(:region) { IIIF::Image::Region::Absolute.new(80, 15, 60, 75) }
+
+            it 'resizes the image so that the width and height are equal or less than the requested value' do
+              expect(image).to receive(:thumbnail_image).with(200, height: 300)
+              expect(Vips::Image).not_to receive(:thumbnail)
+              subject
+            end
           end
         end
       end
