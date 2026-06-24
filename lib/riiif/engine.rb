@@ -1,12 +1,12 @@
-require 'iiif-image-api'
+require "iiif-image-api"
 module Riiif
   class Engine < ::Rails::Engine
-    require 'riiif/rails/routes'
+    require "riiif/rails/routes"
 
     # How long to cache the tiles for.
     config.cache_duration = 3.days
 
-    config.action_dispatch.rescue_responses['Riiif::ImageNotFoundError'] = :not_found
+    config.action_dispatch.rescue_responses["Riiif::ImageNotFoundError"] = :not_found
 
     # Set to true to use kdu for jp2000 source images
     config.kakadu_enabled = false
@@ -22,7 +22,7 @@ module Riiif
       # enough version of Rails to have zeitwerk config
       #
       # See: https://github.com/cbeer/engine_cart/issues/117
-      Rails.autoloaders.main.ignore(Rails.root.join('lib', 'generators')) if Rails.try(:autoloaders).try(:main).respond_to?(:ignore)
+      Rails.autoloaders.main.ignore(Rails.root.join("lib", "generators")) if Rails.try(:autoloaders).try(:main).respond_to?(:ignore)
     end
   end
 end

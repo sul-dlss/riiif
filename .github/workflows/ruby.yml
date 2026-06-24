@@ -16,6 +16,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: read
     strategy:
       matrix:
         ruby: ["3.2", "3.3", "3.4"]
@@ -28,6 +31,8 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+      - name: Standard Ruby
+        uses: standardrb/standard-ruby-action@v1
       - name: Install dependencies
         run: bundle install
         env:

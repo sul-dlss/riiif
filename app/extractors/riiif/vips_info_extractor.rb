@@ -1,14 +1,14 @@
-require 'ruby-vips' if Riiif::Engine.config.use_vips
+require "ruby-vips" if Riiif::Engine.config.use_vips
 
 module Riiif
   # Get information using (lib)vips to interrogate the file
   class VipsInfoExtractor < AbstractInfoExtractor
-    self.external_command = 'vipsheader'
+    self.external_command = "vipsheader"
 
     def extract
       width, height, vipsloader = Riiif::CommandRunner.execute(
         "#{external_command} -f width -f height -f vips-loader '#{@path}'"
-      ).split(/\n/)
+      ).split("\n")
 
       {
         height: Integer(height),
