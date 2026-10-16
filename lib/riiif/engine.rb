@@ -15,6 +15,9 @@ module Riiif
     # https://www.libvips.org/
     config.use_vips = false
 
+    # Set to true to apply EXIF orientation to derivatives and reported dimensions
+    config.autorotate = false
+
     config.before_configuration do
       # see https://github.com/fxn/zeitwerk#for_gem
       # We put a generator into LOCAL APP lib/generators, so tell

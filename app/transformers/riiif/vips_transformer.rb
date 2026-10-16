@@ -15,6 +15,7 @@ module Riiif
     def initialize(path, image_info, transformation, compression: 85, subsample: true, strip_metadata: true)
       super(path, image_info, transformation)
       @image = ::Vips::Image.new_from_file(path.to_s)
+      @image = @image.autorot if Riiif.autorotate?
       @compression = compression
       @subsample = subsample
       @strip_metadata = strip_metadata

@@ -6,13 +6,9 @@ RSpec.describe Riiif::VipsInfoExtractor do
     allow(Vips::Image).to receive(:new_from_file).and_return(image)
   end
 
-  let(:image) { double(has_alpha?: false) }
+  let(:image) { double(has_alpha?: false, width: 500, height: 376) }
 
-  let(:fake_info) do
-    "500
-    376
-    tiffload"
-  end
+  let(:fake_info) { "tiffload" }
 
   it 'uses vipsheader as its external command' do
     expect(described_class.external_command).to eq "vipsheader"
@@ -29,14 +25,23 @@ RSpec.describe Riiif::VipsInfoExtractor do
     end
   end
 
-  context 'on a file with transparency' do
-    let(:image) { double(has_alpha?: true) }
+  context 'when autorotate is enabled' do
+    let(:oriented) { double(has_alpha?: false, width: 376, height: 500) }
 
-    let(:fake_info) do
-      "50
-      50
-      pngload"
+    before do
+      allow(Riiif).to receive(:autorotate?).and_return(true)
+      allow(image).to receive(:autorot).and_return(oriented)
     end
+
+    it 'reports the dimensions after orientation is applied' do
+      expect(described_class.new("path/to/image.jpg").extract).to include(width: 376, height: 500)
+    end
+  end
+
+  context 'on a file with transparency' do
+    let(:image) { double(has_alpha?: true, width: 50, height: 50) }
+
+    let(:fake_info) { "pngload" }
 
     it 'returns the extracted attributes' do
       expect(described_class.new(image).extract).to eq({
