@@ -32,4 +32,8 @@ module Riiif
   def self.use_vips?
     Engine.config.use_vips
   end
+
+  def self.autorotate?
+    Engine.config.autorotate
+  end
 end
