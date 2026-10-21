@@ -16,6 +16,21 @@ RSpec.describe Riiif::ImagemagickCommandFactory do
                                       format: target)
     end
 
+    context 'with autorotate' do
+      subject { described_class.new(tiff, info, transformation).command }
+
+      let(:source) { 'tif' }
+      let(:target) { 'jpg' }
+
+      it { is_expected.not_to match(/-auto-orient/) }
+
+      context 'when enabled' do
+        before { allow(Riiif).to receive(:autorotate?).and_return(true) }
+
+        it { is_expected.to match(/convert -auto-orient /) }
+      end
+    end
+
     context "when the target format is jpeg" do
       subject { described_class.new(tiff, info, transformation).command }
 

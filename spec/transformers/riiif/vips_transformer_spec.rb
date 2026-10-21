@@ -49,8 +49,26 @@ RSpec.describe Riiif::VipsTransformer do
     let(:path) { Pathname.new("path/to/image.tif") }
 
     it 'normalizes pathnames to strings' do
-      expect(Vips::Image).to receive(:new_from_file).with("path/to/image.tif")
+      expect(Vips::Image).to receive(:new_from_file).with("path/to/image.tif").and_return(image)
       described_class.new(path, image_info, transformation)
+    end
+
+    it 'does not apply EXIF orientation by default' do
+      expect(image).not_to receive(:autorot)
+      expect(described_class.new(path, image_info, transformation).image).to eq image
+    end
+
+    context 'when autorotate is enabled' do
+      let(:oriented) { double('Oriented Vips Image', has_alpha?: false) }
+
+      before do
+        allow(Riiif).to receive(:autorotate?).and_return(true)
+        allow(image).to receive(:autorot).and_return(oriented)
+      end
+
+      it 'applies the EXIF orientation to the source image' do
+        expect(described_class.new(path, image_info, transformation).image).to eq oriented
+      end
     end
   end
 

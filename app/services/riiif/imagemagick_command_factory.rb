@@ -29,6 +29,7 @@ module Riiif
     def command
       [
         external_command,
+        auto_orient,
         crop,
         size,
         rotation,
@@ -77,6 +78,10 @@ module Riiif
         else
           " #{transformation.format}:-"
         end
+      end
+
+      def auto_orient
+        ' -auto-orient' if Riiif.autorotate?
       end
 
       def crop

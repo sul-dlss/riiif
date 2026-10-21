@@ -102,6 +102,16 @@ To use [libvips](https://www.libvips.org/) instead of ImageMagick
 Riiif::Engine.config.use_vips = true
 ```
 
+### EXIF orientation
+
+By default, derivatives and `info.json` dimensions use the raw stored pixels and ignore the EXIF Orientation tag. To apply it (as browsers and thumbnailers do):
+
+```ruby
+Riiif::Engine.config.autorotate = true
+```
+
+This works with ImageMagick and libvips. Cached derivatives and `info.json` need to be cleared after changing it.
+
 ## Usage
 
 Add the routes to your application by inserting the following line into `config/routes.rb`
