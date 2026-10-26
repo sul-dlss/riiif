@@ -1,0 +1,6 @@
+ruby_version: 3.2
+ignore:
+  - '.internal_test_app/**/*'
+  - 'coverage/**/*'
+  - 'pkg/**/*'
+  - 'tmp/**/*'

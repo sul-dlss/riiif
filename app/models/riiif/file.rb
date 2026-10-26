@@ -29,7 +29,7 @@ module Riiif
     def transformer
       if Riiif.use_vips?
         VipsTransformer
-      elsif Riiif.kakadu_enabled? && path.ends_with?('.jp2')
+      elsif Riiif.kakadu_enabled? && path.ends_with?(".jp2")
         KakaduTransformer
       else
         ImagemagickTransformer

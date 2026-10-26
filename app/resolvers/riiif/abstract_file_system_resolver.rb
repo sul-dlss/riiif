@@ -1,6 +1,7 @@
 module Riiif
   class AbstractFileSystemResolver
     extend Deprecation
+
     attr_accessor :base_path
 
     def initialize(base_path: nil)
