@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         ruby: ["3.2", "3.3", "3.4"]
-        rails: ["8.1.1", "8.0.4", "7.2.3"]
+        rails: ["8.1.4"]
     steps:
       - name: Install ImageMagick
         run: |
