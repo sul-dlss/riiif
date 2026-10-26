@@ -1,9 +1,10 @@
-require 'open3'
+require "open3"
 module Riiif
   # Runs shell commands under benchmark and saves the output
   class CommandRunner
     include Open3
     include ActiveSupport::Benchmarkable
+
     delegate :logger, to: :Rails
 
     # TODO: this is being loaded into memory.  We could make this a stream.

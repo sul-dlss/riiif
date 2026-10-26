@@ -1,13 +1,13 @@
-require 'simplecov'
+require "simplecov"
 
-SimpleCov.start('rails')
+SimpleCov.start("rails")
 
-require 'engine_cart'
-ENV['RAILS_ENV'] ||= 'test'
+require "engine_cart"
+ENV["RAILS_ENV"] ||= "test"
 
 EngineCart.load_application!
-require 'rspec/rails'
-require 'webmock/rspec'
+require "rspec/rails"
+require "webmock/rspec"
 WebMock.disable_net_connect!
 
 RSpec.configure do |config|
@@ -19,5 +19,5 @@ RSpec.configure do |config|
   # order dependency and want to debug it, you can fix the order by providing
   # the seed, which is printed after each run.
   #     --seed 1234
-  config.order = 'random'
+  config.order = "random"
 end
