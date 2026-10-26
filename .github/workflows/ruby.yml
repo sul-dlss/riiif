@@ -22,7 +22,7 @@ jobs:
         rails: ["8.1.1", "8.0.4", "7.2.3"]
     steps:
       - name: Install ImageMagick
-        run: sudo apt install imagemagick
+        run: sudo apt-get update && sudo apt install imagemagick
       - uses: actions/checkout@v7
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
